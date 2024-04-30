@@ -82,7 +82,7 @@
                                 </div>
 
 
-                            <?php  print_r($my_division); ?>
+       
                               <!-- Upload Scan -->
                                 <div class="form-inline mt-5">
                                     <label for="files" class="form-label sm:w-40" style="text-align: left;">Upload Scan</label>

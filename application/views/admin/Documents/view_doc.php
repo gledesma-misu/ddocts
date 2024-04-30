@@ -505,7 +505,7 @@
                                             <?php switch ($staff['division']){
                                                 case 2:
                                                     echo "Policy Planning and Research Division";
-                                                    $get_div = 'PPD';
+                                                    $get_div = 'PPRD';
                                                 break;
                                                 case 3:
                                                     echo "Localization and Institutionalization Division";
@@ -635,7 +635,7 @@
                                             <?php if ($action_message['staff_name'] == $staff['staff_id']): ?>
                                             <?php switch ($staff['division']){
                                                 case 2:
-                                                    $get_div = 'PPD';
+                                                    $get_div = 'PPRD';
                                                 break;
                                                 case 3:
                                                     $get_div = 'LID';

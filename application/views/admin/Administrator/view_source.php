@@ -149,11 +149,11 @@
                 </div>
                 <div class="col-span-12">
                     <label for="pos-form-3" class="form-label">Sub Source</label>
-                    <input id="pos-form-3" type="text"  id="source_sub" name="source_sub" class="form-control flex-1" placeholder="DSWD">
+                    <input id="pos-form-3" type="text"  id="source_sub" name="source_sub" class="form-control flex-1" placeholder="Ex. MISU">
                 </div>
                 <div class="col-span-12">
                     <label for="pos-form-3" class="form-label">Source Code</label>
-                    <input id="pos-form-3" type="text"  id="source_code" name="source_code" class="form-control flex-1" placeholder="DSWD">
+                    <input id="pos-form-3" type="text"  id="source_code" name="source_code" class="form-control flex-1" placeholder="Ex. MISU">
                 </div>
             </div>
             <div class="modal-footer text-right">
