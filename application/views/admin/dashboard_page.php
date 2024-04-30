@@ -150,35 +150,68 @@
                                                                             <!-- BEGIN: Modal Body -->
                                                                             <div class="modal-body grid grid-cols-12 gap-4 gap-y-3">
 
-                                                                                <?php switch ($this->session->userdata('staff_division')){
-                                                                                    case 2:
-                                                                                        $my_disvision = "Policy Planning and Research Division";
-                                                                                        $my_div = 'PPD';
-                                                                                    break;
-                                                                                    case 3:
-                                                                                        $my_disvision = "Localization and Institutionalization Division";
-                                                                                        $my_div = 'LID';
-                                                                                    break;
-                                                                                    case 4:
-                                                                                        $my_disvision = "Management Information System Unit";
-                                                                                        $my_div = 'MISU';
-                                                                                    break;
-                                                                                    case 5:
-                                                                                        $my_disvision = "Administrative and Finance Division";
-                                                                                        $my_div = 'AFD';
-                                                                                    break;
-                                                                                    case 6:
-                                                                                        $my_disvision = "Public Affairs and Information Office";
-                                                                                        $my_div = 'PAIO';
-                                                                                    break; 
-                                                                                    case 9:
-                                                                                        $my_disvision = "Office of the Executive Director";
-                                                                                        $my_div = 'OED';
-                                                                                    break;
-                                                                                    default: 
-                                                                                        $my_disvision = "ERROR";
-                                                                                    break;  
-                                                                                }?>
+                                                                                <?php 
+                                                       
+                                                                                // switch ($this->session->userdata('staff_division')){
+                                                                                //     case 2:
+                                                                                //         $my_disvision = "Policy Planning and Research Division";
+                                                                                //         $my_div = 'PPD';
+                                                                                //     break;
+                                                                                //     case 3:
+                                                                                //         $my_disvision = "Localization and Institutionalization Division";
+                                                                                //         $my_div = 'LID';
+                                                                                //     break;
+                                                                                //     case 4:
+                                                                                //         $my_disvision = "Management Information System Unit";
+                                                                                //         $my_div = 'MISU';
+                                                                                //     break;
+                                                                                //     case 5:
+                                                                                //         $my_disvision = "Administrative and Finance Division";
+                                                                                //         $my_div = 'AFD';
+                                                                                //     break;
+                                                                                //     case 6:
+                                                                                //         $my_disvision = "Public Affairs and Information Office";
+                                                                                //         $my_div = 'PAIO';
+                                                                                //     break; 
+                                                                                //     case 9:
+                                                                                //         $my_disvision = "Office of the Executive Director";
+                                                                                //         $my_div = 'OED';
+                                                                                //     break;
+                                                                                //     default: 
+                                                                                //         $my_disvision = "ERROR";
+                                                                                //     break;  
+                                                                                // }
+                                                                                $divisions = [
+                                                                                    2 => ['name' => 'Office of the Executive Director', 'abbr' => 'OED'],
+                                                                                    3 => ['name' => 'Office of the Deputy Executive Director', 'abbr' => 'ODED'],
+                                                                                    4 => ['name' => 'Management Information System Unit', 'abbr' => 'MISU'],
+                                                                                    5 => ['name' => 'AFD - Records Section', 'abbr' => 'AFD'],
+                                                                                    6 => ['name' => 'AFD - HRMD Section', 'abbr' => 'AFD'],
+                                                                                    7 => ['name' => 'AFD - Budget Section', 'abbr' => 'AFD'],
+                                                                                    8 => ['name' => 'AFD - Property and Supply', 'abbr' => 'AFD'],
+                                                                                    9 => ['name' => 'AFD - Cash Section', 'abbr' => 'AFD'],
+                                                                                    10 => ['name' => 'AFD - Accounting Section', 'abbr' => 'AFD'],
+                                                                                    11 => ['name' => 'AFD - Procurement Section', 'abbr' => 'AFD'],
+                                                                                    12 => ['name' => 'AFD - General Services', 'abbr' => 'AFD'],
+                                                                                    13 => ['name' => 'Policy, Planning, and Research Division', 'abbr' => 'PPRD'],
+                                                                                    14 => ['name' => 'Localization and Institutionalization Division', 'abbr' => 'LID'],
+                                                                                    15 => ['name' => 'Localization and Institutionalization Division - Regional Committee and Subcommittee for the Welfare of Children Unit', 'abbr' => 'LID - RC/SCWC Unit'],
+                                                                                    16 => ['name' => 'Public Affairs and Information Office', 'abbr' => 'PAIO'],
+                                                                                    17 => ['name' => 'Monitoring and Evaluation Division', 'abbr' => 'MED'],
+                                                                                    18 => ['name' => 'Office of the Executive Director - Legal', 'abbr' => 'OED - Legal'],
+                                                                                    19 => ['name' => 'Project Management Office', 'abbr' => 'PMO'],
+                                                                                ];
+                                                                                
+                                                                                if (isset($divisions[$this->session->userdata('staff_division')])) {
+                                                                                    $division = $divisions[$this->session->userdata('staff_division')];
+                                                                                    $my_disvision = $division['name'];
+                                                                                    $my_div = $division['abbr'];
+                                                                                } else {
+                                                                                    $my_disvision = "ERROR";
+                                                                                    $my_div = "";
+                                                                                }
+
+                                                                                ?>
 
                                                                                     <div class="col-span-12 sm:col-span-12">
                                                                                         <label for="get_my_staff" class="form-label"> Staff Name </label>
@@ -605,7 +638,8 @@
                 <!-- BEGIN: Modal Footer -->
                 <div class="modal-footer text-right">
                     <button type="button" data-dismiss="modal" class="btn btn-secondary w-30 mr-2 mb-2"> <i data-feather="x" class="w-4 h-4 mr-2"></i> Close </button>| &nbsp;
-                    <a href="javascript:;" data-toggle="modal" data-target="#Recieve<?php echo $get_id_staff['dd_id']; ?>" class="btn btn-primary w-30 mr-2 mb-2"> <i data-feather="check-square" class="w-4 h-4 mr-2"></i> Receive </a>| &nbsp;<a href="javascript:;" data-toggle="modal" data-target="#Disregard<?php echo $get_id_staff['dd_id']; ?>" class="btn btn-danger w-30 mr-2 mb-2"> <i data-feather="trash-2" class="w-4 h-4 mr-2"></i> Disregard </a>
+                    <a href="javascript:;" data-toggle="modal" data-target="#Recieve<?php echo $get_id_staff['dd_id']; ?>" class="btn btn-primary w-30 mr-2 mb-2"> <i data-feather="check-square" class="w-4 h-4 mr-2"></i> Receive </a>| 
+                    &nbsp;<a href="javascript:;" data-toggle="modal" data-target="#Disregard<?php echo $get_id_staff['dd_id']; ?>" class="btn btn-danger w-30 mr-2 mb-2"> <i data-feather="trash-2" class="w-4 h-4 mr-2"></i> Disregard </a>
                 </div>
                 <!-- END: Modal Footer -->
             </div>

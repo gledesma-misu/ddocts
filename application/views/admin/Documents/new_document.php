@@ -82,7 +82,7 @@
                                 </div>
 
 
-
+                            <?php  print_r($my_division); ?>
                               <!-- Upload Scan -->
                                 <div class="form-inline mt-5">
                                     <label for="files" class="form-label sm:w-40" style="text-align: left;">Upload Scan</label>
@@ -156,7 +156,7 @@
                                     <?php if ($this->session->userdata('staff_position') == 'Records Officer I' || $this->session->userdata('staff_position') == 'Records Officer II'): ?>
                                         <label for="datepicker" class="form-label sm:w-40" style="text-align: left;">Document Created Date</label>
                                     <?php else: ?>
-                                        <label for="datepicker" class="form-label sm:w-40" style="text-align: left;">Document Recieved Date</label>
+                                        <label for="datepicker" class="form-label sm:w-40" style="text-align: left;">Document Created Date</label>
                                     <?php endif ?>
                                     <input type="text" class="form-control" value="<?php echo $picker; ?>" disabled>
                                     <input id="datepicker" name="datepicker" type="hidden" class="form-control" value="<?php echo $picker; ?>">
@@ -181,8 +181,8 @@
                                     <div class="form-inline mt-5">
                                         <label class="form-label sm:w-40" style="text-align: left;"></label>
                                         <div class="form-check">
-                                            <input id="div3" class="form-check-input" type="checkbox" name="div_unit[]" value="PPD">
-                                            <label class="form-check-label" for="div3">Policy and Planning Division</label>
+                                            <input id="div3" class="form-check-input" type="checkbox" name="div_unit[]" value="PPRD">
+                                            <label class="form-check-label" for="div3">Policy, Planning and Research Division</label>
                                         </div>
                                     </div>
                                     <div class="form-inline mt-5">

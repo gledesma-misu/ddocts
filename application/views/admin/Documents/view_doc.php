@@ -178,7 +178,8 @@
                     </h2>
                 <div class="intro-y grid grid-cols-12 gap-3 sm:gap-6 mt-3">
 
-                    <?php $test = $v_words."/".$get_imgs; ?>   
+                    <?php $test = $v_words."/".$get_imgs; 
+                    ?>   
                     <?php $i = 0;                       
                         if ($doc_details['dd_filename'] == '|No Uploaded Files!|') : 
                          echo '<div class="intro-y col-span-6 sm:col-span-4 md:col-span-6 xxl:col-span-3">
@@ -193,11 +194,13 @@
                          $array = substr($doc_details['dd_filename'], 1, -1);   
                          $files_array1 = explode('||',$array); 
                          foreach($files_array1 as $key) : ?>
-                        <?php $ext = pathinfo($key, PATHINFO_EXTENSION); ?>
-
+                        <?php $ext = pathinfo($key, PATHINFO_EXTENSION); 
+                        $link = $divfold."/".$key;
+                        ?>
+                        
                         <div class="intro-y col-span-6 sm:col-span-4 md:col-span-6 xxl:col-span-3">
                             <div class="file box rounded-md px-5 pt-8 pb-5 px-3 sm:px-5 relative zoom-in">
-                                <a href="<?= base_url('assets/upload'."/".$test."/".$key); ?>" target="_blank" class="w-3/5 file__icon file__icon--file mx-auto tooltip" title="View this file!">
+                                <a href="<?= base_url('assets/upload'."/".$v_words."/".$link); ?>" target="_blank" class="w-3/5 file__icon file__icon--file mx-auto tooltip" title="View this file!">
                                     <div class="file__icon__file-name"><?php echo $ext; ?></div>
                                 </a>
                                 <a href="" class="block font-medium mt-4 text-center truncate"><?php echo $key; ?></a> 
@@ -841,7 +844,7 @@
                         <?php switch ($this->session->userdata('staff_division')){
                             case 2:
                                 $my_disvision = "Policy Planning and Research Division";
-                                $my_div = 'PPD';
+                                $my_div = 'PPRD';
                             break;
                             case 3:
                                 $my_disvision = "Localization and Institutionalization Division";

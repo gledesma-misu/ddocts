@@ -690,7 +690,8 @@
                     </ul>
                 </li>
                 <?php endif; ?>
-                <?php if($this->session->userdata('staff_division') == "4") : ?>
+               
+                <?php if($this->session->userdata('id') == 1) : ?>       
                 <li>
                 <?php if($this->uri->segment(2) == 'administrator'){ $url = 'top-menu--active';}else{ $url = '';}?>
                     <a href="javascript:;" class="top-menu <?php echo $url; ?>">

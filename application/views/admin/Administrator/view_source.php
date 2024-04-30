@@ -4,7 +4,7 @@
         <div class="content"> 
             <div class="intro-y flex flex-col sm:flex-row items-center mt-8">
                 <h2 class="text-lg font-medium mr-auto">
-                   Source Docoments
+                   Source Documents
                 </h2>
                 <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
                     <a href="javascript:;" data-toggle="modal" data-target="#Create_new" class="btn btn-primary shadow-md mr-2">Create New Source</a> 

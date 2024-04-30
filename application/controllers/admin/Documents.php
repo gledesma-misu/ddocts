@@ -21,6 +21,11 @@ class Documents extends CI_Controller {
         $data['all_sources'] = $this->dts->get_all_source();
         $data['get_internal_sources'] = $this->dts->get_internal_source();
         
+
+        $s_division = $this->session->userdata('staff_division');
+        $data['get_s_division'] = $this->dts->get_s_division($s_division);
+        $data['my_division'] = $data['get_s_division']['sd_code_name'];
+
         $this->load->view('admin/Documents/new_document', $data);
 
     }
@@ -43,6 +48,7 @@ class Documents extends CI_Controller {
         $data['get_s_division'] = $this->dts->get_s_division($s_division);
         $my_division = $data['get_s_division']['sd_code_name'];
         $lname = $this->session->userdata('staff_lname');
+        $folder_lname = str_replace(" ", "_", trim($lname));
 
         $data = array(); 
         $filesCount = count($_FILES['files']['name']);
@@ -53,10 +59,10 @@ class Documents extends CI_Controller {
             $_FILES['file']['error']     = $_FILES['files']['error'][$i];
             $_FILES['file']['size']     = $_FILES['files']['size'][$i];
 
-            $doc_directory = "./assets/upload/".$my_division."/".$lname."/";
+            $doc_directory = "./assets/upload/".$my_division."/".$folder_lname."/";
 
-            if (!file_exists("./assets/upload/".$my_division."/".$lname."/")) {
-                mkdir("./assets/upload/".$my_division."/".$lname."/", 0777, true);
+            if (!file_exists("./assets/upload/".$my_division."/".$folder_lname."/")) {
+                mkdir("./assets/upload/".$my_division."/".$folder_lname."/", 0777, true);
             }
 
              //upload files
@@ -361,10 +367,13 @@ class Documents extends CI_Controller {
         $data['v_words'] = preg_replace('/- *$/ismU', "", trim($get_word));
 
         $v_img = $data['doc_details']['dd_filename'];
+        $file_name = trim($v_img, " |");
+        $parts = explode("-", $file_name);
         $v_imgs = str_word_count($v_img , 1);
         $get_img = $v_imgs[0];
-        $data['get_imgs'] = preg_replace('/- *$/ismU', "", trim($get_img));
-        
+        $data['divfold'] =$parts[0];
+        $data['get_imgs'] = preg_replace('/- *$/ismU', " ", trim($get_img));
+       
         $this->load->view('admin/Documents/view_doc', $data);
     }
 
@@ -658,10 +667,10 @@ class Documents extends CI_Controller {
                 $_FILES['file']['error']     = $_FILES['files']['error'][$i];
                 $_FILES['file']['size']     = $_FILES['files']['size'][$i];
 
-        $doc_directory = "./assets/upload/".$my_division."/".$lname."/";
-        if (!file_exists("./assets/upload/".$my_division."/".$lname."/")) {
-            mkdir("./assets/upload/".$my_division."/".$lname."/", 0777, true);
-        }
+        // $doc_directory = "./assets/upload/".$my_division."/".$lname."/";
+        // if (!file_exists("./assets/upload/".$my_division."/".$lname."/")) {
+        //     mkdir("./assets/upload/".$my_division."/".$lname."/", 0777, true);
+        // }
 
                  //upload files
         $config['upload_path'] = $doc_directory;

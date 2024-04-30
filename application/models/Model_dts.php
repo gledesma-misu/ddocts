@@ -157,7 +157,7 @@ class Model_dts extends CI_Model {
 	public function mysources($mysource){
 	    $this->db->select('document_source.ds_id, document_source.ds_code');
 	    $this->db->from('document_source');
-	    $this->db->like('document_source.ds_id', $mysource);
+	    $this->db->where('document_source.ds_id', $mysource);
 	    $this->db->order_by("document_source.ds_id", "desc");
 	    $result = $this->db->get();
 	    return $result->row_array();
@@ -166,7 +166,7 @@ class Model_dts extends CI_Model {
 	public function get_s_division($s_division){
 		$this->db->select('*');
 	    $this->db->from('staff_division');
-	    $this->db->like('staff_division.sd_code', $s_division);
+	    $this->db->where('staff_division.sd_code', $s_division);
 	    $this->db->order_by("staff_division.sd_id", "desc");
 	    $result = $this->db->get();
 	    return $result->row_array();

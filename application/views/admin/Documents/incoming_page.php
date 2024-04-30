@@ -46,6 +46,7 @@
                             <th class="text-center whitespace-nowrap">Document Title</th>
                             <th class="text-center whitespace-nowrap">Source</th>
                             <th class="text-center whitespace-nowrap">Routed To</th>
+                            <th class="text-center whitespace-nowrap">Date Sent</th>
                             <th class="text-center whitespace-nowrap">Date Received</th>
                             <th class="text-center whitespace-nowrap">Concerned Staff</th>
                             <th class="text-center whitespace-nowrap">Doc. Status</th>
@@ -73,7 +74,7 @@
                             <td class="text-center"> <?php $dd_action_taken_id = $post['dd_source']; ?>
                               <?php 
                                  $dd_action_id = explode(", ", $dd_action_taken_id);
-                                 //print_r($dd_action_id);
+                                //  print_r($post['dd_source']);
                                  $dd_action_name = '';
                                  foreach($dd_action_id as $mysource){
                                      $this->load->model('Model_dts', 'dts');
@@ -84,6 +85,7 @@
                                  echo $dd_name;
                               ?></td>
                             <td class="text-center"> <?php echo $post['dd_view_doc']; ?> </td>
+                            <td class="text-center"> <?php echo $post['dd_date_encoded']; ?> </td>
                             <td class="text-center">
                                 <?php $date = $post['dd_date_encoded'];  
                                 $datepicker = date("M-d-Y h:i A", strtotime($date)); ?>
@@ -130,6 +132,7 @@
                             <th class="text-center whitespace-nowrap">Document Title</th>
                             <th class="text-center whitespace-nowrap">Source</th>
                             <th class="text-center whitespace-nowrap">Routed To</th>
+                            <th class="text-center whitespace-nowrap">Date Sent</th>
                             <th class="text-center whitespace-nowrap">Date Received</th>
                             <th class="text-center whitespace-nowrap">Concerned Staff</th>
                             <th class="text-center whitespace-nowrap">Doc. Status</th>
