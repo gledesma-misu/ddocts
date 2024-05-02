@@ -362,6 +362,7 @@ class Documents extends CI_Controller {
 
         //get division and last name
         $v_staff = $data['doc_details']['dd_doc_id_code'];
+        $data['v_stap'] = $v_staff;
         $v_word = str_word_count($v_staff , 1);
         $get_word = $v_word[0];
         $data['v_words'] = preg_replace('/- *$/ismU', "", trim($get_word));
@@ -372,6 +373,7 @@ class Documents extends CI_Controller {
         $v_imgs = str_word_count($v_img , 1);
         $get_img = $v_imgs[0];
         $data['divfold'] =$parts[0];
+        $data['get'] =$v_imgs;
         $data['get_imgs'] = preg_replace('/- *$/ismU', " ", trim($get_img));
        
         $this->load->view('admin/Documents/view_doc', $data);

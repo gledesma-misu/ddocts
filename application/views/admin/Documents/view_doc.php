@@ -179,6 +179,7 @@
                 <div class="intro-y grid grid-cols-12 gap-3 sm:gap-6 mt-3">
 
                     <?php $test = $v_words."/".$get_imgs; 
+                    print_r($get_s_division);
                     ?>   
                     <?php $i = 0;                       
                         if ($doc_details['dd_filename'] == '|No Uploaded Files!|') : 
@@ -196,6 +197,7 @@
                          foreach($files_array1 as $key) : ?>
                         <?php $ext = pathinfo($key, PATHINFO_EXTENSION); 
                         $link = $divfold."/".$key;
+                        
                         ?>
                         
                         <div class="intro-y col-span-6 sm:col-span-4 md:col-span-6 xxl:col-span-3">
@@ -931,6 +933,7 @@
               <div class="modal-dialog">
                   <div class="modal-content">
                   <?php echo form_open_multipart('admin/Documents/file_attachment/'.$doc_details['dd_id']."/".$v_words."/".$get_imgs); ?>
+                  <?php print_r($v_words); ?>
                       <!-- BEGIN: Modal Header -->
                       <div class="modal-header">
                           <h2 class="font-medium text-base mr-auto">
