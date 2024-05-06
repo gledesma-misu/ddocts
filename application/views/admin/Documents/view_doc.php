@@ -179,7 +179,6 @@
                 <div class="intro-y grid grid-cols-12 gap-3 sm:gap-6 mt-3">
 
                     <?php $test = $v_words."/".$get_imgs; 
-                    print_r($get_s_division);
                     ?>   
                     <?php $i = 0;                       
                         if ($doc_details['dd_filename'] == '|No Uploaded Files!|') : 
@@ -273,7 +272,7 @@
                                                 </div>
                                             </div>
 
-                                            <!--=============== Forech for comment and action ========================================== -->
+                                            <!--=============== Foreach for comment and action ========================================== -->
                                             <div class="box px-5 py-3 ml-4 flex-1 zoom-in">
                                                 <div class="flex items-center">
                                                     <div class="font-medium">
@@ -297,8 +296,17 @@
                                                                     case 6:
                                                                         echo "Public Affairs and Information Office";
                                                                     break;
-                                                                    case 9:
+                                                                    case 7:
                                                                         echo "Office of the Executive Director";
+                                                                    break;
+                                                                    case 8:
+                                                                        echo "Office of the Deputy Executive Director";
+                                                                    break;
+                                                                    case 9:
+                                                                        echo "Project Management Office";
+                                                                    break;
+                                                                    case 10:
+                                                                        echo "Monitoring and Evaluation Division";
                                                                     break;
                                                                     default: 
                                                                         echo "ERROR";
@@ -525,9 +533,17 @@
                                                     echo "Public Affairs and Information Office";
                                                     $get_div = 'PAIO';
                                                 break;
-                                                case 9:
+                                                case 7:
                                                     echo "Office of the Executive Director";
                                                     $get_div = 'OED';
+                                                break;
+                                                case 8:
+                                                    echo "Office of the Deputy Executive Director";
+                                                    $get_div = 'ODED';
+                                                break;
+                                                case 9:
+                                                    echo "Project Management Office";
+                                                    $get_div = 'PMO';
                                                 break;
                                                 default: 
                                                     echo "ERROR";
@@ -651,11 +667,17 @@
                                                 case 6:
                                                     $get_div = 'PAIO';
                                                 break;
-                                                case 9:
+                                                case 7:
                                                     $get_div = 'OED';
                                                 break;
+                                                case 8:
+                                                    $get_div = 'ODED';
+                                                break;
+                                                case 9:
+                                                    $get_div = 'PMO';
+                                                break;
                                                 default: 
-                                                    $get_div = 'ERROR';
+                                                    $my_disvision = "ERROR";
                                                 break;  
                                             }?>
                                             <?php $encoded = $staff['lname']; ?>
@@ -727,7 +749,7 @@
                     </div>
                     <div class="px-5 pb-8 text-center">
                         <button type="button" data-dismiss="modal" class="btn btn-outline-secondary w-24 dark:border-dark-5 dark:text-gray-300 mr-1">Cancel</button>
-                        <button type="submit"  class="btn btn-primary w-40">Yes, Complate it!</button>
+                        <button type="submit"  class="btn btn-primary w-40">Yes, Complete it!</button>
                     </div>
                 </div>
                 </form>
@@ -753,9 +775,10 @@
                         <!-- END: Modal Header -->
                         <!-- BEGIN: Modal Body -->
                         <div class="modal-body grid grid-cols-12 gap-4 gap-y-3">
+                            <?php   print_r($this->session->userdata('staff_division')); ?>
                             <?php switch ($this->session->userdata('staff_division')){
                                 case 2:
-                                    $my_div = 'PPD';
+                                    $my_div = 'PPRD';
                                 break;
                                 case 3:
                                     $my_div = 'LID';
@@ -769,8 +792,14 @@
                                 case 6:
                                     $my_div = 'PAIO';
                                 break;
-                                case 9:
+                                case 7:
                                     $my_div = 'OED';
+                                break;
+                                case 8:
+                                    $my_div = 'ODED';
+                                break;
+                                case 9:
+                                    $my_div = 'PMO';
                                 break;
                                 default: 
                                     $my_disvision = "ERROR";
@@ -864,9 +893,17 @@
                                 $my_disvision = "Public Affairs and Information Office";
                                 $my_div = 'PAIO';
                             break;
-                            case 9:
+                            case 7:
                                 $my_disvision = "Office of the Executive Director";
                                 $my_div = 'OED';
+                            break;
+                            case 8:
+                                $my_disvision = "Office of the Deputy Executive Director";
+                                $my_div = 'ODED';
+                            break;
+                            case 9:
+                                $my_disvision = "Project Management Office";
+                                $my_div = 'PMO';
                             break;
                             default: 
                                 $my_disvision = "ERROR";
@@ -932,8 +969,7 @@
           <div id="Upload_file" class="modal" tabindex="-1" aria-hidden="true">
               <div class="modal-dialog">
                   <div class="modal-content">
-                  <?php echo form_open_multipart('admin/Documents/file_attachment/'.$doc_details['dd_id']."/".$v_words."/".$get_imgs); ?>
-                  <?php print_r($v_words); ?>
+                  <?php echo form_open_multipart('admin/Documents/file_attachment/'.$doc_details['dd_id']."/".$v_words."/".$divfold); ?>
                       <!-- BEGIN: Modal Header -->
                       <div class="modal-header">
                           <h2 class="font-medium text-base mr-auto">

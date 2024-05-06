@@ -22,7 +22,7 @@
                             <th class="text-center whitespace-nowrap">Full Name</th>
                             <th class="text-center whitespace-nowrap">Employee No.</th>
                             <th class="text-center whitespace-nowrap">Position</th>
-                            <th class="text-center whitespace-nowrap">Division</th>
+                            <th class="text-center whitespace-nowrap">Office/Division/Unit</th>
                             <th class="text-center whitespace-nowrap">Email</th>
                             <th class="text-center whitespace-nowrap">Date Register</th>
                             <th class="text-center whitespace-nowrap">Status</th>

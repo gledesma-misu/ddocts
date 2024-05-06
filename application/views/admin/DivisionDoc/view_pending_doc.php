@@ -27,6 +27,7 @@
               <h2 class="text-lg font-medium truncate mr-5">
                  For Action Document - Division/Unit
               </h2>
+
               <div class="flex items-center sm:ml-auto mt-3 sm:mt-0">
                     <?php echo form_open('admin/DivisionDoc/search_pending') ?>
                     <div class="relative text-gray-700 dark:text-gray-300">
@@ -60,12 +61,15 @@
                                                 <label for="get_my_staff" class="form-label"> Select Division </label>
                                                 <select data-search="true" id="source_doc" name="source_doc" class="tail-select w-full form-control">
                                                 <optgroup label="Please Select Division">
-                                                 <option value="1">Policy Planning and Research Division</option>
-                                                 <option value="2">Localization and Institutionalization Division</option>
-                                                 <option value="3">Management Information System Unit</option>
-                                                 <option value="4">Administrative and Finance Division</option>
-                                                 <option value="5">Public Affairs and Information Office</option>
-                                                 <option value="6">Office of the Executive Director</option>
+                                                 <option value="2">Policy Planning and Research Division</option>
+                                                 <option value="3">Localization and Institutionalization Division</option>
+                                                 <option value="4">Management Information System Unit</option>
+                                                 <option value="5">Administrative and Finance Division</option>
+                                                 <option value="6">Public Affairs and Information Office</option>
+                                                 <option value="7">Office of the Executive Director</option>
+                                                 <option value="8">Office of the Deputy Executive Director</option>
+                                                 <option value="9">Project Management Office</option>
+                                                 <option value="10">Monitoring and Evaluation Division</option>
                                                  <option value="0">All Division/Unit </option>
                                                 </optgroup>
                                                 </select>
@@ -97,12 +101,15 @@
                                                 <label for="get_my_staff" class="form-label"> Select Division </label>
                                                 <select data-search="true" id="source_doc" name="source_doc" class="tail-select w-full form-control">
                                                 <optgroup label="Please Select Division">
-                                                 <option value="1">Policy Planning and Research Division</option>
-                                                 <option value="2">Localization and Institutionalization Division</option>
-                                                 <option value="3">Management Information System Unit</option>
-                                                 <option value="4">Administrative and Finance Division</option>
-                                                 <option value="5">Public Affairs and Information Office</option>
-                                                 <option value="6">Office of the Executive Director</option>
+                                                <option value="2">Policy Planning and Research Division</option>
+                                                 <option value="3">Localization and Institutionalization Division</option>
+                                                 <option value="4">Management Information System Unit</option>
+                                                 <option value="5">Administrative and Finance Division</option>
+                                                 <option value="6">Public Affairs and Information Office</option>
+                                                 <option value="7">Office of the Executive Director</option>
+                                                 <option value="8">Office of the Deputy Executive Director</option>
+                                                 <option value="9">Project Management Office</option>
+                                                 <option value="10">Monitoring and Evaluation Division</option>
                                                  <option value="0">All Division/Unit </option>
                                                 </optgroup>
                                                 </select>
@@ -137,7 +144,7 @@
                             <th class="text-center whitespace-nowrap">Date Received</th>
                             <th class="text-center whitespace-nowrap">Concerned Staff</th>
                             <th class="text-center whitespace-nowrap">Doc. Status</th>
-                            <?php if($this->session->userdata('staff_division') == '9'){
+                            <?php if($this->session->userdata('staff_position') == 'Administrative Assistant II' || 'Administrative Assistant I'){
                                 echo '<th class="text-center whitespace-nowrap">Action</th>';
                             }else{ 
 
@@ -203,7 +210,7 @@
                                 }?>
                             </td>
 
-                            <?php if($this->session->userdata('staff_division') == '9'){ ?>
+                            <?php if($this->session->userdata('staff_position') == 'Administrative Assistant II' || 'Administrative Assistant I'){ ?>
                                 <td class="table-report__action w-30">
                                     <div class="flex justify-center items-center">
                                         <a class="btn btn-sm btn-outline-primary w-24 inline-block" href="<?= base_url("admin/documents/viewDoc/".$post["dd_id"]); ?>"> <i data-feather="file-text" class="w-4 h-4 mr-1"></i>Route</a>
@@ -225,10 +232,10 @@
                             <th class="text-center whitespace-nowrap">Date Received</th>
                             <th class="text-center whitespace-nowrap">Concerned Staff</th>
                             <th class="text-center whitespace-nowrap">Doc. Status</th>
-                            <?php if($this->session->userdata('staff_division') == '9'){
+                            <?php if($this->session->userdata('staff_position') == 'Administrative Assistant II'  || 'Administrative Assistant I'){
                                 echo '<th class="text-center whitespace-nowrap">Action</th>';
                             }else{ 
-
+                                
                             } ?>
                       </tr>
                   </tfoot>

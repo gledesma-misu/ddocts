@@ -51,6 +51,15 @@ class Model_dts extends CI_Model {
 		return $result->result_array();
   	}
 
+	public function get_staff_division($dd_folder){
+		$this->db->select('*');
+	  	$this->db->from('staff_details');
+	  	$this->db->like('staff_details.staff_id',$dd_folder);
+	  	$this->db->order_by("staff_details.staff_id", "desc");
+	  	$result = $this->db->get();
+		return $result->row_array();
+  	}
+
 	public function routed_details($myid){
 	    $this->db->select('staff_details.staff_id, staff_details.fname, staff_details.lname, staff_details.official_email');
 	    $this->db->from('staff_details');

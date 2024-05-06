@@ -360,6 +360,13 @@ class Documents extends CI_Controller {
         $data['type_action_takens'] = $this->dts->get_action_taken();
         $data['staffs'] = $this->dts->get_staff_details(); 
 
+        //get division per doc details - updated code (Grant)
+        $dd_staff = $data['doc_details']['dd_encoded_doc'];
+        $data['div'] = $this->dts->get_staff_division($dd_staff);
+        $dd_div = $data['div']['division'];
+        $data['get_s_division'] = $this->dts->get_s_division($dd_div);
+        $division = $data['get_s_division']['sd_code_name'];
+        $data['dd_division'] = trim($division);
         //get division and last name
         $v_staff = $data['doc_details']['dd_doc_id_code'];
         $data['v_stap'] = $v_staff;
@@ -669,10 +676,10 @@ class Documents extends CI_Controller {
                 $_FILES['file']['error']     = $_FILES['files']['error'][$i];
                 $_FILES['file']['size']     = $_FILES['files']['size'][$i];
 
-        // $doc_directory = "./assets/upload/".$my_division."/".$lname."/";
-        // if (!file_exists("./assets/upload/".$my_division."/".$lname."/")) {
-        //     mkdir("./assets/upload/".$my_division."/".$lname."/", 0777, true);
-        // }
+        $doc_directory = "./assets/upload/".$my_division."/".$lname."/";
+        if (!file_exists("./assets/upload/".$my_division."/".$lname."/")) {
+            mkdir("./assets/upload/".$my_division."/".$lname."/", 0777, true);
+        }
 
                  //upload files
         $config['upload_path'] = $doc_directory;

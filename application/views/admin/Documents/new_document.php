@@ -155,7 +155,7 @@
                                     <?php if ($this->session->userdata('staff_position') == 'Records Officer I' || $this->session->userdata('staff_position') == 'Records Officer II'): ?>
                                         <label for="datepicker" class="form-label sm:w-40" style="text-align: left;">Document Created Date</label>
                                     <?php else: ?>
-                                        <label for="datepicker" class="form-label sm:w-40" style="text-align: left;">Document Created Date</label>
+                                        <label for="datepicker" class="form-label sm:w-40" style="text-align: left;">Document Recieved Date</label>
                                     <?php endif ?>
                                     <input type="text" class="form-control" value="<?php echo $picker; ?>" disabled>
                                     <input id="datepicker" name="datepicker" type="hidden" class="form-control" value="<?php echo $picker; ?>">
@@ -219,6 +219,13 @@
                                             <label class="form-check-label" for="div8">Project Management Office</label>
                                         </div>
                                     </div>
+                                    <div class="form-inline mt-5">
+                                        <label class="form-label sm:w-40" style="text-align: left;"></label>
+                                        <div class="form-check">
+                                            <input id="div9" class="form-check-input" type="checkbox" name="div_unit[]" value="MED">
+                                            <label class="form-check-label" for="div8">Monitoring and Evaluation Division</label>
+                                        </div>
+                                    </div>
                                 </div>
                                 <!-- end of division checkboxs --> 
 
@@ -229,7 +236,7 @@
                                         <!-- Office of Executive Director -->
                                         <optgroup label="Office of Executive Director">
                                             <?php foreach($staffs as $staff): ?>
-                                                <?php if ($staff['division'] == 2 || $staff['division'] == 18): ?>
+                                                <?php if ($staff['division'] == 7 ): ?>
                                                 <option value="<?php echo $staff['staff_id']; ?>">
                                                         <?php echo $staff['fname']; ?> <?php echo $staff['lname']; ?> 
                                                         <?php if ($staff['position'] == 'Administrative Assistant II' || $staff['position'] == 'Administrative Assistant I'): ?>
@@ -242,7 +249,7 @@
                                         <!-- Office of the Deputy Executive Director -->
                                         <optgroup label="Office of the Deputy Executive Director">
                                             <?php foreach($staffs as $staff): ?>
-                                                <?php if ($staff['division'] == 3): ?>
+                                                <?php if ($staff['division'] == 8): ?>
                                                 <option value="<?php echo $staff['staff_id']; ?>">
                                                         <?php echo $staff['fname']; ?> <?php echo $staff['lname']; ?> 
                                                         <?php if ($staff['position'] == 'Administrative Assistant II' || $staff['position'] == 'Administrative Assistant I'): ?>
@@ -253,9 +260,9 @@
                                             <?php endforeach; ?>
                                         </optgroup>
                                         <!-- Policy and Planing Division -->
-                                        <optgroup label="Policy and Planing Division">
+                                        <optgroup label="Policy, Planning and Research Division">
                                           <?php foreach($staffs as $staff): ?>
-                                                <?php if ($staff['division'] == 13): ?>
+                                                <?php if ($staff['division'] == 2): ?>
                                                 <option value="<?php echo $staff['staff_id']; ?>">
                                                         <?php echo $staff['fname']; ?> <?php echo $staff['lname']; ?> 
                                                         <?php if ($staff['position'] == 'Administrative Assistant II' || $staff['position'] == 'Administrative Assistant I'): ?>
@@ -268,7 +275,7 @@
                                         <!-- Localization and Institutional Division -->
                                         <optgroup label="Localization and Institutional Division">
                                           <?php foreach($staffs as $staff): ?>
-                                                <?php if ($staff['division'] == 14 || $staff['division'] == 15): ?>
+                                                <?php if ($staff['division'] == 3): ?>
                                                 <option value="<?php echo $staff['staff_id']; ?>">
                                                         <?php echo $staff['fname']; ?> <?php echo $staff['lname']; ?> 
                                                         <?php if ($staff['position'] == 'Administrative Assistant II' || $staff['position'] == 'Administrative Assistant I'): ?>
@@ -281,9 +288,7 @@
                                         <!-- Administrative and Finance Division -->
                                         <optgroup label="Administrative and Finance Division">
                                            <?php foreach($staffs as $staff): ?>
-                                                <?php if ($staff['division'] == 5 || $staff['division'] == 6  || $staff['division'] == 7 || $staff['division'] == 8
-                                                 || $staff['division'] == 9 || $staff['division'] == 10 || $staff['division'] == 11
-                                                 || $staff['division'] == 12): ?>
+                                                <?php if ($staff['division'] == 5): ?>
                                                 <option value="<?php echo $staff['staff_id']; ?>">
                                                         <?php echo $staff['fname']; ?> <?php echo $staff['lname']; ?> 
                                                         <?php if ($staff['position'] == 'Administrative Assistant II' || $staff['position'] == 'Administrative Assistant I'): ?>
@@ -296,7 +301,7 @@
                                         <!-- Public Affairs and Informations Office -->
                                         <optgroup label="Public Affairs and Informations Office">
                                            <?php foreach($staffs as $staff): ?>
-                                                <?php if ($staff['division'] == 16): ?>
+                                                <?php if ($staff['division'] == 6): ?>
                                                 <option value="<?php echo $staff['staff_id']; ?>">
                                                         <?php echo $staff['fname']; ?> <?php echo $staff['lname']; ?> 
                                                         <?php if ($staff['position'] == 'Administrative Assistant II' || $staff['position'] == 'Administrative Assistant I'): ?>
@@ -323,7 +328,7 @@
                                         <!-- Monitoring and Evaluation Division -->
                                         <optgroup label="Monitoring and Evaluation Division">
                                             <?php foreach($staffs as $staff): ?>
-                                                <?php if ($staff['division'] == 17): ?>
+                                                <?php if ($staff['division'] == 10): ?>
                                                 <option value="<?php echo $staff['staff_id']; ?>">
                                                         <?php echo $staff['fname']; ?> <?php echo $staff['lname']; ?> 
                                                         <?php if ($staff['position'] == 'Administrative Assistant II' || $staff['position'] == 'Administrative Assistant I'): ?>
@@ -336,7 +341,7 @@
                                         <!-- Project Management office -->
                                         <optgroup label="Project Management office">
                                             <?php foreach($staffs as $staff): ?>
-                                                <?php if ($staff['division'] == 19): ?>
+                                                <?php if ($staff['division'] == 9): ?>
                                                 <option value="<?php echo $staff['staff_id']; ?>">
                                                         <?php echo $staff['fname']; ?> <?php echo $staff['lname']; ?> 
                                                         <?php if ($staff['position'] == 'Administrative Assistant II' || $staff['position'] == 'Administrative Assistant I'): ?>

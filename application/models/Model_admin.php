@@ -200,59 +200,32 @@ class Model_admin extends CI_Model {
 
 		 switch ($division){
 			case 2:
-				$get_division =  "OED";
+				$get_division =  "PPRD";
 			break;
 			case 3:
-				$get_division =  "ODED";
+				$get_division =  "LID";
 			break;
 			case 4:
 				$get_division =  "MISU";
 			break;
 			case 5:
-				$get_division =  "AFD - Records Section";
+				$get_division =  "AFD";
 			break;
 			case 6:
-				$get_division =  "AFD - HRMD Section";
-			break;
-			case 7:
-				$get_division =  "AFD - Budget Section";
-			break;
-			case 8:
-				$get_division =  "AFD - Property and Supply";
-			break;			
-			case 9:
-				$get_division =  "AFD - Cash Section";
-			break;
-			case 10:
-				$get_division =  "AFD - Accounting Section";
-			break;
-			case 11:
-				$get_division =  "AFD - Procurement Section";
-			break;
-			case 12:
-				$get_division =  "AFD - General Services";
-			break;
-			case 13:
-				$get_division =  "PPRD";
-			break;
-			case 14:
-				$get_division =  "LID";
-			break;
-			case 15:
-				$get_division =  "LID - RC/SCWC Unit";
-			break;
-			case 16:
 				$get_division =  "PAIO";
 			break;
-			case 17:
-				$get_division =  "MED";
+			case 7:
+				$get_division =  "OED";
 			break;
-			case 18:
-				$get_division =  "OED - Legal";
-			break;
-			case 19:
-				$get_division =  "PMO";
+			case 8:
+				$get_division =  "ODED";
 			break;			
+			case 9:
+				$get_division =  "PMO";
+			break;
+			case 10:
+				$get_division =  "MED";
+			break;		
 			default: 
 				$get_division =  "ERROR";
 			break;  
@@ -312,62 +285,35 @@ class Model_admin extends CI_Model {
 
 		switch ($division){
 			case 2:
-				$get_division =  "OED";
+				$get_division =  "PPRD";
 			break;
 			case 3:
-				$get_division =  "ODED";
+				$get_division =  "LID";
 			break;
 			case 4:
 				$get_division =  "MISU";
 			break;
 			case 5:
-				$get_division =  "AFD - Records Section";
+				$get_division =  "AFD";
 			break;
 			case 6:
-				$get_division =  "AFD - HRMD Section";
-			break;
-			case 7:
-				$get_division =  "AFD - Budget Section";
-			break;
-			case 8:
-				$get_division =  "AFD - Property and Supply";
-			break;			
-			case 9:
-				$get_division =  "AFD - Cash Section";
-			break;
-			case 10:
-				$get_division =  "AFD - Accounting Section";
-			break;
-			case 11:
-				$get_division =  "AFD - Procurement Section";
-			break;
-			case 12:
-				$get_division =  "AFD - General Services";
-			break;
-			case 13:
-				$get_division =  "PPRD";
-			break;
-			case 14:
-				$get_division =  "LID";
-			break;
-			case 15:
-				$get_division =  "LID - RC/SCWC Unit";
-			break;
-			case 16:
 				$get_division =  "PAIO";
 			break;
-			case 17:
-				$get_division =  "MED";
+			case 7:
+				$get_division =  "OED";
 			break;
-			case 18:
-				$get_division =  "OED - Legal";
-			break;
-			case 19:
-				$get_division =  "PMO";
+			case 8:
+				$get_division =  "ODED";
 			break;			
+			case 9:
+				$get_division =  "PMO";
+			break;
+			case 10:
+				$get_division =  "MED";
+			break;		
 			default: 
 				$get_division =  "ERROR";
-			break;
+			break;  
 		}	
 		
 		$this->db->set('fname', $fname);

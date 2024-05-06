@@ -143,7 +143,9 @@
 
                                                             foreach($staffs as $staff): ?>
                                                                 <?php if ($post['dd_encoded_doc'] == $staff['staff_id']): ?>
-                                                                <?php $encoded = $staff['lname']; ?>
+                                                                <?php $encoded = $staff['lname']; 
+                                                                $folder_lname = str_replace(" ", "_", trim($encoded));
+                                                                ?>
                                                                 <?php endif ?>
                                                             <?php endforeach; 
                                                             $array = substr($post['dd_filename'], 1, -1);  
@@ -152,12 +154,12 @@
                                                             <?php $ext = pathinfo($key, PATHINFO_EXTENSION); ?>
                                                             <div class="intro-y col-span-6 sm:col-span-4 md:col-span-6 xxl:col-span-4">
                                                                 <div class="file box rounded-md px-5 pt-8 pb-5 px-3 sm:px-5 relative zoom-in">
-                                                                    <a href="<?= base_url('assets/upload'."/".$v_words."/".$encoded."/".$key); ?>" target="_blank" class="w-3/5 file__icon file__icon--file mx-auto">
+                                                                    <a href="<?= base_url('assets/upload'."/".$v_words."/".$folder_lname."/".$key); ?>" target="_blank" class="w-3/5 file__icon file__icon--file mx-auto">
                                                                         <div class="file__icon__file-name"><?php echo $ext; ?></div>
                                                                     </a>
-                                                                    <a href="<?= base_url('assets/upload'."/".$v_words."/".$encoded."/".$key); ?>" class="block font-medium mt-4 text-center truncate"><?php echo $key; ?></a> 
+                                                                    <a href="<?= base_url('assets/upload'."/".$v_words."/".$folder_lname."/".$key); ?>" class="block font-medium mt-4 text-center truncate"><?php echo $key; ?></a> 
                                                                     <div class="absolute top-0 right-0 mr-2 mt-2 dropdown ml-auto">
-                                                                        <a class="dropdown-toggle w-5 h-5 block" href="<?= base_url('assets/upload'."/".$v_words."/".$encoded."/".$key); ?>" download aria-expanded="false"> <i data-feather="save" class="w-5 h-5 text-gray-600"></i> </a>
+                                                                        <a class="dropdown-toggle w-5 h-5 block" href="<?= base_url('assets/upload'."/".$v_words."/".$folder_lname."/".$key); ?>" download aria-expanded="false"> <i data-feather="save" class="w-5 h-5 text-gray-600"></i> </a>
                                                                     </div>
                                                                 </div>
                                                             </div>
