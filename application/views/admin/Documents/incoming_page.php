@@ -85,9 +85,14 @@
                                  echo $dd_name;
                               ?></td>
                             <td class="text-center"> <?php echo $post['dd_view_doc']; ?> </td>
-                            <td class="text-center"> <?php echo $post['dd_date_encoded']; ?> </td>
+
                             <td class="text-center">
                                 <?php $date = $post['dd_date_encoded'];  
+                                $datepicker = date("M-d-Y h:i A", strtotime($date)); ?>
+                                <?php echo $datepicker; ?>
+                            </td>
+                            <td class="text-center">
+                                <?php $date = $post['dd_date_routed'];  
                                 $datepicker = date("M-d-Y h:i A", strtotime($date)); ?>
                                 <?php echo $datepicker; ?>
                             </td>

@@ -632,12 +632,14 @@ class DivisionDoc extends CI_Controller
                 break;
         }
 
-        $source_doc = $this->input->post('source_doc');
-        $date_from = $this->input->post('date_from');
-        $date_to = $this->input->post('date_to');
+        $source_doc_excel = $this->input->post("source_doc_excel");
+        $date_from = $this->input->post('date_from_excel');
+        $date_to = $this->input->post('date_to_excel');
 
-        $employee_data = $this->division->print_excel($Exist, $source_doc, $date_from, $date_to);
+        $employee_data = $this->division->print_excel(trim($Exist), 2, $date_from, $date_to);
+        // echo "<script>console.log('Debug Objects: ".$Exist . " " . $source_doc . " " . $date_from. " ". $date_to."' );</script>";
 
+    
         $excel_row = 2;
 
         foreach ($employee_data as $row) {
@@ -689,10 +691,11 @@ class DivisionDoc extends CI_Controller
             $object->getActiveSheet()->setCellValueByColumnAndRow(6, $excel_row, $row['dd_staff_name']);
             $object->getActiveSheet()->setCellValueByColumnAndRow(7, $excel_row, $status);
             $object->getActiveSheet()->setCellValueByColumnAndRow(8, $excel_row, $row['dd_note']);
+
             $excel_row++;
         }
 
-        switch ($source_doc) {
+        switch ($source_doc_excel) {
             case 0:
                 $div = 'All';
                 break;

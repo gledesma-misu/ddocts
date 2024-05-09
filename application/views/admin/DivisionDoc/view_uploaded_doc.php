@@ -46,6 +46,7 @@
                             <th class="text-center whitespace-nowrap">Document Title</th>
                             <th class="text-center whitespace-nowrap">Source</th>
                             <th class="text-center whitespace-nowrap">Routed To</th>
+                            <th class="text-center whitespace-nowrap">Date Sent</th>
                             <th class="text-center whitespace-nowrap">Date Received</th>
                             <th class="text-center whitespace-nowrap">Concerned Staff</th>
                             <th class="text-center whitespace-nowrap">Doc. Status</th>
@@ -83,6 +84,11 @@
                                  echo $dd_name;
                               ?></td>
                             <td class="text-center"> <?php echo $post['dd_view_doc']; ?> </td>
+                            <td class="text-center">
+                                <?php $date = $post['dd_date_encoded'];  
+                                $datepicker = date("M-d-Y h:i A", strtotime($date)); ?>
+                                <?php echo $datepicker; ?>
+                            </td>
                             <td class="text-center">
                                 <?php $date = $post['dd_date_routed'];  
                                 $datepicker = date("M-d-Y h:i A", strtotime($date)); ?>
@@ -192,6 +198,7 @@
                             <th class="text-center whitespace-nowrap">Document Title</th>
                             <th class="text-center whitespace-nowrap">Source</th>
                             <th class="text-center whitespace-nowrap">Routed To</th>
+                            <th class="text-center whitespace-nowrap">Date Sent</th>
                             <th class="text-center whitespace-nowrap">Date Received</th>
                             <th class="text-center whitespace-nowrap">Concerned Staff</th>
                             <th class="text-center whitespace-nowrap">Doc. Status</th>

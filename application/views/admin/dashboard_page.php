@@ -83,7 +83,7 @@
                                                     <th class="text-center whitespace-nowrap">Source</th>
                                                     <th class="text-center whitespace-nowrap">Routed To</th>
                                                     <th class="text-center whitespace-nowrap">Concerned Staff</th>
-                                                    <th class="text-center whitespace-nowrap">Date Received</th>
+                                                    <th class="text-center whitespace-nowrap">Date Sent</th>
                                                     <th class="text-center whitespace-nowrap">Action</th>
                                                 </tr>
                                             </thead>
@@ -191,6 +191,7 @@
                                                                                     break;
                                                                                     default: 
                                                                                         $my_disvision = "ERROR";
+                                                                                        $my_div = 'ERROR';
                                                                                     break;  
                                                                                     }
                                                                                 ?>
@@ -238,7 +239,7 @@
                                                     <th class="text-center whitespace-nowrap">Source</th>
                                                     <th class="text-center whitespace-nowrap">Routed To</th>
                                                     <th class="text-center whitespace-nowrap">Concerned Staff</th>
-                                                    <th class="text-center whitespace-nowrap">Date Received</th>
+                                                    <th class="text-center whitespace-nowrap">Date Sent</th>
                                                     <th class="text-center whitespace-nowrap">Action</th>
                                                 </tr>
                                             </tfoot>

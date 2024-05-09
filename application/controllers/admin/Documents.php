@@ -144,7 +144,7 @@ class Documents extends CI_Controller {
 
             $type_doc = $this->input->post('type_doc') == 'Select' ? '0' : $this->input->post('type_doc');
 
-            $daterec = $this->input->post('datepicker');
+            $datesent = $this->input->post('datepicker');
             $editor1 = $this->input->post('editor1');
 
             $type_docs = implode(', ', $this->input->post('type_docs[]') == '' ? array('0') : $this->input->post('type_docs[]'));
@@ -180,7 +180,7 @@ class Documents extends CI_Controller {
             }
             // new add data , $dd_disregard_doc,$not_listed
 
-            $this->dts->insertDocDetails($doc_no,$source_doc,$sub_title,$files_array_new,$moredocs,$type_doc,$action_taken,$daterec,$div_unit,$staff_details,$editor1,$type_docs,$file_get,$staff_id,$dd_disregard_doc,$source_staffs_name,$records_id);
+            $this->dts->insertDocDetails($doc_no,$source_doc,$sub_title,$files_array_new,$moredocs,$type_doc,$action_taken,$datesent,$div_unit,$staff_details,$editor1,$type_docs,$file_get,$staff_id,$dd_disregard_doc,$source_staffs_name,$records_id);
 
             $emails=array();
             foreach ($source_staffs_email as $test1) {
@@ -403,7 +403,7 @@ class Documents extends CI_Controller {
 
         $this->dts->complate_file($dd_id);
 
-        $this->session->set_flashdata('success', 'This file has been complated!');
+        $this->session->set_flashdata('success', 'This file has been completed!');
         redirect(base_url()."admin/Documents/viewDoc/".$dd_id);
     }
 
@@ -870,7 +870,7 @@ class Documents extends CI_Controller {
                 $status = '<div class="alert alert-primary show flex items-center mb-2" role="alert"> Re-process </div>';
             break;
             case 4:
-                $status = '<div class="alert alert-success show flex items-center mb-2" role="alert"> Complated (Released doc.)</div>';
+                $status = '<div class="alert alert-success show flex items-center mb-2" role="alert"> Completed (Released doc.)</div>';
             break;
             default:
                 $status = "ERROR";

@@ -199,26 +199,35 @@ class Records extends CI_Controller {
             case 0:
                 $div = 'All Division/Unit';
             break;
-            case 1:
+            case 2:
                 $div = 'Policy Planning and Research Division';
             break;
-            case 2:
+            case 3:
                 $div = 'Localization and Institutionalization Division';
             break;
-            case 3:
+            case 4:
                 $div = 'Management Information System Unit';
             break;
-            case 4:
+            case 5:
                 $div = 'Administrative and Finance Division';
             break;
-            case 5:
+            case 6:
                 $div = 'Public Affairs and Information Office';
             break;
-            case 6:
+            case 7:
                 $div = 'Office of the Executive Director';
             break;
+            case 8:
+                $div = 'Office of the Deputy Executive Director';
+            break;
+            case 9:
+                $div = 'Project Management Office';
+            break;
+            case 10:
+                $div = 'Monitoring and Evaluation Division';
+            break;
             default: 
-                $Exist = "ERROR"; 
+                $div = "ERROR"; 
             break;   
         }
         
@@ -250,26 +259,35 @@ class Records extends CI_Controller {
             case 0:
                 $div = 'All Division/Unit';
             break;
-            case 1:
+            case 2:
                 $div = 'Policy Planning and Research Division';
             break;
-            case 2:
+            case 3:
                 $div = 'Localization and Institutionalization Division';
             break;
-            case 3:
+            case 4:
                 $div = 'Management Information System Unit';
             break;
-            case 4:
+            case 5:
                 $div = 'Administrative and Finance Division';
             break;
-            case 5:
+            case 6:
                 $div = 'Public Affairs and Information Office';
             break;
-            case 6:
+            case 7:
                 $div = 'Office of the Executive Director';
             break;
+            case 8:
+                $div = 'Office of the Deputy Executive Director';
+            break;
+            case 9:
+                $div = 'Project Management Office';
+            break;
+            case 10:
+                $div = 'Monitoring and Evaluation Division';
+            break;
             default: 
-                $Exist = "ERROR"; 
+                $div = "ERROR"; 
             break;   
         }
         

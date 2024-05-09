@@ -71,7 +71,7 @@ class Model_dts extends CI_Model {
 
 	// New Document Page  ==================================================================================
 
-	public function insertDocDetails($doc_no,$source_doc,$sub_title,$files_array_new,$moredocs,$type_doc,$action_taken,$daterec,$div_unit,$staff_details,$editor1,$type_docs,$file_get,$staff_id,$dd_disregard_doc,$source_staffs_name,$records_id){
+	public function insertDocDetails($doc_no,$source_doc,$sub_title,$files_array_new,$moredocs,$type_doc,$action_taken,$datesent,$div_unit,$staff_details,$editor1,$type_docs,$file_get,$staff_id,$dd_disregard_doc,$source_staffs_name,$records_id){
 
 		date_default_timezone_set('Asia/Manila');  
 		$date_now = date('Y-m-d H:i:s', time());
@@ -97,7 +97,7 @@ class Model_dts extends CI_Model {
 			'dd_routed_to' => $staff_details,
 			'dd_staff_name' => $source_staffs_name,
 			'dd_view_doc' => $div_unit,
-			'dd_date_recieved' => $daterec,
+			'dd_date_recieved' => $datesent,
 			'dd_filename' => $files_array_new,
 			'dd_status' => '0',
 			'dd_encoded_doc' => $staff_id,
@@ -105,7 +105,7 @@ class Model_dts extends CI_Model {
 			'dd_note' => $editor1,
 			'dd_disregard_doc' => $dd_disregard_doc,
 			'dd_records' => $records_id,
-			'dd_date_routed' => $date_nows
+
         );
 
 		$this->db->insert('document_details', $data); 

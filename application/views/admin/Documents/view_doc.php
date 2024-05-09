@@ -545,6 +545,10 @@
                                                     echo "Project Management Office";
                                                     $get_div = 'PMO';
                                                 break;
+                                                case 10:
+                                                    echo "Monitoring and Evaluation Division";
+                                                    $get_div = 'MED';
+                                                break;
                                                 default: 
                                                     echo "ERROR";
                                                     $get_div = 'ERROR';
@@ -676,6 +680,9 @@
                                                 case 9:
                                                     $get_div = 'PMO';
                                                 break;
+                                                case 10:
+                                                    $get_div = 'MED';
+                                                break;
                                                 default: 
                                                     $my_disvision = "ERROR";
                                                 break;  
@@ -775,7 +782,7 @@
                         <!-- END: Modal Header -->
                         <!-- BEGIN: Modal Body -->
                         <div class="modal-body grid grid-cols-12 gap-4 gap-y-3">
-                            <?php   print_r($this->session->userdata('staff_division')); ?>
+                
                             <?php switch ($this->session->userdata('staff_division')){
                                 case 2:
                                     $my_div = 'PPRD';
@@ -801,8 +808,11 @@
                                 case 9:
                                     $my_div = 'PMO';
                                 break;
+                                case 10:
+                                    $my_div = 'MED';
+                                break;
                                 default: 
-                                    $my_disvision = "ERROR";
+                                    $my_div = "ERROR";
                                 break;  
                             }?>
                             <input type="hidden" value="<?php echo $my_div; ?>" id="my_div" name="my_div">
@@ -904,6 +914,10 @@
                             case 9:
                                 $my_disvision = "Project Management Office";
                                 $my_div = 'PMO';
+                            break;
+                            case 9:
+                                $my_disvision = "Monitoring and Evaluation Division";
+                                $my_div = 'MED';
                             break;
                             default: 
                                 $my_disvision = "ERROR";

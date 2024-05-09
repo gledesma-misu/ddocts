@@ -51,7 +51,8 @@ class Model_dashboard extends CI_Model {
 
       $data = array(
         'dd_recieved_doc' => '1',
-        'dd_status' => '1'
+        'dd_status' => '1',
+        'dd_date_routed' => $date_now,
       );
 
       $this->db->where('dd_id', $get_doc);
