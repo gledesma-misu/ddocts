@@ -137,7 +137,7 @@
             <div class="modal-body grid grid-cols-12 gap-4 gap-y-3">
                 <div class="col-span-12">
                     <label for="pos-form-1" class="form-label">Source Name</label>
-                    <input id="pos-form-1" type="text" id="source" name="source" class="form-control flex-1" placeholder="Eneter Source Name">
+                    <input id="pos-form-1" type="text" id="source" name="source" class="form-control flex-1" placeholder="Enter Source Name">
                 </div>
                 <div class="col-span-12">
                     <label for="pos-form-2" class="form-label">Select Type Source</label>

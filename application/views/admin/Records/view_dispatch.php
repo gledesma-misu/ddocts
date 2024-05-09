@@ -49,7 +49,7 @@
                             <th class="text-center whitespace-nowrap">Document Title</th>
                             <th class="text-center whitespace-nowrap">Source Document</th>
                             <th class="text-center whitespace-nowrap">Routed From</th>
-                            <th class="text-center whitespace-nowrap">Date Routed (Recieved)</th>
+                            <th class="text-center whitespace-nowrap">Date Routed (Received)</th>
                             <th class="text-center whitespace-nowrap">To</th>
                             <th class="text-center whitespace-nowrap">Action</th> 
                         </tr>
@@ -104,7 +104,7 @@
                             <th class="text-center whitespace-nowrap">Document Title</th>
                             <th class="text-center whitespace-nowrap">Source Document</th>
                             <th class="text-center whitespace-nowrap">Routed From</th>
-                            <th class="text-center whitespace-nowrap">Date Routed (Recieved)</th>
+                            <th class="text-center whitespace-nowrap">Date Routed (Received)</th>
                             <th class="text-center whitespace-nowrap">To</th>
                             <th class="text-center whitespace-nowrap">Action</th>
                         </tr>

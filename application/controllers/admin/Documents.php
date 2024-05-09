@@ -170,7 +170,7 @@ class Documents extends CI_Controller {
             //staff_id of person encoded
             $staff_id = $this->session->userdata('staff_id');
 
-            if ($source_doc == 10) {
+            if ($source_doc == 1) {
                 $dd_disregard_doc = 1;
                 $not_listed = $this->input->post('not_liste');
 

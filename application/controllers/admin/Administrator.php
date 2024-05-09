@@ -38,7 +38,7 @@ class Administrator extends CI_Controller {
 
     	 $this->admin->insertSouce($source,$type,$code,$sub);
         // Set message 
-        $this->session->set_flashdata('source_created', 'Soruce Document Created Successful!');
+        $this->session->set_flashdata('source_created', 'Source Document Created Successful!');
 
         redirect('admin/administrator');
     }

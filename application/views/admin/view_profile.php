@@ -184,24 +184,16 @@
                                     <select data-placeholder="<?php $Exist; ?>" data-search="true" class="tail-select w-full form-control" id="p_div" name="p_div" required>
                                         <optgroup label="Required Actions">
                                             <option value="">Existing: <?php echo $Exist; ?></option>
-                                            <option value="2">Office of the Executive Director</option>
-                                            <option value="3">Office of the Deputy Executive Director</option>
-                                            <option value="4">Management Information Systems Unit</option>
-                                            <option value="5">Administrative Finance and Division - Record Section</option>
-                                            <option value="6">Administrative Finance and Division - HRMD Section</option>
-                                            <option value="7">Administrative Finance and Division - Budget Section</option>
-                                            <option value="8">Administrative Finance and Division - Property and Supply</option>
-                                            <option value="9">Administrative Finance and Division - Cash Section</option>
-                                            <option value="10">Administrative Finance and Division - Accounting Section</option>
-                                            <option value="11">Administrative Finance and Division - Procurement Section</option>
-                                            <option value="12">Administrative Finance and Division - General Services</option>
-                                            <option value="13">Policy, Planning, and Research Division</option>
-                                            <option value="14">Localization and Institutionalization Division</option>
-                                            <option value="15">LID - Regional Committee and Subcommittee for the Welfare of Children</option>
-                                            <option value="16">Public Affairs and Information Office</option>
-                                            <option value="17">Monitoring and Evaluation Division</option>
-                                            <option value="18">Office of the Executive Director - Legal</option>
-                                            <option value="19">Project Management Office</option>
+                                            <option value="2">Policy Planning and Research Division</option>
+                                            <option value="3">Localization and Institutionalization Division</option>
+                                            <option value="4">Management Information System Unit</option>
+                                            <option value="5">Administrative and Finance Division</option>
+                                            <option value="6">Public Affairs and Information Office</option>
+                                            <option value="7">Office of the Executive Director</option>
+                                            <option value="8">Office of the Deputy Executive Director</option>
+                                            <option value="9">Project Management Office</option>
+                                            <option value="10">Monitoring and Evaluation Division</option>
+                          
                                         </optgroup>
                                     </select>
                                 </div>

@@ -426,7 +426,7 @@ uploadField.onchange = function() {
 <script type="text/javascript">
 $(function() {
     $("#source_doc").change(function(event){
-        if(event.target.value == '10'){
+        if(event.target.value == '1'){
             $("#not_listed").show(1000);  //show if option 'select' is not selected
             Swal.fire(
               'New Source Document?',
