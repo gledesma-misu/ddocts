@@ -120,10 +120,45 @@ class Documents extends CI_Controller {
             }
 
             $source_doc = $this->input->post('source_doc');
+            $source_div = $this->dts->get_s_division($source_doc)['sd_code_name'];
+
+            switch ($source_doc){
+                case 2:
+                    $dd_text = 'PPRD';
+                break;
+                case 3:
+                    $dd_text = 'LID';
+                break;
+                case 4:
+                    $dd_text = 'MISU';
+                break;
+                case 5:
+                    $dd_text = 'AFD';
+                break;
+                case 6:
+                    $dd_text = 'PAIO';
+                break;
+                case 7:
+                    $dd_text = 'OED';
+                break;
+                case 8:
+                    $dd_text = 'ODED';
+                break;
+                case 9:
+                    $dd_text = 'PMO';
+                break;
+                case 10:
+                    $dd_text = 'MED';
+                break;
+                default:
+                echo "ERROR";
+                break;  
+            }
             $records_id = $this->input->post('records_status');
             
             if($records_id == 0){
                 $source = $this->dts->get_in_ex_source1($source_doc);   
+                // $source_label = $source['ds_code']; // source code number
                 $source_label = $source['ds_code']; // source code number
                 $count = $this->db->from("document_details")->count_all_results();
             }else{
@@ -202,7 +237,7 @@ class Documents extends CI_Controller {
             $subject = "".$doc_no." (Document Notification)";
             $test['doc_title'] = $sub_title;
             $test['doc_number'] = $doc_no;
-            $test['date'] = $daterec;
+            $test['date'] = $datesent;
             $test['staff_id'] = $staff_id; 
             $doc_status1 = '1';
             switch ($doc_status1) {
@@ -359,10 +394,17 @@ class Documents extends CI_Controller {
         $data['action_messages'] = $this->dts->get_document_reply($dd_id);
         $data['type_action_takens'] = $this->dts->get_action_taken();
         $data['staffs'] = $this->dts->get_staff_details(); 
+        $stap = $this->dts->get_staff_details(); 
+        // $data['staffIds'] = array_column($stap, 'staff_id');
+        $staf = $data['doc_details']['dd_routed_to']; 
+        $data['specificValues'] = explode(', ', $staf);
+        // $data['available_staff'] = $this->dts->get_available_staff($dd_id);
 
         //get division per doc details - updated code (Grant)
         $dd_staff = $data['doc_details']['dd_encoded_doc'];
         $data['div'] = $this->dts->get_staff_division($dd_staff);
+        $ddFile = $data['div']['lname'];//get Last Name of the User who creates the route
+        $data['dd_lname'] = str_replace(" ", "_", trim($ddFile));
         $dd_div = $data['div']['division'];
         $data['get_s_division'] = $this->dts->get_s_division($dd_div);
         $division = $data['get_s_division']['sd_code_name'];
@@ -378,7 +420,12 @@ class Documents extends CI_Controller {
         $file_name = trim($v_img, " |");
         $parts = explode("-", $file_name);
         $v_imgs = str_word_count($v_img , 1);
-        $get_img = $v_imgs[0];
+        if($v_imgs == null){//Check if all files in the document is remove
+            $get_img = '';
+        }
+        else{
+            $get_img = $v_imgs[0];
+        }
         $data['divfold'] =$parts[0];
         $data['get'] =$v_imgs;
         $data['get_imgs'] = preg_replace('/- *$/ismU', " ", trim($get_img));
@@ -400,11 +447,18 @@ class Documents extends CI_Controller {
     }
 
     public function complate_doc($dd_id){
+        $doc_reply = $this->dts->get_document_reply($dd_id);
+        
+        if (empty($doc_reply)){
+            $this->session->set_flashdata('error', 'No Conversation or File Uploaded found');
+            redirect(base_url()."admin/Documents/viewDoc/".$dd_id);
+        }
+        else{
+            $this->dts->complate_file($dd_id);
+            $this->session->set_flashdata('success', 'This file has been completed!');
+            redirect(base_url()."admin/Documents/viewDoc/".$dd_id);
+        }
 
-        $this->dts->complate_file($dd_id);
-
-        $this->session->set_flashdata('success', 'This file has been completed!');
-        redirect(base_url()."admin/Documents/viewDoc/".$dd_id);
     }
 
     public function viewDoc_process($dd_id){
@@ -421,7 +475,7 @@ class Documents extends CI_Controller {
         $my_division = $this->input->post('my_div');
         $doc_current_status = $this->input->post('doc_status');  
         $doc_current_action =  implode(', ', $this->input->post('doc_action[]'));
-        $notes = $this->input->post('editor1');
+        $notes = $this->input->post('editorDocAction');
         date_default_timezone_set('Asia/Manila');
         $date_now = date('Y-m-d H:i:s');
 
@@ -687,9 +741,11 @@ class Documents extends CI_Controller {
         $config['remove_spaces'] = TRUE;
         $config['max_size'] = '0';
 
+
+        $uploaderLname = $this->session->userdata('staff_lname'); // get the logged in user's last name
         $token = substr(number_format(time() * rand(),0,'',''),0,6);
         $temp = explode(".", $_FILES["file"]["name"]);
-        $new_name = $lname .'-'.$token . '.' . end($temp);
+        $new_name = $uploaderLname .'-'.$token . '.' . end($temp);
         
         $config['file_name'] = $new_name;
         $this->load->library('upload',$config);
@@ -727,7 +783,7 @@ class Documents extends CI_Controller {
             $this->dts->update_files_array($files_array,$dd_id); 
         }
 
-        $this->session->set_flashdata('deleted', 'File has been deleted successfully...');
+        $this->session->set_flashdata('deleted', 'File has been uploaded successfully...');
         redirect(base_url()."admin/Documents/viewDoc/".$dd_id);
     }
 
@@ -750,6 +806,7 @@ class Documents extends CI_Controller {
  
     public function search_doc(){
         $doc_id = $this->input->post('doc_id');
+        $sess = $this->session->userdata('staff_id');
         $data['get_divs'] = $this->dts->get_docList($doc_id); 
 
         $ducoment_type = $data['get_divs']['dd_doct_type'];
@@ -757,6 +814,7 @@ class Documents extends CI_Controller {
         $ddtitle = $data['get_divs']['dd_title'];
         $dd_source_id = $data['get_divs']['dd_source']; 
         $dd_view_id = $data['get_divs']['dd_view_doc'];
+        $dd_encode = $data['get_divs']['dd_encoded_doc'];
         $taken_id = $data['get_divs']['dd_action_taken'];
         $date = $data['get_divs']['dd_date_encoded'];
         $staff_name = $data['get_divs']['dd_staff_name'];
@@ -806,6 +864,8 @@ class Documents extends CI_Controller {
            'dd_doct_type'   => $dd_document,
            'dd_source'   => $s_name,
            'dd_view_doc'   => $dd_view_id,
+           'dd_encode_doc'   => $dd_encode,
+           'sess'   => $sess,
            'dd_action_taken'   => $a_name,
            'dd_date_routed'   => $date_recieve,
            'dd_staff_name'   => $staff_name,

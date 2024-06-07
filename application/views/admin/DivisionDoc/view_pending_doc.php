@@ -173,7 +173,7 @@
                         <td class="text-center"> <?php $dd_action_taken_id = $post['dd_source']; ?>
                             <?php
                             $dd_action_id = explode(", ", $dd_action_taken_id);
-                            print_r($dd_action_id);
+                           
                             $dd_action_name = '';
                             foreach ($dd_action_id as $mysource) {
                                 $this->load->model('Model_division', 'division');

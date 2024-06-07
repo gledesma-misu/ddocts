@@ -21,12 +21,12 @@
                 <div class="hidden xl:flex flex-col min-h-screen">
                     <a href="" class="-intro-x flex items-center pt-5">
                         <img alt="Rubick Tailwind HTML Admin Template" class="w-6" src="<?php echo base_url('assets/template/dist/images/logo.svg'); ?>">
-                        <span class="text-white text-lg ml-3"> CWC - <span class="font-medium">DDOCTS</span> </span>
+                        <span class="text-white text-lg ml-3"> CWC - <span class="font-medium">DOCTS</span> </span>
                     </a>
                     <div class="my-auto">
                         <img alt="Rubick Tailwind HTML Admin Template" class="-intro-x w-1/2 -mt-16" src="<?php echo base_url('assets/template/dist/images/illustration.svg'); ?>">
-                        <div class="-intro-x text-white font-medium text-4xl leading-tight mt-10">
-                           Document Tracking and Management Systems (DDocTS)
+                        <div class="-intro-x text-white font-medium text-4xl leading-tight mt-10 mr-5">
+                           Document Tracking and Management Systems (DocTS)
                         </div>
                     </div>
                 </div>
@@ -55,7 +55,7 @@
                         <div class="intro-x mt-10 xl:mt-24 text-gray-700 dark:text-gray-600 text-center xl:text-left">
                             Management Information System Unit (MISU)
                             <br>
-                            <a class="text-theme-1 dark:text-theme-10" href="">Version 1.0.0</a>
+                            <a class="text-theme-1 dark:text-theme-10" href="">Version 1.0.1</a>
                         </div>
                     </div>
                 </div>

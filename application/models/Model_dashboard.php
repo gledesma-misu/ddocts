@@ -11,7 +11,8 @@ class Model_dashboard extends CI_Model {
   public function get_my_division($staf_get){
     $this->db->select('*');  
     $this->db->from('document_details');
-    $this->db->like('document_details.dd_routed_to', $staf_get);
+    $this->db->where("FIND_IN_SET('$staf_get', REPLACE(document_details.dd_routed_to, ' ', '')) !=", 0); //updated code find in column and deleted spaces
+    // $this->db->where('document_details.dd_routed_to', $staf_get);
     $this->db->join('document_type', 'document_type.dt_id = document_details.dd_doct_type','left');
     $this->db->order_by("document_details.dd_id", "desc");
     $result = $this->db->get();
@@ -103,7 +104,7 @@ class Model_dashboard extends CI_Model {
   }
 
   public function mysources($mysource){
-    $this->db->select('document_source.ds_id, document_source.ds_code');
+    $this->db->select('document_source.ds_id, document_source.ds_code, document_source.ds_name');
     $this->db->from('document_source');
     $this->db->where('document_source.ds_id', $mysource);
     $this->db->order_by("document_source.ds_id", "desc");
@@ -114,7 +115,8 @@ class Model_dashboard extends CI_Model {
   public function limit_doc($staf_get){
     $this->db->select('*'); 
     $this->db->from('document_details');
-    $this->db->like('document_details.dd_routed_to', $staf_get);
+    $this->db->where("FIND_IN_SET('$staf_get', REPLACE(document_details.dd_routed_to, ' ', '')) !=", 0); 
+    // $this->db->like('document_details.dd_routed_to', $staf_get);
     $this->db->join('document_type', 'document_type.dt_id = document_details.dd_doct_type','left');  
     $this->db->order_by("document_details.dd_id", "desc");
     $this->db->limit(7);

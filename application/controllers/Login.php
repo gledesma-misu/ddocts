@@ -1,45 +1,50 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Login extends CI_Controller {
+class Login extends CI_Controller
+{
 
- 	public function index(){
+    public function index()
+    {
         $session = $this->session->userdata('isLogin');
 
-        if($session == FALSE) {
+        if ($session == FALSE) {
             $this->load->view('login_page');
-        } 
-        else {
-            session_start();
-            redirect('admin/Dashboard');
-        } 
-    }
-
-	public function checklogin(){
-		$this->form_validation->set_rules('username', 'Username', 'trim|required');
-        $this->form_validation->set_rules('password', 'Password', 'trim|required|callback_verifylogin');
-        
-        if($this->form_validation->run() == FALSE) {
-            echo '<script> console.log("sss") </script>';
-            $data['error'] = '2'; 
-            $this->load->view('login_page',$data);
-            $this->session->sess_destroy();
-        } 
-        else {
+        } else {
+            if (!isset($_SESSION)) {
+                session_start();
+            }
+            // session_start();
             redirect('admin/Dashboard');
         }
-	}
+    }
 
-    public function verifylogin(){
+    public function checklogin()
+    {
+        $this->form_validation->set_rules('username', 'Username', 'trim|required');
+        $this->form_validation->set_rules('password', 'Password', 'trim|required|callback_verifylogin');
+
+        if ($this->form_validation->run() == FALSE) {
+            echo '<script> console.log("sss") </script>';
+            $data['error'] = '2';
+            $this->load->view('login_page', $data);
+            $this->session->sess_destroy();
+        } else {
+            redirect('admin/Dashboard');
+        }
+    }
+
+    public function verifylogin()
+    {
         $username = $this->input->post('username');
         $password = md5($this->input->post('password'));
 
         //Load the Login model for database check
         $this->load->model('Model_login', 'login');
-        $result = $this->login->login($username,$password);
-        
-        if($result != false){
-            foreach ($result as $user){
+        $result = $this->login->login($username, $password);
+
+        if ($result != false) {
+            foreach ($result as $user) {
                 $s['id'] = $user->id;
                 $s['su'] = $user->su;
                 $s['password'] = $user->password;
@@ -57,19 +62,19 @@ class Login extends CI_Controller {
                 $this->session->set_userdata($s);
                 $su = $this->session->userdata('su');
 
-               
-                $message = '1'; 
+
+                $message = '1';
                 $this->session->set_flashdata('message', $message);
             }
 
-            if($su == 1){
+            if ($su == 1) {
                 $this->session->set_flashdata('email_notif', 'Account has been Deactivated!');
                 return false;
-            }else{
+            } else {
                 return true;
             }
-        }else{
-           
+        } else {
+
             $this->session->set_flashdata('email_notif', 'Incorrect Username or Password! Please try again.');
             return false;
         }
@@ -115,7 +120,7 @@ class Login extends CI_Controller {
 
     //                 return true;  
     //             }
- 
+
     //         }else{
     //             $this->session->set_flashdata('error', 'Incorrect Username or Password! Please try again...');
     //             return false;

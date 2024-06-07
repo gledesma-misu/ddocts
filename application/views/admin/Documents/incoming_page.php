@@ -38,7 +38,7 @@
           </div>
             <!-- BEGIN: HTML Table Data -->
             <div class="intro-y overflow-auto lg:overflow-visible mt-8 sm:mt-0">
-                <table class="table table-report sm:mt-2">
+                <table  class="table table-report sm:mt-2">
                     <thead>
                         <tr>
                             <th class="whitespace-nowrap">Document No.</th>
@@ -48,7 +48,7 @@
                             <th class="text-center whitespace-nowrap">Routed To</th>
                             <th class="text-center whitespace-nowrap">Date Sent</th>
                             <th class="text-center whitespace-nowrap">Date Received</th>
-                            <th class="text-center whitespace-nowrap">Concerned Staff</th>
+                            <th class="text-center whitespace-nowrap">Concerned Staff/s</th>
                             <th class="text-center whitespace-nowrap">Doc. Status</th>
                             <th class="text-center whitespace-nowrap">Action</th>
                         </tr>
@@ -87,7 +87,7 @@
                             <td class="text-center"> <?php echo $post['dd_view_doc']; ?> </td>
 
                             <td class="text-center">
-                                <?php $date = $post['dd_date_encoded'];  
+                                <?php $date = $post['dd_date_recieved'];  
                                 $datepicker = date("M-d-Y h:i A", strtotime($date)); ?>
                                 <?php echo $datepicker; ?>
                             </td>

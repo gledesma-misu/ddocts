@@ -57,38 +57,13 @@
                                     <div class="ml-4 mr-auto">
                                         <a href="" class="font-medium">Staff Division</a>
                                         <div class="text-gray-600 mr-5 sm:mr-5">
-                                            <?php switch ($this->session->userdata('staff_division')) {
-                                                case 2:
-                                                    echo "Policy Planning and Research Division";
-                                                    break;
-                                                case 3:
-                                                    echo "Localization and Institutional Division";
-                                                    break;
-                                                case 4:
-                                                    echo "Management Information Systems Unit";
-                                                    break;
-                                                case 5:
-                                                    echo "Administrative Finance and Division";
-                                                    break;
-                                                case 6:
-                                                    echo "Public Affairs and Information Office";
-                                                    break;
-                                                case 7:
-                                                    echo "Office of the Executive Director";
-                                                    break;
-                                                case 8:
-                                                    echo "Office of the Deputy Executive Director";
-                                                    break;
-                                                case 9:
-                                                    echo "Project Management Office";
-                                                    break;
-                                                case 10:
-                                                    echo "Monitoring and Evalution Division";
-                                                    break;
-                                                default:
-                                                    echo "ERROR";
-                                                    break;
-                                            } ?>
+                                            <?php
+                                                $source = $this->dashboard->mysources($this->session->userdata('staff_division'));
+
+                                                echo $source['ds_name'];
+                                             
+                                            ?>
+                                            
                                         </div>
                                     </div>
                                 </div>
@@ -149,41 +124,16 @@
                                 </div>
                                 <div class="form-inline mt-3">
                                     <label for="p_div" class="form-label sm:w-40" style="text-align: left;">Staff Division</label>
-                                    <?php switch ($this->session->userdata('staff_division')) {
-                                        case 2:
-                                            $Exist = "Policy, Planning, and Research Division";
-                                            break;
-                                        case 3:
-                                            $Exist = "Localization and Institutionalization Division";
-                                            break;
-                                        case 4:
-                                            $Exist = "Management Information Systems Unit";
-                                            break;
-                                        case 5:
-                                            $Exist = "Administrative Finance and Division";
-                                            break;
-                                        case 6:
-                                            $Exist = "Public Affairs and Information Office";
-                                            break;
-                                        case 7:
-                                            $Exist = "Office of the Executive Director";
-                                            break;
-                                        case 8:
-                                            $Exist = "Office of the Deputy Executive Director";
-                                            break;
-                                        case 9:
-                                            $Exist = "Project Management Office";
-                                            break;
-                                        case 10:
-                                            $Exist = "Monitoring and Evaluation Division";
-                                            break;
-                                        default:
-                                            $Exist = "ERROR";
-                                            break;
-                                    } ?>
-                                    <select data-placeholder="<?php $Exist; ?>" data-search="true" class="tail-select w-full form-control" id="p_div" name="p_div" required>
-                                        <optgroup label="Required Actions">
-                                            <option value="">Existing: <?php echo $Exist; ?></option>
+                                    <?php
+                                                $source = $this->dashboard->mysources($this->session->userdata('staff_division'));
+                                                $dd_id = $source['ds_code'];
+                                                $Exist = $source['ds_name'];
+                                             
+                                            ?>
+     
+                                    <select data-placeholder="<?php $Exist; ?>" data-search="true" class="w-full form-control" id="p_div" name="p_div" required>
+                                        <option value="<?php echo $dd_id; ?>" selected><?php echo $Exist; ?></option>
+                                        <!-- <option value="">Existing: <?php echo $Exist; ?></option>
                                             <option value="2">Policy Planning and Research Division</option>
                                             <option value="3">Localization and Institutionalization Division</option>
                                             <option value="4">Management Information System Unit</option>
@@ -192,8 +142,7 @@
                                             <option value="7">Office of the Executive Director</option>
                                             <option value="8">Office of the Deputy Executive Director</option>
                                             <option value="9">Project Management Office</option>
-                                            <option value="10">Monitoring and Evaluation Division</option>
-                          
+                                            <option value="10">Monitoring and Evaluation Division</option> -->
                                         </optgroup>
                                     </select>
                                 </div>
@@ -204,7 +153,7 @@
                                 <input type="hidden" id="staff_id" name="staff_id" value="<?= $this->session->userdata('staff_id'); ?>">
                                 <div class="form-inline mt-3">
                                     <label for="p_position" class="form-label sm:w-40" style="text-align: left;">Staff Postion</label>
-                                    <input id="p_position" name="p_position" type="text" class="form-control" placeholder="Enter Official Email" value="<?= $this->session->userdata('staff_position'); ?>" required>
+                                    <input id="p_position" name="p_position" type="text" class="form-control" placeholder="Enter Official Email" value="<?= $this->session->userdata('staff_position'); ?>" required disabled>
                                 </div>
                                 <div class="form-inline py-5 sm:py-3 border-b border-gray-200 dark:border-dark-5">
                                     <label for="p_position_title" class="form-label sm:w-40" style="text-align: left;">Staff Postion Title</label>
@@ -294,7 +243,7 @@
                     myApp.hidePreloader();
                 }, 3000);
                 Swal.fire(
-                    'SECCESSFUL',
+                    'SUCCESSFUL',
                     'Profile Information Updated Successfully!',
                     'success'
                 );
@@ -338,7 +287,7 @@
                         myApp.hidePreloader();
                     }, 3000);
                     Swal.fire(
-                        'SECCESSFUL',
+                        'SUCCESSFUL',
                         'Change Password Updated Successfully!',
                         'success'
                     );

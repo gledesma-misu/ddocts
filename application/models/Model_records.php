@@ -15,7 +15,7 @@ class Model_records extends CI_Model {
     public function mysources($mysource){
 	    $this->db->select('document_source.ds_id, document_source.ds_code, document_source.ds_name');
 	    $this->db->from('document_source');
-	    $this->db->like('document_source.ds_id', $mysource);
+	    $this->db->where('document_source.ds_id', $mysource);
 	    $this->db->order_by("document_source.ds_id", "desc");
 	    $result = $this->db->get();
 	    return $result->row_array();

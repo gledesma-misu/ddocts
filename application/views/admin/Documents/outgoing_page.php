@@ -48,7 +48,7 @@
                             <th class="text-center whitespace-nowrap">Routed To</th>
                             <th class="text-center whitespace-nowrap">Date Sent</th>
                             <th class="text-center whitespace-nowrap">Date Received</th>
-                            <th class="text-center whitespace-nowrap">Concerned Staff</th>
+                            <th class="text-center whitespace-nowrap">Concerned Staff/s</th>
                             <th class="text-center whitespace-nowrap">Doc. Status</th>
                             <th class="text-center whitespace-nowrap">Action</th>
                         </tr>
@@ -86,7 +86,7 @@
                               ?></td>
                             <td class="text-center"> <?php echo $post['dd_view_doc']; ?> </td>
                             <td class="text-center">
-                                <?php $date = $post['dd_date_encoded'];  
+                                <?php $date = $post['dd_date_recieved'];  
                                 $datepicker = date("M-d-Y h:i A", strtotime($date)); ?>
                                 <?php echo $datepicker; ?>
                             </td>

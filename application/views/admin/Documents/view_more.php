@@ -93,7 +93,7 @@
                                      <div class="flex items-center">
                                          <div class="font-medium text-lg">Please select document!</div>
                                      </div>
-                                     <div class="mt-3">Document Cannot found please select atless one.</div>
+                                     <div class="mt-3">Document Cannot found please select atleast one.</div>
                                  </div>
                                  </div>
                                 
@@ -163,7 +163,7 @@
 $(".docdata").click(function(){ 
  var id = $(this).attr('id');
  var doc_id = id.replace("show",'');
- // alert(doc_id);
+//  alert(doc_id);
  $.showLoading({name: 'line-pulse', allowHide: false });
     $.ajax({
         url:"<?php echo base_url('admin/Documents/search_doc');?>",
@@ -171,10 +171,19 @@ $(".docdata").click(function(){
         dataType: 'JSON',
         type:"POST",
         success: function(result){
-            // console.log(result);
+            console.log(result);
+            var button;
             var obj = JSON.parse(JSON.stringify(result));
             setTimeout(function() { $.hideLoading(); }, 500);
             var numResult = obj.length;
+            // console.log(obj.sess + ' ' + obj.dd_encode_doc);
+            if (obj.dd_encode_doc != obj.sess){
+                button = '<a class="btn btn-outline-primary w-34 inline-block mr-1 mb-2" href="javascript:;" data-toggle="modal" data-target="#Recieve`+obj.dd_id+`">Recieve</a>';
+            }
+            else {
+                button = ''
+            }
+ 
             if(numResult == null){
             $("#result").html(`<div class="overflow-x-auto" id="result">
                     <table class="table">
@@ -235,7 +244,7 @@ $(".docdata").click(function(){
                             </tr>
                             <tr>
                                 <td class="border-b dark:border-dark-5">
-                                    <div class="font-medium whitespace-nowrap">Concern Staff</div>
+                                    <div class="font-medium whitespace-nowrap">Concern Staff/s</div>
                                 </td>
                                 <td class="text-right border-b dark:border-dark-5">
                                 `+obj.dd_staff_name+`
@@ -253,7 +262,7 @@ $(".docdata").click(function(){
                     </table>
                 </div>
                 <div class="flex justify-end mt-4">
-                <a class="btn btn-outline-primary w-34 inline-block mr-1 mb-2" href="javascript:;" data-toggle="modal" data-target="#Recieve`+obj.dd_id+`">Recieve</a>
+                    `+button+` 
                 </div>`); 
             }
         }

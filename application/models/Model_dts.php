@@ -54,7 +54,7 @@ class Model_dts extends CI_Model {
 	public function get_staff_division($dd_folder){
 		$this->db->select('*');
 	  	$this->db->from('staff_details');
-	  	$this->db->like('staff_details.staff_id',$dd_folder);
+	  	$this->db->where('staff_details.staff_id',$dd_folder);
 	  	$this->db->order_by("staff_details.staff_id", "desc");
 	  	$result = $this->db->get();
 		return $result->row_array();
@@ -63,7 +63,7 @@ class Model_dts extends CI_Model {
 	public function routed_details($myid){
 	    $this->db->select('staff_details.staff_id, staff_details.fname, staff_details.lname, staff_details.official_email');
 	    $this->db->from('staff_details');
-	    $this->db->like('staff_details.staff_id', $myid);
+	    $this->db->where('staff_details.staff_id', $myid);
 	    $this->db->order_by("staff_details.staff_id", "desc");
 	    $result = $this->db->get();
 	    return $result->row_array();
@@ -157,7 +157,7 @@ class Model_dts extends CI_Model {
 	public function get_bundle($dd_docbundle_ge){
 	    $this->db->select('*');
 	    $this->db->from('document_type');
-	    $this->db->like('document_type.dt_id', $dd_docbundle_ge);
+	    $this->db->where('document_type.dt_id', $dd_docbundle_ge);
 	    $this->db->order_by("document_type.dt_id", "desc");
 	    $result = $this->db->get();
 	    return $result->row_array();
@@ -185,7 +185,7 @@ class Model_dts extends CI_Model {
 	public function view_get_details($dd_id){
 	    $this->db->select('*');
 	    $this->db->from('document_details');
-	    $this->db->like('document_details.dd_id', $dd_id);
+	    $this->db->where('document_details.dd_id', $dd_id);
 	    $this->db->join('document_type', 'document_type.dt_id = document_details.dd_doct_type','left');
 	    $result = $this->db->get();
 	    return $result->row_array();
@@ -444,7 +444,8 @@ class Model_dts extends CI_Model {
 	public function get_my_division($staff){
 	    $this->db->select('*');
 	    $this->db->from('document_details');
-	    $this->db->like('document_details.dd_routed_to', $staff);
+	    $this->db->where("FIND_IN_SET('$staff', REPLACE(document_details.dd_routed_to, ' ', '')) !=", 0);//updated code find in column and deleted spaces
+	   // $this->db->like('document_details.dd_routed_to', $staff);
 	    $this->db->join('document_type', 'document_type.dt_id = document_details.dd_doct_type','left');
 	    $this->db->order_by("document_details.dd_id", "desc");
 	    $result = $this->db->get();
@@ -455,7 +456,8 @@ class Model_dts extends CI_Model {
 
         $this->db->select('*'); 
         $this->db->where('document_details.dd_recieved_doc', '1');
-        $this->db->like('document_details.dd_routed_to', $staff);
+        $this->db->where("FIND_IN_SET('$staff', REPLACE(document_details.dd_routed_to, ' ', '')) !=", 0);//updated code find in column and deleted spaces
+        // $this->db->like('document_details.dd_routed_to', $staff);
         $this->db->join('document_type', 'document_type.dt_id = document_details.dd_doct_type','left');
 		$this->db->order_by("document_details.dd_id", "desc");
         $this->db->limit($limit, $start);
@@ -467,14 +469,17 @@ class Model_dts extends CI_Model {
         $this->db->select('*'); 
         $this->db->where('document_details.dd_recieved_doc', '1');
 		$this->db->where('dd_status !=', '4');
-        $this->db->like('document_details.dd_routed_to', $staff);
+		$this->db->where("FIND_IN_SET('$staff', REPLACE(document_details.dd_routed_to, ' ', '')) !=", 0); //updated code find in column and deleted spaces
+        // $this->db->like('document_details.dd_routed_to', $staff);
         return $this->db->count_all_results('document_details');
     }
 
 	public function search_incoming_doc($search,$staff){
 
 		$this->db->select('*');
-		$this->db->like('dd_routed_to', $staff);
+// 		$this->db->from('document_details');
+		$this->db->where("FIND_IN_SET('$staff', REPLACE(document_details.dd_routed_to, ' ', '')) !=", 0); //updated code find in column and deleted spaces
+// 		$this->db->like('dd_routed_to', $staff);
 		$this->db->where('dd_recieved_doc', '1');
 		$this->db->where('dd_status !=', '4');
 		$this->db->like('dd_doc_id_code',$search);
@@ -488,7 +493,8 @@ class Model_dts extends CI_Model {
 		$this->db->select('*'); 
         $this->db->where('document_details.dd_recieved_doc', '1');
 		$this->db->where('dd_status !=', '4');
-        $this->db->like('document_details.dd_routed_to', $staff);
+		$this->db->where("FIND_IN_SET('$staff', REPLACE(document_details.dd_routed_to, ' ', '')) !=", 0); //updated code find in column and deleted spaces
+        // $this->db->like('document_details.dd_routed_to', $staff);
         return $this->db->count_all_results('document_details');
     }
 
@@ -498,7 +504,7 @@ class Model_dts extends CI_Model {
 		$this->db->select('*'); 
         $this->db->where('document_details.dd_recieved_doc', '1');
 		$this->db->where('dd_status', '4');
-        $this->db->like('document_details.dd_routed_to', $staff);
+        $this->db->where('document_details.dd_routed_to', $staff);
         return $this->db->count_all_results('document_details');
     }
 
@@ -506,7 +512,8 @@ class Model_dts extends CI_Model {
 
         $this->db->select('*'); 
         $this->db->where('document_details.dd_recieved_doc', '1');
-        $this->db->like('document_details.dd_routed_to', $staff);
+        $this->db->where("FIND_IN_SET('$staff', REPLACE(document_details.dd_routed_to, ' ', '')) !=", 0);
+        // $this->db->like('document_details.dd_routed_to', $staff);
 		$this->db->where('dd_status', '4');
         $this->db->join('document_type', 'document_type.dt_id = document_details.dd_doct_type','left');
 		$this->db->order_by("document_details.dd_id", "desc");
@@ -541,7 +548,8 @@ class Model_dts extends CI_Model {
 	public function count_recieve($staff_recieve){
         $recieve = '0';
         $disregard = '0';
-        $this->db->like('document_details.dd_routed_to', $staff_recieve);
+        $this->db->where("FIND_IN_SET('$staff_recieve', REPLACE(document_details.dd_routed_to, ' ', '')) !=", 0); //updated code find in column and deleted spaces
+        // $this->db->where('document_details.dd_routed_to', $staff_recieve);
         $this->db->where('document_details.dd_recieved_doc', $recieve);
         $this->db->where('document_details.dd_disregard_doc', $disregard);
         $this->db->from('document_details');

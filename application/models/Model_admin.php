@@ -166,6 +166,15 @@ class Model_admin extends CI_Model {
 		return $result->result_array();
 	}
 
+	public function get_staff_division($division){
+		$this->db->select('*');
+	  	$this->db->from('staff_division');
+	  	$this->db->where('staff_division.sd_code',$division);
+	  	$this->db->order_by("staff_division.sd_id", "desc");
+	  	$result = $this->db->get();
+		return $result->row_array();
+  	}
+
 	public function getstaff_id(){
 		$this->db->select('*');
 	    $this->db->from('staff_details');
@@ -184,7 +193,7 @@ class Model_admin extends CI_Model {
 		return $result->result_array();
 	}
 
-	public function insertnewstaff($username,$password,$text_pass,$email,$fname,$lname,$address,$em_no,$gender,$em_position,$dob,$division,$staff_id){
+	public function insertnewstaff($username,$password,$text_pass,$email,$fname,$lname,$address,$em_no,$gender,$em_position,$dob,$division,$division_code,$staff_id){
 
 		date_default_timezone_set('Asia/Manila');  
 		$date_now = date('Y-m-d H:i:s', time());
@@ -198,38 +207,6 @@ class Model_admin extends CI_Model {
 		);
 	 	$this->db->insert('document_history', $data1);
 
-		 switch ($division){
-			case 2:
-				$get_division =  "PPRD";
-			break;
-			case 3:
-				$get_division =  "LID";
-			break;
-			case 4:
-				$get_division =  "MISU";
-			break;
-			case 5:
-				$get_division =  "AFD";
-			break;
-			case 6:
-				$get_division =  "PAIO";
-			break;
-			case 7:
-				$get_division =  "OED";
-			break;
-			case 8:
-				$get_division =  "ODED";
-			break;			
-			case 9:
-				$get_division =  "PMO";
-			break;
-			case 10:
-				$get_division =  "MED";
-			break;		
-			default: 
-				$get_division =  "ERROR";
-			break;  
-		}
 
 		$data = array(
 			'username' => $username, 
@@ -243,7 +220,7 @@ class Model_admin extends CI_Model {
 			'gender' => $gender,
 			'position' => $em_position,
 			'dob' => $dob,
-			'division' => $get_division,
+			'division' => $division_code,
 			'staff_id_account' => $staff_id,
 			'reg_date' => $date_now
         );
@@ -281,47 +258,14 @@ class Model_admin extends CI_Model {
 		$this->db->update('account');
 	}
 
-	public function updateAccount($fname,$lname,$em_no,$position,$email,$division,$staff_id){
-
-		switch ($division){
-			case 2:
-				$get_division =  "PPRD";
-			break;
-			case 3:
-				$get_division =  "LID";
-			break;
-			case 4:
-				$get_division =  "MISU";
-			break;
-			case 5:
-				$get_division =  "AFD";
-			break;
-			case 6:
-				$get_division =  "PAIO";
-			break;
-			case 7:
-				$get_division =  "OED";
-			break;
-			case 8:
-				$get_division =  "ODED";
-			break;			
-			case 9:
-				$get_division =  "PMO";
-			break;
-			case 10:
-				$get_division =  "MED";
-			break;		
-			default: 
-				$get_division =  "ERROR";
-			break;  
-		}	
+	public function updateAccount($fname,$lname,$em_no,$position,$email,$division,$division_code,$staff_id){
 		
 		$this->db->set('fname', $fname);
 		$this->db->set('lname', $lname);
 		$this->db->set('employee_no', $em_no);
 		$this->db->set('position', $position);
 		$this->db->set('email', $email);
-		$this->db->set('division', $get_division);
+		$this->db->set('division', $division_code);
 		$this->db->where('staff_id_account', $staff_id);
 		$this->db->update('account');
 

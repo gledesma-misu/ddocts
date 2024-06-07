@@ -173,12 +173,13 @@ class Administrator extends CI_Controller {
         $gender = $this->input->post('gender');
         $em_position = $this->input->post('em_position'); 
         $dob = $this->input->post('dob');
-        $division = $this->input->post('division'); 
+        $get_division = $this->admin->get_staff_division($this->input->post('division'));
         $staff_id = $this->input->post('staff_id');
 
 
-
-        $this->admin->insertnewstaff($username,$password,$text_pass,$email,$fname,$lname,$address,$em_no,$gender,$em_position,$dob,$division,$staff_id);
+        $division = $get_division['sd_code'];
+        $division_code = $get_division['sd_code_name'];
+        $this->admin->insertnewstaff($username,$password,$text_pass,$email,$fname,$lname,$address,$em_no,$gender,$em_position,$dob,$division,$division_code,$staff_id);
         // Set message 
         $this->session->set_flashdata('success', 'New staff has been Added!');
 
@@ -217,10 +218,12 @@ class Administrator extends CI_Controller {
         $em_no = $this->input->post('em_no'); 
         $position = $this->input->post('position');
         $email = $this->input->post('email');
-        $division = $this->input->post('division'); 
+        $get_division = $this->admin->get_staff_division($this->input->post('division'));
         $staff_id = $this->input->post('get_id');
 
-        $this->admin->updateAccount($fname,$lname,$em_no,$position,$email,$division,$staff_id);
+        $division = $get_division['sd_code'];
+        $division_code = $get_division['sd_code_name'];
+        $this->admin->updateAccount($fname,$lname,$em_no,$position,$email,$division,$division_code,$staff_id);
         // Set message 
         $this->session->set_flashdata('success', 'Account has been updated!');
 
