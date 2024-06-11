@@ -26,7 +26,7 @@
           <div class="intro-y block sm:flex items-center h-10 mt-8">
               <h2 class="text-lg font-medium truncate mr-5">
                  Completed Document
-              </h2>
+              </h2>          
               <div class="flex items-center sm:ml-auto mt-3 sm:mt-0">
                     <?php echo form_open('admin/Documents/search_outgoing') ?>
                     <div class="relative text-gray-700 dark:text-gray-300">
@@ -35,6 +35,17 @@
                     </div>
                     <?php echo form_close(); ?>
               </div>
+          </div>
+          <div class="row">
+                    <?php echo form_open('admin/Documents/search_outgoing') ?>
+                    <div class="relative text-gray-700 dark:text-gray-300">
+                    <label for="type_doc" class="form-label sm:w-40" style="text-align: left;">Type of Document</label>
+                    <select id="type_doc" name="type_doc" class="tail-select w-full form-control">
+                            <option value="0">Incoming</option>
+                            <option value="1">Outgoing</option>
+                    </select>
+                    </div>
+                    <?php echo form_close(); ?>
           </div>
             <!-- BEGIN: HTML Table Data -->
             <div class="intro-y overflow-auto lg:overflow-visible mt-8 sm:mt-0">
@@ -54,7 +65,9 @@
                         </tr>
                     </thead>
                     <tbody>
+                       
                       <?php if(is_array($posts)&&(count($posts)))
+                      
                         foreach($posts as $post): ?>
                         <?php if ($post['dd_status'] == 4 || $post['dd_status'] == 0): ?>
                         <tr class="intro-x">
