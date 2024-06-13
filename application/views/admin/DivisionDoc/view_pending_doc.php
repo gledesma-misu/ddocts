@@ -153,6 +153,7 @@
                     } ?>
                 </tr>
             </thead>
+
             <tbody>
                 <?php if (is_array($posts) && (count($posts)))
                     foreach ($posts as $post) : ?>

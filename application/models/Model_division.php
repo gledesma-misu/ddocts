@@ -4,7 +4,7 @@ class Model_division extends CI_Model {
 
 
     public function get_division_all($staff_division){
-	    $this->db->select('ds.code');
+	    $this->db->select('*');
         $this->db->from('document_source');
         $this->db->where('document_source.ds_id', $staff_division);
         $this->db->order_by("document_source.ds_id", "desc");
