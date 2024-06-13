@@ -2,6 +2,16 @@
 
 class Model_division extends CI_Model {
 
+
+    public function get_division_all($staff_division){
+	    $this->db->select('*');
+        $this->db->from('document_source');
+        $this->db->where('document_source.ds_id', $staff_division);
+        $this->db->order_by("document_source.ds_id", "desc");
+        $result = $this->db->get();
+		return $result->row_array();
+  	}
+
     // pending page
 
     public function count_doc_pending($Exist){ 
@@ -17,7 +27,7 @@ class Model_division extends CI_Model {
         $this->db->select('*'); 
         $this->db->where('dd_status !=', '4');
         $this->db->where('document_details.dd_recieved_doc', '1');
-        $this->db->like('document_details.dd_view_doc', $Exist);
+        $this->db->where('document_details.dd_view_doc', $Exist);
         $this->db->join('document_type', 'document_type.dt_id = document_details.dd_doct_type','left');
 		$this->db->order_by("document_details.dd_id", "desc");
         $this->db->limit($limit, $start);
@@ -28,7 +38,7 @@ class Model_division extends CI_Model {
     public function mysources($mysource){
 	    $this->db->select('document_source.ds_id, document_source.ds_code');
 	    $this->db->from('document_source');
-	    $this->db->like('document_source.ds_id', $mysource);
+	    $this->db->where('document_source.ds_id', $mysource);
 	    $this->db->order_by("document_source.ds_id", "desc");
 	    $result = $this->db->get();
 	    return $result->row_array();

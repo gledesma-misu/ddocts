@@ -1,4 +1,4 @@
- <?php
+<?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
 class DivisionDoc extends CI_Controller
@@ -377,44 +377,44 @@ class DivisionDoc extends CI_Controller
     // ==============================================================================================================================
     public function pending()
     {
-        switch ($this->session->userdata('staff_division')) {
-            case 2:
-                $Exist = "PPRD";
-                break;
-            case 3:
-                $Exist = "LID";
-                break;
-            case 4:
-                $Exist = "MISU";
-                break;
-            case 5:
-                $Exist = "AFD";
-                break;
-            case 6:
-                $Exist = "PAIO";
-                break;
-            case 7:
-                $Exist = "OED";
-                break;
-            case 8:
-                $Exist = "ODED";
-                break;
-            case 9:
-                $Exist = "PMO";
-                break;
-            case 10:
-                $Exist = "MED";
-                break;
-            default:
-                $Exist = "ERROR";
-                break;
-        }
+        // switch ($this->session->userdata('staff_division')) {
+        //     case 2:
+        //         $Exist = "PPRD";
+        //         break;
+        //     case 3:
+        //         $Exist = "LID";
+        //         break;
+        //     case 4:
+        //         $Exist = "MISU";
+        //         break;
+        //     case 5:
+        //         $Exist = "AFD";
+        //         break;
+        //     case 6:
+        //         $Exist = "PAIO";
+        //         break;
+        //     case 7:
+        //         $Exist = "OED";
+        //         break;
+        //     case 8:
+        //         $Exist = "ODED";
+        //         break;
+        //     case 9:
+        //         $Exist = "PMO";
+        //         break;
+        //     case 10:
+        //         $Exist = "MED";
+        //         break;
+        //     default:
+        //         $Exist = "ERROR";
+        //         break;
+        // }
 
-
+        $Exist = $this->division->get_division_all($this->session->userdata('staff_division'));
 
         $config = array();
         $config["base_url"] = base_url() . "admin/DivisionDoc/pending";
-        $config["total_rows"] = $this->division->count_doc_pending($Exist);
+        $config["total_rows"] = $this->division->count_doc_pending($Exist['ds_code']);
         $config["per_page"] = 10;
         $config["uri_segment"] = 4;
         $config['first_link'] = 'First';
@@ -438,8 +438,8 @@ class DivisionDoc extends CI_Controller
 
         $this->pagination->initialize($config);
         $page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
-        $data['posts'] = $this->division->get_doc_pending($config["per_page"], $page, $Exist);
-        $data['get_id_staffs'] = $this->division->get_my_division($Exist);
+        $data['posts'] = $this->division->get_doc_pending($config["per_page"], $page, $Exist['ds_code']);
+        $data['get_id_staffs'] = $this->division->get_my_division($Exist['ds_code']);
 
         $this->parser->parse('admin/DivisionDoc/view_pending_doc', $data);
     }
