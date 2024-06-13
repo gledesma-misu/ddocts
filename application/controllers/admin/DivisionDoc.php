@@ -414,7 +414,7 @@ class DivisionDoc extends CI_Controller
 
         $config = array();
         $config["base_url"] = base_url() . "admin/DivisionDoc/pending";
-        $config["total_rows"] = $this->division->count_doc_pending($Exist['ds_code']);
+        $config["total_rows"] = $this->division->count_doc_pending($Exist['d_code']);
         $config["per_page"] = 10;
         $config["uri_segment"] = 4;
         $config['first_link'] = 'First';
