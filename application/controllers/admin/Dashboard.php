@@ -26,6 +26,9 @@ class Dashboard extends CI_Controller {
         $data['limit_docs'] = $this->dashboard->limit_doc($staf_get);
         
         $data['staffs'] = $this->dashboard->get_staff_details(); 
+
+        $data['incoming_doc'] = $this->dashboard->get_incoming($staf_get); 
+        $data['outgoing_doc'] = $this->dashboard->get_outgoing($staf_get); 
         
         $this->load->view('admin/dashboard_page', $data);
     }

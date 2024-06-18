@@ -28,15 +28,6 @@
             Completed Document
         </h2>
         <div class="flex items-center sm:ml-auto mt-3 sm:mt-0">
-            <?php echo form_open('admin/Documents/filter_outgoing') ?>
-            <div class="relative text-gray-700 dark:text-gray-300 mr-3">
-                <select class="tail-select w-full form-control" id="filter_doc" name="filter_doc">
-                    <option value="0">Incoming</option>
-                    <option value="1">Outgoing</option>
-                </select>
-
-            </div>
-            <?php echo form_close(); ?>
             <?php echo form_open('admin/Documents/search_outgoing') ?>
             <div class="relative text-gray-700 dark:text-gray-300">
                 <input type="text" class="form-control py-3 px-4 w-full lg:w-64 box pr-10 placeholder-theme-13" id="search_doc" name="search_doc" placeholder="Search Doc ID...">
@@ -46,6 +37,18 @@
 
         </div>
     </div>
+    <!-- <div class="intro-y block sm:flex items-center h-10 mt-8">
+        <div class="relative text-gray-700 dark:text-gray-300 mr-3">
+            <label for="filter_doc" class="form-label mr-3 mb-2">Filter Document</label>
+            <?php echo form_open('admin/Documents/filter_docs'); ?>
+            <select class="tail-select w-full form-control" id="filter_doc" name="filter_doc">
+                <option value="0">Overall</option>
+                <option value="1">Incoming</option>
+                <option value="2">Outgoing</option>
+            </select>
+            <?php echo form_close(); ?>
+        </div>
+    </div> -->
     <!-- BEGIN: HTML Table Data -->
     <div class="intro-y overflow-auto lg:overflow-visible mt-8 sm:mt-0">
         <table class="table table-report sm:mt-2">
@@ -320,3 +323,4 @@
         jQuery('#success-notification-toggle').click();
     });
 </script>
+

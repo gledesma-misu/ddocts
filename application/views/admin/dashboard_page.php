@@ -15,6 +15,20 @@
                         <a href="<?= base_url('admin/dashboard'); ?>" class="ml-auto flex items-center text-theme-1 dark:text-theme-10"> <i data-feather="refresh-ccw" class="w-4 h-4 mr-3"></i> Reload Data </a>
                     </div>
                     <div class="grid grid-cols-12 gap-6 mt-5">
+                        <div class="sm:col-span-6 xl:col-span-2 intro-y" >
+                            <div class="box zoom-in">
+                                <div class="box p-2">
+                                    <i data-feather="file-text" class="report-box__icon text-theme-10"></i>
+                                    <div class="text-base font-light">Incoming Documents - <?php echo count($incoming_doc); ?></div>
+                                </div>
+                            </div>
+                            <div class="box zoom-in mt-3">
+                                <div class="box p-2">
+                                    <i data-feather="file-text" class="report-box__icon text-theme-10"></i>
+                                    <div class="text-base font-light ">Outgoing Documents - <?php echo count($outgoing_doc); ?></div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-span-12 sm:col-span-6 xl:col-span-3 intro-y">
                             <div class="report-box zoom-in">
                                 <a href="<?= base_url('admin/documents'); ?>">
@@ -27,7 +41,7 @@
                                 </a>
                             </div>
                         </div>
-                        <div class="col-span-12 sm:col-span-6 xl:col-span-3 intro-y">
+                        <div class="col-span-12 sm:col-span-6 xl:col-span-2 intro-y">
                             <div class="report-box zoom-in">
                                 <a href="<?= base_url('admin/documents/incoming'); ?>">
                                     <div class="box p-5">
@@ -39,7 +53,7 @@
                                 </a>
                             </div>
                         </div>
-                        <div class="col-span-12 sm:col-span-6 xl:col-span-3 intro-y">
+                        <div class="col-span-12 sm:col-span-6 xl:col-span-2 intro-y">
                             <div class="report-box zoom-in">
                                 <a href="<?= base_url('admin/documents/outgoing'); ?>">
                                     <div class="box p-5">
@@ -64,6 +78,7 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
                 <!-- END: four box button -->
 
@@ -155,12 +170,12 @@
                                                                     <!-- END: Modal Header -->
                                                                     <!-- BEGIN: Modal Body -->
                                                                     <div class="modal-body grid grid-cols-12 gap-4 gap-y-3">
-                                                                       
+
                                                                         <?php
-                                                                            $source = $this->dashboard->mysources($this->session->userdata('staff_division'));
-                                                                        
-                                                                            $my_disvision = $source['ds_name'];
-                                                                            $my_div = $source['ds_code'];
+                                                                        $source = $this->dashboard->mysources($this->session->userdata('staff_division'));
+
+                                                                        $my_disvision = $source['ds_name'];
+                                                                        $my_div = $source['ds_code'];
                                                                         ?>
                                                                         <div class="col-span-12 sm:col-span-12">
                                                                             <label for="get_my_staff" class="form-label"> Staff Name </label>

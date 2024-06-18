@@ -125,7 +125,7 @@
                     <ul class="">
                         <li>
                             <a href="<?= base_url('admin/documents'); ?>" class="top-menu">
-                                <div class="top-menu__icon"> <i data-feather="activity"></i> </div>
+                                <div class="top-menu__icon"> <i data-feather="edit-2"></i> </div>
                                 <div class="top-menu__title"> Create new record </div>
                             </a>
                         </li>
@@ -137,11 +137,11 @@
                         </li>
                         <li>
                             <a href="<?= base_url('admin/documents/outgoing'); ?>" class="top-menu">
-                                <div class="top-menu__icon"> <i data-feather="activity"></i> </div>
+                                <div class="top-menu__icon"> <i data-feather="file"></i> </div>
                                 <div class="top-menu__title"> Completed </div>
                             </a>
                             <a href="<?= base_url('admin/documents/search'); ?>" class="top-menu">
-                                <div class="top-menu__icon"> <i data-feather="activity"></i> </div>
+                                <div class="top-menu__icon"> <i data-feather="search"></i> </div>
                                 <div class="top-menu__title"> Search </div>
                             </a>
                         </li>
@@ -162,13 +162,13 @@
                         </li>
                         <li>
                             <a href="<?= base_url('admin/DivisionDoc/completed'); ?>" class="top-menu">
-                                <div class="top-menu__icon"> <i data-feather="activity"></i> </div>
+                                <div class="top-menu__icon"> <i data-feather="file"></i> </div>
                                 <div class="top-menu__title"> Completed </div>
                             </a>
                         </li>
                         <li>
                             <a href="<?= base_url('admin/DivisionDoc/upload_files'); ?>" class="top-menu">
-                                <div class="top-menu__icon"> <i data-feather="activity"></i> </div>
+                                <div class="top-menu__icon"> <i data-feather="download"></i> </div>
                                 <div class="top-menu__title"> Download Files </div>
                             </a>
                         </li>

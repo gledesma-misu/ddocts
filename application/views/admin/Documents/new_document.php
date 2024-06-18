@@ -35,7 +35,7 @@
                             <optgroup label="External">
                                 <?php foreach ($all_sources as $all_source) : ?>
                                     <?php if ($all_source['ds_type'] == 1) : ?>
-                                        <option value="<?php echo $all_source['ds_id']; ?>"><?php echo $all_source['ds_sub']; ?> - <?php echo $all_source['ds_name']; ?></option>
+                                        <option value="<?php echo $all_source['ds_id']; ?>"><?php echo $all_source['ds_name']; ?></option>
                                     <?php endif ?>
                                 <?php endforeach; ?>
                             </optgroup>
@@ -43,7 +43,7 @@
                                 <?php foreach ($all_sources as $all_source) : ?>
                                     <?php if ($all_source['ds_type'] == 2) : ?>
                                         <option value="">Please Select</option>
-                                        <option value="<?php echo $all_source['ds_id']; ?>"><?php echo $all_source['ds_sub']; ?> - <?php echo $all_source['ds_name']; ?></option>
+                                        <option value="<?php echo $all_source['ds_id']; ?>"><?php echo $all_source['ds_name']; ?></option>
                                     <?php endif ?>
                                 <?php endforeach; ?>
                             </optgroup>
@@ -91,7 +91,7 @@
                             } ?>
                             <?php foreach ($all_sources as $all_source) : ?> <!-- Here is the code use for the Select Option-->
                                 <?php if ($all_source['ds_id'] == $this->session->userdata('staff_division')) : ?>
-                                    <option value="<?php echo $all_source['ds_id']; ?>" selected><?php echo $all_source['ds_sub']; ?> - <?php echo $all_source['ds_name']; ?></option>
+                                    <option value="<?php echo $all_source['ds_id']; ?>" selected><?php echo $all_source['ds_name']; ?></option>
                                 <?php endif ?>
                             <?php endforeach; ?>
                             <!-- <option value="<?php echo $dd_id; ?>" selected><?php echo $dd_text; ?></option> -->
