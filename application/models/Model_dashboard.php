@@ -22,7 +22,7 @@ class Model_dashboard extends CI_Model
     return $result->result_array();
   }
 
-  public function get_incoming($user)
+  public function get_incoming_completed($user)
   {
     $this->db->select('*');
     $this->db->from('document_details');
@@ -45,7 +45,7 @@ class Model_dashboard extends CI_Model
     return $result->result_array();
   }
 
-  public function get_outgoing($user)
+  public function get_outgoing_completed($user)
   {
     $this->db->select('*');
     $this->db->from('document_details');

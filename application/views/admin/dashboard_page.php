@@ -12,10 +12,50 @@
                         <h2 class="text-lg font-medium truncate mr-5">
                             Dashboard
                         </h2>
+
+                        <div class="grid grid-cols-12 gap-2 mt-5">
+                            
+                        </div>
+                        <div class="box zoom-in ml-2">
+                            <div class="box p-1">
+                                <div class="text-lg font-black text-gray-900 dark:text-white mb-1">Completed</div>
+                                <div class="text-base font-light">
+                                    <i data-feather="file-text" class="report-box__icon text-theme-10"></i>
+                                    Incoming Documents - <?php echo count($incoming_doc); ?>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="box zoom-in ml-2">
+                            <div class="box p-1">
+                                <div class="text-lg font-black text-gray-900 dark:text-white mb-1">Completed</div>
+                                <div class="text-base font-light ">
+                                    <i data-feather="file-text" class="report-box__icon text-theme-10"></i>
+                                    Outgoing Documents - <?php echo count($outgoing_doc); ?>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="box zoom-in ml-2">
+                            <div class="box p-1">
+                                <div class="text-lg font-black text-gray-900 dark:text-white mb-1">Pending</div>
+                                <div class="text-base font-light ">
+                                    <i data-feather="file-text" class="report-box__icon text-theme-10"></i>
+                                    Outgoing Documents - <?php echo count($outgoing_doc); ?>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="box zoom-in ml-2">
+                            <div class="box p-1">
+                                <div class="text-lg font-black text-gray-900 dark:text-white mb-1">Pending</div>
+                                <div class="text-base font-light ">
+                                    <i data-feather="file-text" class="report-box__icon text-theme-10"></i>
+                                    Outgoing Documents - <?php echo count($outgoing_doc); ?>
+                                </div>
+                            </div>
+                        </div>
                         <a href="<?= base_url('admin/dashboard'); ?>" class="ml-auto flex items-center text-theme-1 dark:text-theme-10"> <i data-feather="refresh-ccw" class="w-4 h-4 mr-3"></i> Reload Data </a>
                     </div>
                     <div class="grid grid-cols-12 gap-6 mt-5">
-                        <div class="sm:col-span-6 xl:col-span-2 intro-y" >
+                        <!-- <div class="sm:col-span-6 xl:col-span-2 intro-y" >
                             <div class="box zoom-in">
                                 <div class="box p-2">
                                     <i data-feather="file-text" class="report-box__icon text-theme-10"></i>
@@ -28,7 +68,7 @@
                                     <div class="text-base font-light ">Outgoing Documents - <?php echo count($outgoing_doc); ?></div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="col-span-12 sm:col-span-6 xl:col-span-3 intro-y">
                             <div class="report-box zoom-in">
                                 <a href="<?= base_url('admin/documents'); ?>">
@@ -41,7 +81,7 @@
                                 </a>
                             </div>
                         </div>
-                        <div class="col-span-12 sm:col-span-6 xl:col-span-2 intro-y">
+                        <div class="col-span-12 sm:col-span-6 xl:col-span-3 intro-y">
                             <div class="report-box zoom-in">
                                 <a href="<?= base_url('admin/documents/incoming'); ?>">
                                     <div class="box p-5">
@@ -53,7 +93,7 @@
                                 </a>
                             </div>
                         </div>
-                        <div class="col-span-12 sm:col-span-6 xl:col-span-2 intro-y">
+                        <div class="col-span-12 sm:col-span-6 xl:col-span-3 intro-y">
                             <div class="report-box zoom-in">
                                 <a href="<?= base_url('admin/documents/outgoing'); ?>">
                                     <div class="box p-5">

@@ -62,7 +62,10 @@
                 </a>
                 <!-- END: Logo -->
                 <!-- BEGIN: Breadcrumb -->
-                <div class="-intro-x breadcrumb breadcrumb--light mr-auto"> <a href="">Application</a> <i data-feather="chevron-right" class="breadcrumb__icon"></i> <a href="" class="breadcrumb--active">Dashboard</a> </div>
+                <div class="-intro-x breadcrumb breadcrumb--light mr-auto"> 
+                    <!-- <a href="">Application</a> <i data-feather="chevron-right" class="breadcrumb__icon"></i> 
+                    <a href="" class="breadcrumb--active">Dashboard</a>  -->
+                </div>
                 <!-- END: Breadcrumb -->
 
                 <!-- BEGIN: Notifications -->

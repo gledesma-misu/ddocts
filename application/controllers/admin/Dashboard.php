@@ -9,7 +9,7 @@ class Dashboard extends CI_Controller {
             redirect('Login'); 
         }
        
-        $this->config->config["pageTitle"] = 'CWC-DDocTS - Dashboard'; //page title 
+        $this->config->config["pageTitle"] = 'CWC-DocTS - Dashboard'; //page title 
         $this->load->model('Model_dashboard', 'dashboard'); 
         
     }
@@ -27,8 +27,8 @@ class Dashboard extends CI_Controller {
         
         $data['staffs'] = $this->dashboard->get_staff_details(); 
 
-        $data['incoming_doc'] = $this->dashboard->get_incoming($staf_get); 
-        $data['outgoing_doc'] = $this->dashboard->get_outgoing($staf_get); 
+        $data['incoming_doc'] = $this->dashboard->get_incoming_completed($staf_get); 
+        $data['outgoing_doc'] = $this->dashboard->get_outgoing_completed($staf_get); 
         
         $this->load->view('admin/dashboard_page', $data);
     }
