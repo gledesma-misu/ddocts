@@ -45,6 +45,29 @@ class Model_dashboard extends CI_Model
     return $result->result_array();
   }
 
+  public function get_incoming_pending($user)
+  {
+    $this->db->select('*');
+    $this->db->from('document_details');
+    $this->db->where("FIND_IN_SET('$user', REPLACE(document_details.dd_routed_to, ' ', '')) !=", 0); //updated code find in column and deleted spaces
+    $this->db->where('dd_encoded_doc !=', $user);
+    $this->db->where('dd_status !=', '4');
+
+    // Get current year and set start and end date for the year
+    $currentYear = date("Y");
+    $startOfYear = "$currentYear-01-01 00:00:00";
+    $endOfYear = ($currentYear + 1) . "-01-01 00:00:00";
+
+    // Add date filter for the current year
+    $this->db->where('dd_date_routed >=', $startOfYear);
+    $this->db->where('dd_date_routed <', $endOfYear);
+
+    $this->db->join('document_type', 'document_type.dt_id = document_details.dd_doct_type', 'left');
+    $this->db->order_by("document_details.dd_id", "desc");
+    $result = $this->db->get();
+    return $result->result_array();
+  }
+
   public function get_outgoing_completed($user)
   {
     $this->db->select('*');
@@ -52,6 +75,28 @@ class Model_dashboard extends CI_Model
     $this->db->where("FIND_IN_SET('$user', REPLACE(document_details.dd_routed_to, ' ', '')) !=", 0); //updated code find in column and deleted spaces
     $this->db->where('dd_encoded_doc', $user);
     $this->db->where('dd_status', '4');
+
+    // Get current year and set start and end date for the year
+    $currentYear = date("Y");
+    $startOfYear = "$currentYear-01-01 00:00:00";
+    $endOfYear = ($currentYear + 1) . "-01-01 00:00:00";
+
+    // Add date filter for the current year
+    $this->db->where('dd_date_routed >=', $startOfYear);
+    $this->db->where('dd_date_routed <', $endOfYear);
+    
+    $this->db->join('document_type', 'document_type.dt_id = document_details.dd_doct_type', 'left');
+    $this->db->order_by("document_details.dd_id", "desc");
+    $result = $this->db->get();
+    return $result->result_array();
+  }
+  public function get_outgoing_pending($user)
+  {
+    $this->db->select('*');
+    $this->db->from('document_details');
+    $this->db->where("FIND_IN_SET('$user', REPLACE(document_details.dd_routed_to, ' ', '')) !=", 0); //updated code find in column and deleted spaces
+    $this->db->where('dd_encoded_doc', $user);
+    $this->db->where('dd_status !=', '4');
 
     // Get current year and set start and end date for the year
     $currentYear = date("Y");

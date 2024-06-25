@@ -8,50 +8,10 @@
             <div class="grid grid-cols-12 gap-6">
                 <!-- BEGIN: four box button -->
                 <div class="col-span-12 mt-8">
-                    <div class="intro-y flex items-center h-10">
+                    <div class="intro-y flex items-center h-10 mb-5">
                         <h2 class="text-lg font-medium truncate mr-5">
                             Dashboard
                         </h2>
-
-                        <div class="grid grid-cols-12 gap-2 mt-5">
-                            
-                        </div>
-                        <div class="box zoom-in ml-2">
-                            <div class="box p-1">
-                                <div class="text-lg font-black text-gray-900 dark:text-white mb-1">Completed</div>
-                                <div class="text-base font-light">
-                                    <i data-feather="file-text" class="report-box__icon text-theme-10"></i>
-                                    Incoming Documents - <?php echo count($incoming_doc); ?>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="box zoom-in ml-2">
-                            <div class="box p-1">
-                                <div class="text-lg font-black text-gray-900 dark:text-white mb-1">Completed</div>
-                                <div class="text-base font-light ">
-                                    <i data-feather="file-text" class="report-box__icon text-theme-10"></i>
-                                    Outgoing Documents - <?php echo count($outgoing_doc); ?>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="box zoom-in ml-2">
-                            <div class="box p-1">
-                                <div class="text-lg font-black text-gray-900 dark:text-white mb-1">Pending</div>
-                                <div class="text-base font-light ">
-                                    <i data-feather="file-text" class="report-box__icon text-theme-10"></i>
-                                    Outgoing Documents - <?php echo count($outgoing_doc); ?>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="box zoom-in ml-2">
-                            <div class="box p-1">
-                                <div class="text-lg font-black text-gray-900 dark:text-white mb-1">Pending</div>
-                                <div class="text-base font-light ">
-                                    <i data-feather="file-text" class="report-box__icon text-theme-10"></i>
-                                    Outgoing Documents - <?php echo count($outgoing_doc); ?>
-                                </div>
-                            </div>
-                        </div>
                         <a href="<?= base_url('admin/dashboard'); ?>" class="ml-auto flex items-center text-theme-1 dark:text-theme-10"> <i data-feather="refresh-ccw" class="w-4 h-4 mr-3"></i> Reload Data </a>
                     </div>
                     <div class="grid grid-cols-12 gap-6 mt-5">
@@ -118,12 +78,45 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
                 <!-- END: four box button -->
+                <div class="col-span-12">
+                    <div class="flex justify-center items-center">
+                        <div class="col-span-12 sm:col-span-3 sm:col-span-2 intro-y">
+                            <div class="box zoom-in ml-2">
+                                <div class="box p-1">
+                                    <div class="text-lg font-black text-gray-900 dark:text-white mb-1">Completed</div>
+                                    <div class="text-base font-light">
+                                        <i data-feather="file-plus" class="text-theme-1"></i>
+                                        Incoming Documents - <?php echo count($incoming_doc); ?>
+                                    </div>
+                                    <div class="text-base font-light mt-1">
+                                        <i data-feather="file-minus" class="text-theme-1"></i>
+                                        Outgoing Documents - <?php echo count($outgoing_doc); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-span-12 sm:col-span-3 xl:col-span-2 intro-y">
+                            <div class="box zoom-in ml-5">
+                                <div class="box p-1">
+                                    <div class="text-lg font-black text-gray-900 dark:text-white mb-1">Pending/For Action</div>
+                                    <div class="text-base font-light ">
+                                        <i data-feather="file-plus" class="report-box__icon text-theme-6"></i>
+                                        Incoming Documents - <?php echo count($incoming_doc_pending); ?>
+                                    </div>
+                                    <div class="text-base font-light mt-1">
+                                        <i data-feather="file-minus" class="report-box__icon text-theme-6"></i>
+                                        Outgoing Documents - <?php echo count($outgoing_doc_pending); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- BEGIN: Data Table -->
-                <div class="col-span-12 mt-6 box p-5 mt-5">
+                <div class="col-span-12 mt-2 box p-2">
                     <div class="intro-y block sm:flex items-center h-10">
                         <h2 class="text-lg font-medium truncate mr-5">
                             Pending Documents
