@@ -200,8 +200,7 @@
                     $files_array1 = explode('||', $array);
                     foreach ($files_array1 as $key) : ?>
                         <?php $ext = pathinfo($key, PATHINFO_EXTENSION);
-                        $link = $divfold . "/" . $key;
-                        // print_r($link)
+                        $link = $dd_lname . "/" . $key;
                         ?>
 
                         <div class="intro-y col-span-6 sm:col-span-4 md:col-span-6 xxl:col-span-3">
@@ -882,11 +881,11 @@
 <div id="header-footer-modal" class="p-5">
     <div class="preview">
         <!-- BEGIN: Modal Content -->
-
+                        
         <div id="Upload_file" class="modal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <?php echo form_open_multipart('admin/Documents/file_attachment/' . $doc_details['dd_id'] . "/" . $v_words . "/" . $dd_lname); ?>
+                    <?php echo form_open_multipart('admin/Documents/file_attachment/' . $doc_details['dd_id'] . "/" . $dd_division . "/" . $dd_lname); ?>
                     <!-- BEGIN: Modal Header -->
                     <div class="modal-header">
                         <h2 class="font-medium text-base mr-auto">

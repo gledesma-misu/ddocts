@@ -113,7 +113,8 @@ class Documents extends CI_Controller
             }
             $files_array_new = $file_t;
         } else {
-            $files_array_new = '|No Uploaded Files!|';
+            // $files_array_new = '|No Uploaded Files!|';
+            $files_array_new = '';
         }
 
         if ($this->input->post('records_status') == 0) {
@@ -440,6 +441,7 @@ class Documents extends CI_Controller
         $v_img = $data['doc_details']['dd_filename'];
         $file_name = trim($v_img, " |");
         $parts = explode("-", $file_name);
+        $data['parts'] = explode("-", $file_name);
         $v_imgs = str_word_count($v_img, 1);
         if ($v_imgs == null) { //Check if all files in the document is remove
             $get_img = '';
@@ -753,9 +755,9 @@ class Documents extends CI_Controller
             $_FILES['file']['error']     = $_FILES['files']['error'][$i];
             $_FILES['file']['size']     = $_FILES['files']['size'][$i];
 
-            $doc_directory = "./assets/upload/" . $my_division . "/" . $lname . "/";
-            if (!file_exists("./assets/upload/" . $my_division . "/" . $lname . "/")) {
-                mkdir("./assets/upload/" . $my_division . "/" . $lname . "/", 0777, true);
+            $doc_directory = "./assets/upload/" . urldecode($my_division) . "/" . $lname . "/";
+            if (!file_exists("./assets/upload/" . urldecode($my_division) . "/" . $lname . "/")) {
+                mkdir("./assets/upload/" . urldecode($my_division) . "/" . $lname . "/", 0777, true);
             }
 
             //upload files
