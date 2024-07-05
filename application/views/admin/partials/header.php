@@ -116,7 +116,7 @@
                 <?php if($this->uri->segment(2) == 'dashboard' || $this->uri->segment(2) == 'Dashboard'){ $url = 'top-menu--active';}else{ $url = '';}?>
                     <a href="<?= base_url('admin/dashboard'); ?>" class="top-menu <?php echo $url; ?>">
                         <div class="top-menu__icon"> <i data-feather="home"></i> </div>
-                        <div class="top-menu__title"> Dashboard <i data-feather="chevron-down" class="top-menu__sub-icon"></i> </div>
+                        <div class="top-menu__title"> Dashboard </i> </div>
                     </a>
                 </li>
                 <li>

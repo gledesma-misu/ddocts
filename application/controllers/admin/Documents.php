@@ -124,38 +124,38 @@ class Documents extends CI_Controller
         $source_doc = $this->input->post('source_doc');
         $source_div = $this->dts->get_s_division($source_doc)['sd_code_name'];
 
-        switch ($source_doc) {
-            case 2:
-                $dd_text = 'PPRD';
-                break;
-            case 3:
-                $dd_text = 'LID';
-                break;
-            case 4:
-                $dd_text = 'MISU';
-                break;
-            case 5:
-                $dd_text = 'AFD';
-                break;
-            case 6:
-                $dd_text = 'PAIO';
-                break;
-            case 7:
-                $dd_text = 'OED';
-                break;
-            case 8:
-                $dd_text = 'ODED';
-                break;
-            case 9:
-                $dd_text = 'PMO';
-                break;
-            case 10:
-                $dd_text = 'MED';
-                break;
-            default:
-                echo "ERROR";
-                break;
-        }
+        // switch ($source_doc) {
+        //     case 2:
+        //         $dd_text = 'PPRD';
+        //         break;
+        //     case 3:
+        //         $dd_text = 'LID';
+        //         break;
+        //     case 4:
+        //         $dd_text = 'MISU';
+        //         break;
+        //     case 5:
+        //         $dd_text = 'AFD';
+        //         break;
+        //     case 6:
+        //         $dd_text = 'PAIO';
+        //         break;
+        //     case 7:
+        //         $dd_text = 'OED';
+        //         break;
+        //     case 8:
+        //         $dd_text = 'ODED';
+        //         break;
+        //     case 9:
+        //         $dd_text = 'PMO';
+        //         break;
+        //     case 10:
+        //         $dd_text = 'MED';
+        //         break;
+        //     default:
+        //         echo "ERROR";
+        //         break;
+        // }
         $records_id = $this->input->post('records_status');
 
         if ($records_id == 0) {

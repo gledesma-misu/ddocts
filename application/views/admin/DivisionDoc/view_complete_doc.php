@@ -60,17 +60,13 @@
                                                 <label for="get_my_staff" class="form-label"> Select Division </label>
                                                 <select data-search="true" id="source_doc" name="source_doc" class="tail-select w-full form-control">
                                                 <optgroup label="Please Select Division">
-                                                 <option value="2">Policy Planning and Research Division</option>
-                                                 <option value="3">Localization and Institutionalization Division</option>
-                                                 <option value="4">Management Information System Unit</option>
-                                                 <option value="5">Administrative and Finance Division</option>
-                                                 <option value="6">Public Affairs and Information Office</option>
-                                                 <option value="7">Office of the Executive Director</option>
-                                                 <option value="8">Office of the Deputy Executive Director</option>
-                                                 <option value="9">Project Management Office</option>
-                                                 <option value="10">Monitoring and Evaluation Division</option>
-                                                 <option value="0">All Division/Unit </option>
-                                                </optgroup>
+                                                <option value="0">All Division/Unit </option>
+                                                <?php foreach ($all_sources as $all_source) : ?> <!-- Here is the code use for the Select Option-->
+                                                    <?php if ($all_source['ds_type'] == 0) : ?>
+                                                        <option value="<?php echo $all_source['ds_id']; ?>" selected><?php echo $all_source['ds_name']; ?></option>
+                                                    <?php endif ?>
+                                                <?php endforeach; ?>
+                                            </optgroup>
                                                 </select>
                                             </div>
 

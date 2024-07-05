@@ -47,7 +47,7 @@ class DivisionDoc extends CI_Controller
         $page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
         $data['posts'] = $this->division->get_doc_completed($config["per_page"], $page, $Exist['ds_code']);
         $data['get_id_staffs'] = $this->division->get_my_completed($Exist['ds_code']);
-
+        $data['all_sources'] = $this->division->get_all_source();
         $this->parser->parse('admin/DivisionDoc/view_complete_doc', $data);
     }
 
@@ -63,74 +63,8 @@ class DivisionDoc extends CI_Controller
 
     public function com_generate_pdf()
     {
-        switch ($this->session->userdata('staff_division')) {
-            case 2:
-                $Exist = "PPRD";
-                break;
-            case 3:
-                $Exist = "LID";
-                break;
-            case 4:
-                $Exist = "MISU";
-                break;
-            case 5:
-                $Exist = "AFD";
-                break;
-            case 6:
-                $Exist = "PAIO";
-                break;
-            case 7:
-                $Exist = "OED";
-                break;
-            case 8:
-                $Exist = "ODED";
-                break;
-            case 9:
-                $Exist = "PMO";
-                break;
-            case 10:
-                $Exist = "MED";
-                break;
-            default:
-                $Exist = "ERROR";
-                break;
-        }
-
-        switch ($this->input->post('source_doc')) {
-            case 0:
-                $div = 'All Division/Unit';
-                break;
-            case 2:
-                $div = 'Policy Planning and Research Division';
-                break;
-            case 3:
-                $div = 'Localization and Institutionalization Division';
-                break;
-            case 4:
-                $div = 'Management Information System Unit';
-                break;
-            case 5:
-                $div = 'Administrative and Finance Division';
-                break;
-            case 6:
-                $div = 'Public Affairs and Information Office';
-                break;
-            case 7:
-                $div = 'Office of the Executive Director';
-                break;
-            case 8:
-                $div = 'Office of the Deputy Executive Director';
-                break;
-            case 9:
-                $div = 'Project Management Office';
-                break;
-            case 10:
-                $div = 'Monitoring and Evaluation Division';
-                break;
-            default:
-                $Exist = "ERROR";
-                break;
-        }
+        $Exist = $this->division->get_division_all($this->session->userdata('staff_division'));
+       
 
         $source_doc = $this->input->post('source_doc');
         $date_from = $this->input->post('date_from');
@@ -148,8 +82,8 @@ class DivisionDoc extends CI_Controller
         $data['date_now'] = date("M-d-Y h:i A", strtotime($date_now));
 
         $data['from'] = 'Period covered: <u>' . $now . ' to ' . $end . '</u>';
-        $data['division'] = 'List of Completed Inter-Office Documents - <u>' . $div . '</u>';
-        $data['posts'] = $this->division->com_print_pdf($Exist, $source_doc, $date_from, $date_to);
+        $data['division'] = 'List of Completed Office Documents - <u>' . $Exist['ds_name'] . '</u>';
+        $data['posts'] = $this->division->com_print_pdf($Exist['ds_code'], $source_doc, $date_from, $date_to);
         $data['count'] = 'Total of Completed Documents - <u>' . count($data['posts']) . '</u>';
 
 
@@ -348,7 +282,7 @@ class DivisionDoc extends CI_Controller
         $page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
         $data['posts'] = $this->division->get_doc_pending($config["per_page"], $page, $Exist['ds_code']);
         $data['get_id_staffs'] = $this->division->get_my_division($Exist['ds_code']);
-
+        $data['all_sources'] = $this->division->get_all_source();
         $this->parser->parse('admin/DivisionDoc/view_pending_doc', $data);
     }
 
@@ -364,80 +298,16 @@ class DivisionDoc extends CI_Controller
 
     public function generate_pdf()
     {
-        switch ($this->session->userdata('staff_division')) {
-            case 2:
-                $Exist = "PPRD";
-                break;
-            case 3:
-                $Exist = "LID";
-                break;
-            case 4:
-                $Exist = "MISU";
-                break;
-            case 5:
-                $Exist = "AFD";
-                break;
-            case 6:
-                $Exist = "PAIO";
-                break;
-            case 7:
-                $Exist = "OED";
-                break;
-            case 8:
-                $Exist = "ODED";
-                break;
-            case 9:
-                $Exist = "PMO";
-                break;
-            case 10:
-                $Exist = "MED";
-                break;
-            default:
-                $Exist = "ERROR";
-                break;
-        }
+        $Exist = $this->division->get_division_all($this->session->userdata('staff_division'));
+        // $source_doc = $this->division->get_division_all($this->session->userdata('staff_division'));
 
-        switch ($this->input->post('source_doc')) {
-            case 0:
-                $div = 'All Division/Unit';
-                break;
-            case 2:
-                $div = 'Policy Planning and Research Division';
-                break;
-            case 3:
-                $div = 'Localization and Institutionalization Division';
-                break;
-            case 4:
-                $div = 'Management Information System Unit';
-                break;
-            case 5:
-                $div = 'Administrative and Finance Division';
-                break;
-            case 6:
-                $div = 'Public Affairs and Information Office';
-                break;
-            case 7:
-                $div = 'Office of the Executive Director';
-                break;
-            case 8:
-                $div = 'Office of the Deputy Executive Director';
-                break;
-            case 9:
-                $div = 'Project Management Office';
-                break;
-            case 10:
-                $div = 'Monitoring and Evaluation Division';
-                break;
-            default:
-                $div = "ERROR";
-                break;
-        }
+       
 
         $source_doc = $this->input->post('source_doc');
         $date_from = $this->input->post('date_from');
         $date_to = $this->input->post('date_to');
 
-        //echo $source_doc.' '.$date_from.' '.$date_to.' '.$Exist;
+        // echo $Exist['ds_id'].' '.$date_from.' '.$date_to.' '.$Exist['ds_code'];
 
         $this->load->library('pdf');
 
@@ -449,8 +319,8 @@ class DivisionDoc extends CI_Controller
         $data['date_now'] = date("M-d-Y h:i A", strtotime($date_now));
 
         $data['from'] = 'Period covered: <u>' . $now . ' to ' . $end . '</u>';
-        $data['division'] = 'List of Inter-Office Documents for Action - <u>' . $div . '</u>';
-        $data['posts'] = $this->division->print_pdf($Exist, $source_doc, $date_from, $date_to);
+        $data['division'] = 'List of Office Documents for Action - <u>' . $Exist['ds_name'] . '</u>';
+        $data['posts'] = $this->division->print_pdf($Exist['ds_code'], $source_doc, $date_from, $date_to);
         $data['count'] = 'Total of Action Documents - <u>' . count($data['posts']) . '</u>';
 
 

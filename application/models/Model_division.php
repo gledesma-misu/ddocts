@@ -12,6 +12,15 @@ class Model_division extends CI_Model {
 		return $result->row_array();
   	}
 
+      public function get_all_source()
+      {
+          $this->db->select('*');
+          $this->db->from('document_source');
+          $this->db->order_by("document_source.ds_id", "desc");
+          $result = $this->db->get();
+          return $result->result_array();
+      }
+
     // pending page
 
     public function count_doc_pending($Exist){ 
@@ -89,7 +98,7 @@ class Model_division extends CI_Model {
 
 		$this->db->select('*');
         if($source_doc == '0'){
-           
+            // $this->db->where('dd_source', $source_doc);
         }else{
             $this->db->where('dd_source', $source_doc);
         }
