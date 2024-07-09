@@ -163,7 +163,7 @@
                     <label for="type_doc" class="form-label sm:w-40" style="text-align: left;">Type of Document</label>
                     <select data-search="true" id="type_doc" name="type_doc" class="tail-select w-full form-control">
                         <optgroup label="Type of Document">
-                            <option value="0">Select</option>
+                            <option value="0" selected>Select Type of document</option>
                             <?php foreach ($type_documents as $type_document) : ?>
                                 <option value="<?php echo $type_document['dt_id']; ?>"><?php echo $type_document['dt_name']; ?></option>
                             <?php endforeach; ?>
@@ -315,7 +315,7 @@
                         <?php endforeach; ?>
                     </select>
                 </div>
-               
+
 
                 <!-- Subject Title -->
                 <div class="form-inline mt-5">
@@ -340,11 +340,13 @@
     document.getElementById('staffForm').addEventListener('submit', function(event) {
         const staffDetails = document.getElementById('staff_details');
         const typeDoc = document.getElementById('type_doc');
+        const typeDocs = document.getElementById('type_docs');
+        const moredocs = document.getElementById('moredocs');
         const actionTaken = document.getElementById('action_taken');
-        var checkboxes = document.querySelectorAll('input[name="div_unit[]"]');
-        var checked = Array.from(checkboxes).some(checkbox => checkbox.checked);
+        var checkboxesdiv = document.querySelectorAll('input[name="div_unit[]"]');
+        var checkeddiv = Array.from(checkboxesdiv).some(checkbox => checkbox.checked);
 
-        if (!checked) {
+        if (!checkeddiv) {
             Swal.fire({
                 icon: 'error',
                 text: 'Please select division/s to route the document',
@@ -362,14 +364,28 @@
         }
 
         const selectedTypeDoc = Array.from(typeDoc.selectedOptions).map(option => option.value);
-        if (selectedTypeDoc.includes("0")) {
-            Swal.fire({
-                icon: 'error',
-                text: 'Please select at least one type of document.',
-            });
-            event.preventDefault(); // Prevent form submission
-            return;
+
+        if (moredocs.checked) {
+            if (typeDocs.selectedOptions.length === 0) {
+                Swal.fire({
+                    icon: 'error',
+                    text: 'Please select at least one type of document.',
+                });
+                event.preventDefault(); // Prevent form submission
+                return;
+            }
+        } else {
+            if (selectedTypeDoc.includes("0")) {
+                Swal.fire({
+                    icon: 'error',
+                    text: 'Please select at least one type of document.',
+                });
+                event.preventDefault(); // Prevent form submission
+                return;
+            }
         }
+
+
 
         if (actionTaken.selectedOptions.length === 0) {
             Swal.fire({
@@ -420,9 +436,9 @@
                 $("#action_multi").show(1000);
                 $("#action_solo").hide(1000);
             } else {
+
                 $("#action_solo").show(1000);
                 $("#action_multi").hide(1000);
-                $("#type_docs").find('option:selected').prop('selected', false);;
             }
         });
     });
