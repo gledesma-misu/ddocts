@@ -15,7 +15,7 @@ class Model_login extends CI_Model {
 		$this->db->where('password', $password);
 		$this->db->update('account', $data);
 		
-		$this->db->select('account.id,account.su,account.remove,account.password,account.email,account.staff_id_account,account.last_login,staff_details.fname,staff_details.mname,staff_details.lname,staff_details.position_title,staff_details.position,staff_details.division');
+		$this->db->select('account.account_type_id,account.gender,account.id,account.su,account.remove,account.password,account.email,account.staff_id_account,account.last_login,staff_details.fname,staff_details.mname,staff_details.lname,staff_details.position_title,staff_details.position,staff_details.division');
         $this->db->where('username', $username);
 		$this->db->where('password', $password);
 		$this->db->from('account'); 

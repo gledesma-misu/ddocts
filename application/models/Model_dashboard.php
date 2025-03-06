@@ -22,6 +22,16 @@ class Model_dashboard extends CI_Model
     return $result->result_array();
   }
 
+  public function get_doc($user)
+  {
+    $this->db->select('*');
+    $this->db->from('document_details');
+    $this->db->where("dd_encoded_doc =", $user);
+    $this->db->where('dd_recieved_doc', '0');
+    $result = $this->db->get();
+    return $result->result_array();
+  }
+
   public function get_incoming_completed($user)
   {
     $this->db->select('*');

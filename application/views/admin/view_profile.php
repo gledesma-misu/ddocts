@@ -12,7 +12,8 @@
             <div class="intro-y box mt-5 lg:mt-0">
                 <div class="relative flex items-center p-5">
                     <div class="w-12 h-12 image-fit">
-                        <img alt="Rubick Tailwind HTML Admin Template" class="rounded-full" src="<?php echo base_url('assets/template/images/female_avatar.png'); ?>">
+                        <!-- <img alt="Rubick Tailwind HTML Admin Template" class="rounded-full" src="<?php echo base_url('assets/template/images/female_avatar.png'); ?>"> -->
+                        <img alt="Rubick Tailwind HTML Admin Template" src="<?php echo $this->session->userdata('staff_gender') == 1 ? base_url('assets/template/images/emp-male.png') : base_url('assets/template/images/emp-female.png'); ?>"> 
                     </div>
                     <div class="ml-4 mr-auto">
                         <div class="font-medium text-base"> <?= $this->session->userdata('staff_fname'); ?> <?= $this->session->userdata('staff_lname'); ?> </div>
@@ -21,7 +22,7 @@
                 </div>
                 <div class="p-5 border-t border-gray-200 dark:border-dark-5">
                     <div class="boxed-tabs nav nav-tabs flex-col justify-center sm:flex-row text-gray-700 dark:text-gray-300" role="tablist">
-                        <a id="top-products-laravel-tab" data-toggle="tab" data-target="#laravel" href="javascript:;" class="w-full sm:w-30 mb-2 sm:mb-0 py-2 rounded-md box dark:bg-dark-5 text-center sm:mx-2 active" role="tab" aria-selected="true"> <i data-feather="activity" class="block w-6 h-6 mb-2 mx-auto"></i> Profile Infirmation </a>
+                        <a id="top-products-laravel-tab" data-toggle="tab" data-target="#laravel" href="javascript:;" class="w-full sm:w-30 mb-2 sm:mb-0 py-2 rounded-md box dark:bg-dark-5 text-center sm:mx-2 active" role="tab" aria-selected="true"> <i data-feather="activity" class="block w-6 h-6 mb-2 mx-auto"></i> Profile Information </a>
                         <a id="top-products-symfony-tab" data-toggle="tab" data-target="#symfony" href="javascript:;" class="w-full sm:w-30 mb-2 sm:mb-0 py-2 rounded-md box dark:bg-dark-5 text-center sm:mx-2" role="tab" aria-selected="false"> <i data-feather="settings" class="block w-6 h-6 mb-2 mx-auto"></i> Edit Profile </a>
                         <a id="top-products-bootstrap-tab" data-toggle="tab" data-target="#bootstrap" href="javascript:;" class="w-full sm:w-30 mb-2 sm:mb-0 py-2 rounded-md box dark:bg-dark-5 text-center sm:mx-2" role="tab" aria-selected="false"> <i data-feather="lock" class="block w-6 h-6 mb-2 mx-auto"></i> Change Password </a>
                     </div>
@@ -59,10 +60,8 @@
                                         <div class="text-gray-600 mr-5 sm:mr-5">
                                             <?php
                                                 $source = $this->dashboard->mysources($this->session->userdata('staff_division'));
-
                                                 echo $source['ds_name'];
-                                             
-                                            ?>
+                                                ?>
                                             
                                         </div>
                                     </div>
@@ -153,7 +152,7 @@
                                 <input type="hidden" id="staff_id" name="staff_id" value="<?= $this->session->userdata('staff_id'); ?>">
                                 <div class="form-inline mt-3">
                                     <label for="p_position" class="form-label sm:w-40" style="text-align: left;">Staff Postion</label>
-                                    <input id="p_position" name="p_position" type="text" class="form-control" placeholder="Enter Official Email" value="<?= $this->session->userdata('staff_position'); ?>" required disabled>
+                                    <input id="p_position" name="p_position" type="text" class="form-control" placeholder="Enter Official Email" value="<?= $this->session->userdata('staff_position'); ?>" required>
                                 </div>
                                 <div class="form-inline py-5 sm:py-3 border-b border-gray-200 dark:border-dark-5">
                                     <label for="p_position_title" class="form-label sm:w-40" style="text-align: left;">Staff Postion Title</label>

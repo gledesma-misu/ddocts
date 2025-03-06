@@ -207,6 +207,9 @@
                                                     case 4:
                                                         echo '<span class="px-2 py-1 rounded-full bg-theme-9 text-white mr-1"> Completed </span>';
                                                         break;
+                                                    case 5:
+                                                        echo '<span class="px-2 py-1 rounded-full bg-theme-1 text-white mr-1"> Requested </span>';
+                                                        break;
                                                     default:
                                                         echo "ERROR";
                                                         break;

@@ -36,7 +36,7 @@
                                         <div class="flex">
                                             <i data-feather="file-text" class="report-box__icon text-theme-10"></i>
                                         </div>
-                                        <div class="text-2xl font-light leading-8 mt-6">Create new record</div>
+                                        <div class="text-2xl font-light leading-8 mt-6">Upload new Document</div>
                                     </div>
                                 </a>
                             </div>
@@ -133,6 +133,7 @@
                                     <th class="text-center whitespace-nowrap">Routed To</th>
                                     <th class="text-center whitespace-nowrap">Concerned Staff</th>
                                     <th class="text-center whitespace-nowrap">Date Sent</th>
+                                    <th class="text-center whitespace-nowrap">Priority</th>
                                     <th class="text-center whitespace-nowrap">Action</th>
                                 </tr>
                             </thead>
@@ -177,11 +178,22 @@
                                             <td class="text-center"><?php $date = $staff_details['dd_date_recieved'];
                                                                     $datepicker = date("M-d-Y h:i A", strtotime($date)); ?>
                                                 <?php echo $datepicker; ?></td>
+                                            <td class="text-center w-35">
+                                                <span class="px-2 py-1 rounded-full <?php echo $staff_details['dd_priority_level'] == 1 ? 'bg-theme-6' : 'bg-theme-12'; ?> text-white mr-1">
+                                                    <?php echo $staff_details['dd_priority_level'] == 1 ? 'Urgent' : 'Not Urgent'; ?>
+                                                </span>
+                                            </td>
+
+
                                             <td class="table-report__action w-56">
 
                                                 <div class="flex justify-center items-center">
                                                     <?php if ($staff_details['dd_encoded_doc'] != $this->session->userdata('staff_id')) :
                                                     ?><a class="btn btn-sm btn-outline-primary w-24 inline-block" href="javascript:;" data-toggle="modal" data-target="#Recieve<?php echo $staff_details['dd_id']; ?>"> <i data-feather="check-square" class="w-4 h-4 mr-1"></i> Receive </a>
+                                                        &nbsp; | &nbsp;
+                                                    <?php endif ?>
+                                                    <?php if ($staff_details['dd_encoded_doc'] == $this->session->userdata('staff_id')) :
+                                                    ?><a class="btn btn-sm btn-outline-warning w-24 inline-block" href="<?= base_url('admin/documents/updateDoc/'.$staff_details['dd_id']);  ?>" > <i data-feather="edit-3" class="w-4 h-4 mr-1"></i> Edit </a>
                                                         &nbsp; | &nbsp;
                                                     <?php endif ?>
                                                     <a class="btn btn-sm btn-outline-danger w-24 inline-block" href="javascript:;" data-toggle="modal" data-target="#Disregard<?php echo $staff_details['dd_id']; ?>"> <i data-feather="trash-2" class="w-4 h-4 mr-1"></i> Disregard </a>
@@ -255,6 +267,7 @@
                                     <th class="text-center whitespace-nowrap">Routed To</th>
                                     <th class="text-center whitespace-nowrap">Concerned Staff</th>
                                     <th class="text-center whitespace-nowrap">Date Sent</th>
+                                    <th class="text-center whitespace-nowrap">Priority</th>
                                     <th class="text-center whitespace-nowrap">Action</th>
                                 </tr>
                             </tfoot>
@@ -614,8 +627,8 @@
                                         <?php echo $datepicker; ?> </td>
                                 </tr>
                                 <tr class="intro-x">
-                                    <td class="text-left"> Routed From </td>
-                                    <td class="text-left"> <?php echo $staff_details['dd_view_doc']; ?></td>
+                                    <td class="text-left"> Routed To </td>
+                                    <td class="text-left"> <?php echo $get_id_staff['dd_view_doc']; ?></td>
                                 </tr>
                                 <tr class="intro-x">
                                     <td class="text-left"> Date Routed </td>

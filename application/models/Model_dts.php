@@ -3,6 +3,16 @@
 class Model_dts extends CI_Model
 {
 
+
+	public function get_doc_pending($dd_id)
+	{
+		$this->db->select('*');
+		$this->db->from('document_details');
+		$this->db->where('dd_id', $dd_id);
+		$result = $this->db->get();
+		return $result->result_array();
+	}
+
 	public function get_all_source()
 	{
 		$this->db->select('*');
@@ -80,7 +90,7 @@ class Model_dts extends CI_Model
 
 	// New Document Page  ==================================================================================
 
-	public function insertDocDetails($doc_no, $source_doc, $sub_title, $files_array_new, $moredocs, $type_doc, $action_taken, $datesent, $div_unit, $staff_details, $editor1, $type_docs, $file_get, $staff_id, $dd_disregard_doc, $source_staffs_name, $records_id)
+	public function insertDocDetails($doc_no, $source_doc, $sub_title, $files_array_new, $moredocs, $type_doc, $action_taken, $datesent, $div_unit, $staff_details, $editor1, $type_docs, $priorityLevel, $file_get, $staff_id, $dd_disregard_doc, $source_staffs_name, $records_id)
 	{
 
 		date_default_timezone_set('Asia/Manila');
@@ -110,6 +120,7 @@ class Model_dts extends CI_Model
 			'dd_date_recieved' => $datesent,
 			'dd_filename' => $files_array_new,
 			'dd_status' => '0',
+			'dd_priority_level' => $priorityLevel,
 			'dd_encoded_doc' => $staff_id,
 			'dd_filetype' => $file_get,
 			'dd_note' => $editor1,
@@ -119,6 +130,50 @@ class Model_dts extends CI_Model
 		);
 
 		$this->db->insert('document_details', $data);
+	}
+
+	public function updateDocDetails($dd_id,$doc_no, $source_doc, $sub_title, $files_array_upd, $moredocs, $type_doc, $action_taken, $datesent, $div_unit, $staff_details, $editor1, $type_docs, $priorityLevel, $file_get, $staff_id, $dd_disregard_doc, $source_staffs_name, $records_id)
+	{
+
+		date_default_timezone_set('Asia/Manila');
+		$date_now = date('Y-m-d H:i:s', time());
+		$date_nows = date('Y-m-d', time());
+
+		$process_doc = 'DOCUMENT-UPDATED: DocNo <b>' . $doc_no . '</b> with status: <b style="color:red"> FOR RECEIVING </b>.';
+
+		$data1 = array(
+			'dh_doc_id' => $this->session->userdata('staff_id'),
+			'dh_action' => $process_doc,
+			'dh_reg_date' => $date_now
+		);
+		$this->db->insert('document_history', $data1);
+
+		$data = array(
+			'dd_doc_id_code' => $doc_no,
+			'dd_title' => $sub_title,
+			'dd_doct_type' => $type_doc,
+			'dd_ifBundle' => $moredocs,
+			'dd_bundleDocs' => $type_docs,
+			'dd_source' => $source_doc,
+			'dd_action_taken' => $action_taken,
+			'dd_routed_to' => $staff_details,
+			'dd_staff_name' => $source_staffs_name,
+			'dd_view_doc' => $div_unit,
+			'dd_date_recieved' => $datesent,
+			'dd_filename' => $files_array_upd,
+			'dd_status' => '0',
+			'dd_priority_level' => $priorityLevel,
+			'dd_encoded_doc' => $staff_id,
+			'dd_filetype' => $file_get,
+			'dd_note' => $editor1,
+			'dd_disregard_doc' => $dd_disregard_doc,
+			'dd_records' => $records_id,
+
+		);
+
+		$this->db->set($data);
+		$this->db->where('dd_id', $dd_id);
+		$this->db->update('document_details');
 	}
 
 	public function doc_request($not_listed)
@@ -238,9 +293,9 @@ class Model_dts extends CI_Model
 		$this->db->update('document_details');
 	}
 
-	public function complate_file($dd_id)
+	public function complate_file($dd_id,$doc_status)
 	{
-		$this->db->set('dd_status', '4');
+		$this->db->set('dd_status', $doc_status);
 		$this->db->where('dd_id', $dd_id);
 		$this->db->update('document_details');
 	}
@@ -485,8 +540,9 @@ class Model_dts extends CI_Model
 		$this->db->where('document_details.dd_recieved_doc', '1');
 		$this->db->where("FIND_IN_SET('$staff', REPLACE(document_details.dd_routed_to, ' ', '')) !=", 0); //updated code find in column and deleted spaces
 		// $this->db->like('document_details.dd_routed_to', $staff);
+		$this->db->where('dd_status !=', '4');
 		$this->db->join('document_type', 'document_type.dt_id = document_details.dd_doct_type', 'left');
-		$this->db->order_by("document_details.dd_id", "desc");
+		$this->db-> order_by("document_details.dd_id", "desc");
 		$this->db->limit($limit, $start);
 		$query = $this->db->get('document_details');
 		return $query->result_array();
@@ -496,7 +552,7 @@ class Model_dts extends CI_Model
 	{
 		$this->db->select('*');
 		$this->db->where('document_details.dd_recieved_doc', '1');
-		$this->db->where('dd_status !=', '4');
+		$this->db->where('document_details.dd_status !=', '4');
 		$this->db->where("FIND_IN_SET('$staff', REPLACE(document_details.dd_routed_to, ' ', '')) !=", 0); //updated code find in column and deleted spaces
 		// $this->db->like('document_details.dd_routed_to', $staff);
 		return $this->db->count_all_results('document_details');
@@ -535,7 +591,8 @@ class Model_dts extends CI_Model
 		$this->db->select('*');
 		$this->db->where('document_details.dd_recieved_doc', '1');
 		$this->db->where('dd_status', '4');
-		$this->db->where('document_details.dd_routed_to', $staff);
+		// $this->db->where('document_details.dd_routed_to', $staff);
+		$this->db->where("FIND_IN_SET('$staff', REPLACE(document_details.dd_routed_to, ' ', '')) !=", 0);
 		return $this->db->count_all_results('document_details');
 	}
 

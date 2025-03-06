@@ -24,12 +24,21 @@
                         <div class="dropdown">
                             <?php if ($doc_details['dd_status'] == "4") : ?>
                                 <div class="alert alert-success show flex items-center mb-2" role="alert"> <i data-feather="thumbs-up" class="w-6 h-6 mr-2"></i> Completed </div>
+                            <?php elseif ($doc_details['dd_status'] == "5" && $doc_details['dd_encoded_doc'] != $staff_id) : ?>
+                                <!-- <?php if ($doc_details['dd_encoded_doc'] != $staff_id): ?> -->
+                                <div class="alert alert-warning show flex items-center mb-2" role="alert"> <i data-feather="thumbs-up" class="w-4 h-4 mr-1 ml-1"></i> Completion Request </div>
+                                <!-- <?php endif; ?> -->
                             <?php else : ?>
-                                <button class="dropdown-toggle btn btn-primary tooltip" title="Select Action!" aria-expanded="false">Action Button</button>
+                                <?php if ($doc_details['dd_status'] == "5" && $doc_details['dd_encoded_doc'] == $staff_id) : ?>
+                                    <button class="dropdown-toggle btn btn-warning tooltip" title="Select Action!" aria-expanded="false">Request for Completion</button>
+                                <?php else: ?>
+                                    <button class="dropdown-toggle btn btn-primary tooltip" title="Select Action!" aria-expanded="false">Action Button</button>
+                                <?php endif; ?>
                                 <div class="dropdown-menu w-56">
                                     <div class="dropdown-menu__content box dark:bg-dark-1">
                                         <div class="p-4 border-b border-gray-200 dark:border-dark-5 font-medium">Please Select Action</div>
                                         <div class="p-2">
+                                            <!-- <a href="javascript:;" data-toggle="modal" data-target="#Add_staff" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="file-plus" class="w-4 h-4 text-gray-700 dark:text-gray-300 mr-2"></i> Add Staff/Employee </a> -->
                                             <?php if ($doc_details['dd_encoded_doc'] == $this->session->userdata('staff_id')) : ?>
                                                 <a href="javascript:;" data-toggle="modal" data-target="#Upload_file" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="file-plus" class="w-4 h-4 text-gray-700 dark:text-gray-300 mr-2"></i> Upload File </a>
                                                 <a href="javascript:;" data-toggle="modal" data-target="#Doc_Complate" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="thumbs-up" class="w-4 h-4 text-gray-700 dark:text-gray-300 mr-2"></i> Complete </a>
@@ -38,6 +47,7 @@
                                                 <a href="javascript:;" data-toggle="modal" data-target="#Doc_Complate" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="thumbs-up" class="w-4 h-4 text-gray-700 dark:text-gray-300 mr-2"></i> Complete </a>
                                                 <a href="javascript:;" data-toggle="modal" data-target="#Upload_file" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="file-plus" class="w-4 h-4 text-gray-700 dark:text-gray-300 mr-2"></i> Upload File </a>
                                             <?php endif ?>
+                                            <!-- <a href="javascript:;" data-toggle="modal" data-target="#Generate_Route" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="file-plus" class="w-4 h-4 text-gray-700 dark:text-gray-300 mr-2"></i> Generate Route </a> -->
                                         </div>
                                     </div>
                                 </div>
@@ -167,6 +177,9 @@
                                     case 4:
                                         echo '<div class="alert alert-success show flex items-center mb-2 tooltip" title="This document is Completed!"" role="alert"> <i data-feather="thumbs-up" class="w-6 h-6 mr-2"></i> Completed (Released doc.)</div>';
                                         break;
+                                    case 5:
+                                        echo '<div class="alert alert-warning show flex items-center mb-2 tooltip" title="This document is requested for completion!"" role="alert"> <i data-feather="alert-circle" class="w-6 h-6 mr-2"></i>Request for Completion</div>';
+                                        break;
                                     default:
                                         echo "ERROR";
                                         break;
@@ -178,7 +191,8 @@
             </table>
 
             <h2 class="intro-y text-lg font-medium mr-auto mt-2">
-                File Uploaded
+                File Uploaded <?php
+                                ?>
             </h2>
             <div class="intro-y grid grid-cols-12 gap-3 sm:gap-6 mt-3">
 
@@ -238,7 +252,7 @@
                 </div>
                 <div class="p-5">
                     <div class="col-span-12 lg:col-span-8 xxl:col-span-9">
-                        <div class="report-timeline mt-9 relative">                                       
+                        <div class="report-timeline mt-9 relative">
                             <?php if (empty($doc_reply)) : ?>
                                 <div class="box ">
                                     <div class="border-l-2 border-theme-6 pl-4 text-gray-600 mt-2">
@@ -285,10 +299,10 @@
                                                             <?php foreach ($staffs as $staff) : ?>
                                                                 <?php if ($doc_reply['staff_name'] == $staff['staff_id']) : ?>
                                                                     <?php
-                                                                    $source = $this->dts->get_in_ex_source1($staff['division']); 
+                                                                    $source = $this->dts->get_in_ex_source1($staff['division']);
                                                                     echo $source['ds_name'];
                                                                     ?>
-                             
+
                                                                 <?php endif ?>
                                                             <?php endforeach; ?>
                                                         <?php elseif ($doc_reply['doc_affiliated'] == "0") : ?>
@@ -465,6 +479,9 @@
                                                                 case 4:
                                                                     echo "<span class='text-theme-9'> Completed </span> ";
                                                                     break;
+                                                                case 5:
+                                                                    echo "<span class='text-theme-6'> requested for completion </span> ";
+                                                                    break;
                                                                 default:
                                                                     echo "ERROR";
                                                                     break;
@@ -490,52 +507,52 @@
                                     <?php foreach ($staffs as $staff) : ?>
                                         <?php if ($action_message['staff_name'] == $staff['staff_id']) : ?>
                                             <?php
-                                                $source = $this->dts->get_in_ex_source1($staff['division']); 
-                                                echo $source['ds_name'];
-                                                $get_div = $source['ds_code'];
+                                            $source = $this->dts->get_in_ex_source1($staff['division']);
+                                            echo $source['ds_name'];
+                                            $get_div = $source['ds_code'];
                                             ?>
                                             <!-- <?php switch ($staff['division']) {
-                                                case 2:
-                                                    echo "Policy Planning and Research Division";
-                                                    $get_div = 'PPRD';
-                                                    break;
-                                                case 3:
-                                                    echo "Localization and Institutionalization Division";
-                                                    $get_div = 'LID';
-                                                    break;
-                                                case 4:
-                                                    echo "Management Information System Unit";
-                                                    $get_div = 'MISU';
-                                                    break;
-                                                case 5:
-                                                    echo "Administrative and Finance Division";
-                                                    $get_div = 'AFD';
-                                                    break;
-                                                case 6:
-                                                    echo "Public Affairs and Information Office";
-                                                    $get_div = 'PAIO';
-                                                    break;
-                                                case 7:
-                                                    echo "Office of the Executive Director";
-                                                    $get_div = 'OED';
-                                                    break;
-                                                case 8:
-                                                    echo "Office of the Deputy Executive Director";
-                                                    $get_div = 'ODED';
-                                                    break;
-                                                case 9:
-                                                    echo "Project Management Office";
-                                                    $get_div = 'PMO';
-                                                    break;
-                                                case 10:
-                                                    echo "Monitoring and Evaluation Division";
-                                                    $get_div = 'MED';
-                                                    break;
-                                                default:
-                                                    echo "ERROR";
-                                                    $get_div = 'ERROR';
-                                                    break;
-                                            } ?> -->
+                                                        case 2:
+                                                            echo "Policy Planning and Research Division";
+                                                            $get_div = 'PPRD';
+                                                            break;
+                                                        case 3:
+                                                            echo "Localization and Institutionalization Division";
+                                                            $get_div = 'LID';
+                                                            break;
+                                                        case 4:
+                                                            echo "Management Information System Unit";
+                                                            $get_div = 'MISU';
+                                                            break;
+                                                        case 5:
+                                                            echo "Administrative and Finance Division";
+                                                            $get_div = 'AFD';
+                                                            break;
+                                                        case 6:
+                                                            echo "Public Affairs and Information Office";
+                                                            $get_div = 'PAIO';
+                                                            break;
+                                                        case 7:
+                                                            echo "Office of the Executive Director";
+                                                            $get_div = 'OED';
+                                                            break;
+                                                        case 8:
+                                                            echo "Office of the Deputy Executive Director";
+                                                            $get_div = 'ODED';
+                                                            break;
+                                                        case 9:
+                                                            echo "Project Management Office";
+                                                            $get_div = 'PMO';
+                                                            break;
+                                                        case 10:
+                                                            echo "Monitoring and Evaluation Division";
+                                                            $get_div = 'MED';
+                                                            break;
+                                                        default:
+                                                            echo "ERROR";
+                                                            $get_div = 'ERROR';
+                                                            break;
+                                                    } ?> -->
                                         <?php endif ?>
                                     <?php endforeach; ?>
                                 <?php elseif ($action_message['doc_affiliated'] == "0") : ?>
@@ -638,10 +655,10 @@
                                 <?php foreach ($staffs as $staff) : ?>
                                     <?php if ($action_message['staff_name'] == $staff['staff_id']) : ?>
                                         <?php
-                                            $source = $this->dts->get_in_ex_source1($staff['division']); 
-                                            $get_div = $source['ds_code'];
+                                        $source = $this->dts->get_in_ex_source1($staff['division']);
+                                        $get_div = $source['ds_code'];
                                         ?>
-                                       
+
                                         <?php $encoded = $staff['lname']; ?>
                                     <?php endif ?>
                                 <?php endforeach; ?>
@@ -696,6 +713,34 @@
 <?php endforeach; ?>
 <!-- End Modal View Message and action -->
 
+<!--  Modal Add Concern Staff -->
+<div id="Add_staff" class="modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <?php echo form_open('admin/Documents/complate_doc/' . $doc_details['dd_id']); ?>
+            <div class="modal-body grid grid-cols-12 gap-4 gap-y-3">
+                <div class="col-span-12 sm:col-span-12">
+                    <label for="concern_staff" class="form-label"> Add Concern/s Staff </label>
+                    <select data-placeholder="Add Concern Staffs" data-search="true" class="tail-select w-full form-control" id="concern_staff" name="concern_staff[]" multiple>
+                        <?php foreach ($staffs as $staff) : ?>
+                            <?php if (!in_array($staff['staff_id'], $specificValues)) : ?>
+                                <option value="<?php echo $staff['staff_id']; ?>">
+                                    <?php echo $staff['fname']; ?> <?php echo $staff['lname']; ?>
+                                </option>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer text-right">
+                <button type="button" data-dismiss="modal" class="btn btn-outline-secondary w-20 dark:border-dark-5 dark:text-gray-300 mr-1">Cancel</button>
+                <button type="submit" class="btn btn-primary w-20">Yes!</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- End Modal Add Concern Staff -->
 <!--  Modal Complate -->
 <div id="Doc_Complate" class="modal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
@@ -706,12 +751,17 @@
                     <i data-feather="help-circle" class="w-16 h-16 text-theme-10 mx-auto mt-3"></i>
                     <div class="text-3xl mt-5">Are you sure?</div>
                     <div class="text-gray-600 mt-2">
-                        Do you want to Complete this document?
+                        <?php if ($doc_details['dd_encoded_doc'] == $staff_id) : ?>
+                            Do you want to Complete this document?
+                        <?php else : ?>
+                            Request this document to tag as completed
+                        <?php endif; ?>
                     </div>
                 </div>
                 <div class="px-5 pb-8 text-center">
                     <button type="button" data-dismiss="modal" class="btn btn-outline-secondary w-24 dark:border-dark-5 dark:text-gray-300 mr-1">Cancel</button>
-                    <button type="submit" class="btn btn-primary w-40">Yes, Complete it!</button>
+                    <button type="submit" name="action" value="pending" class="btn btn-warning w-30">Mark as Pending</button>
+                    <button type="submit" name="action" value="complete" class="btn btn-primary w-30">Yes!</button>
                 </div>
             </div>
             </form>
@@ -719,6 +769,30 @@
     </div>
 </div>
 <!-- End Modal Complate -->
+
+<!--  Modal Generate Route Slip -->
+<div id="Generate_Route" class="modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <?php echo form_open('admin/Documents/generate_routing/' . $doc_details['dd_id']); ?>
+            <div class="modal-body p-0">
+                <div class="p-5 text-center">
+                    <i data-feather="help-circle" class="w-16 h-16 text-theme-10 mx-auto mt-3"></i>
+                    <div class="text-3xl mt-5">Are you sure?</div>
+                    <div class="text-gray-600 mt-2">
+                        Do you want to generate routing slip?
+                    </div>
+                </div>
+                <div class="px-5 pb-8 text-center">
+                    <button type="button" data-dismiss="modal" class="btn btn-outline-secondary w-24 dark:border-dark-5 dark:text-gray-300 mr-1">Cancel</button>
+                    <button type="submit" class="btn btn-primary w-40">Yes</button>
+                </div>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- End Modal Generate Route Slip -->
 
 <!-- Modal Document Action -->
 <div id="header-footer-modal" class="p-5">
@@ -738,41 +812,32 @@
                     <!-- BEGIN: Modal Body -->
                     <div class="modal-body grid grid-cols-12 gap-4 gap-y-3">
 
-                    <?php
-                        $source = $this->dts->get_in_ex_source1($this->session->userdata('staff_division')); 
+                        <?php
+                        $source = $this->dts->get_in_ex_source1($this->session->userdata('staff_division'));
                         $my_div = $source['ds_code'];
-                    ?>
+                        ?>
                         <input type="hidden" value="<?php echo $dd_division; ?>" id="my_div" name="my_div">
                         <!-- <input type="hidden" value="<?php echo $my_div; ?>" id="my_div" name="my_div"> -->
-                        <!-- <div class="col-span-12 sm:col-span-12">
-                            <label for="concern_staff" class="form-label"> Add Concern/s Staff </label>
-                            <select data-placeholder="Add Concern Staffs" data-search="true" class="tail-select w-full form-control" id="concern_staff" name="concern_staff[]" multiple>
-                                <?php foreach ($staffs as $staff) : ?>
-                                    <?php if (!in_array($staff['staff_id'], $specificValues)) : ?>
-                                        <option value="<?php echo $staff['staff_id']; ?>" >
-                                        <?php echo $staff['fname']; ?> <?php echo $staff['lname']; ?>
-                                        </option>
-                                    <?php endif; ?>
-                                <?php endforeach; ?>
-                            </select>
-                        </div> -->
+
                         <div class="col-span-12 sm:col-span-12">
                             <label for="modal-form-1" class="form-label">Document Status</label>
                             <select data-placeholder="Select Document Status" data-search="true" class="tail-select w-full form-control" id="doc_status" name="doc_status">
                                 <optgroup label="Required Actions">
                                     <option value="2">On Process</option>
                                     <option value="3">Re-process</option>
-                                    <option value="4">Release Document</option>
+                                    <!-- <option value="4">Release Document</option> -->
                                 </optgroup>
                             </select>
                         </div>
-                        <div class="col-span-12 sm:col-span-12">
-                            <label for="dispatch" class="form-label"> For Dispatch </label>
-                            <div class="form-check">
-                                <input id="dispatch" name="dispatch" class="form-check-input" type="checkbox">
-                                <label class="form-check-label" for="dispatch">If you want to dispatch this document please check this box.</label>
+                        <?php if ($doc_details['dd_status'] != "5"): ?>
+                            <div class="col-span-12 sm:col-span-12">
+                                <label for="dispatch" class="form-label"> For Dispatch </label>
+                                <div class="form-check">
+                                    <input id="dispatch" name="dispatch" class="form-check-input" type="checkbox">
+                                    <label class="form-check-label" for="dispatch">If you want to dispatch this document please check this box.</label>
+                                </div>
                             </div>
-                        </div>
+                        <?php endif; ?>
                         <div class="col-span-12 sm:col-span-12">
                             <label for="modal-form-1" class="form-label"> Action Taken </label>
                             <select data-placeholder="Select Required Action" data-search="true" class="tail-select w-full form-control" id="doc_action" name="doc_action[]" multiple>
@@ -821,12 +886,12 @@
                     <!-- END: Modal Header -->
                     <!-- BEGIN: Modal Body -->
                     <div class="modal-body grid grid-cols-12 gap-4 gap-y-3">
-                    <?php
-                        $source = $this->dts->get_in_ex_source1($this->session->userdata('staff_division')); 
+                        <?php
+                        $source = $this->dts->get_in_ex_source1($this->session->userdata('staff_division'));
                         $my_disvision = $source['ds_name'];
                         $my_div = $source['ds_code'];
-                    ?>
-                       
+                        ?>
+
                         <div class="col-span-12 sm:col-span-12">
                             <label for="get_my_staff" class="form-label"> Staff Name </label>
                             <input type="text" class="form-control" value="<?= $this->session->userdata('staff_fname'); ?> <?= $this->session->userdata('staff_lname'); ?>" disabled>
@@ -845,16 +910,28 @@
                             <label for="editor1" class="form-label"> Notes / Remarks </label>
                             <textarea placeholder="Enter Notes / Remarks" id="editor1" name="editor1" class="form-control"></textarea>
                         </div>
+                        <!-- type of Document single -->
+                        <div class="col-span-12 sm:col-span-12" id="action_solo">
+                            <label for="reply_type_doc" class="form-label sm:w-40" style="text-align: left;">Type of Document</label>
+                            <select data-search="true" id="reply_type_doc" name="reply_type_doc" class="tail-select w-full form-control">
+                                <optgroup label="Type of Document">
+                                    <option value="0" selected>Select Type of document</option>
+                                    <?php foreach ($type_documents as $type_document) : ?>
+                                        <option value="<?php echo $type_document['dt_id']; ?>"><?php echo $type_document['dt_name']; ?></option>
+                                    <?php endforeach; ?>
+                                </optgroup>
+                            </select>
+                        </div>
                         <div class="col-span-12 sm:col-span-12">
                             <label for="modal-form-1" class="form-label">Select files</label>
                             <div id="multiple-file-upload" class="form-control">
                                 <div class="preview">
                                     <div class="fallback">
-                                        <input type="file" class="upload" id="files" <?php if (!empty($files_array)) {
-                                                                                            if (count($files_array) >= 10) {
-                                                                                                echo 'disabled';
-                                                                                            }
-                                                                                        } ?> accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,application/vnd.ms-excel" name="files[]" onchange="readURL(this);" multiple />
+                                        <input type="file" class="upload" id="reply_files" <?php if (!empty($files_array)) {
+                                                                                                if (count($files_array) >= 10) {
+                                                                                                    echo 'disabled';
+                                                                                                }
+                                                                                            } ?> accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,application/vnd.ms-excel" name="files[]" onchange="readURL(this);" multiple />
                                     </div>
                                 </div>
                             </div>
@@ -865,7 +942,7 @@
 
                     <div class="modal-footer text-right">
                         <button type="button" data-dismiss="modal" class="btn btn-outline-secondary w-25"> <i data-feather="x" class="w-4 h-4"></i> &nbsp; Cancel</button>
-                        <button type="submit" data-dismiss="modal" class="btn btn-primary w-25 reply"> <i data-feather="send" class="w-4 h-4"></i> &nbsp; Send </button>
+                        <button type="submit" class="btn btn-primary w-25 reply"> <i data-feather="send" class="w-4 h-4"></i> &nbsp; Send </button>
                     </div>
                     <?php echo form_close(); ?>
                     <!-- END: Modal Footer -->
@@ -881,11 +958,11 @@
 <div id="header-footer-modal" class="p-5">
     <div class="preview">
         <!-- BEGIN: Modal Content -->
-                        
+
         <div id="Upload_file" class="modal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <?php echo form_open_multipart('admin/Documents/file_attachment/' . $doc_details['dd_id'] . "/" . $dd_division . "/" . $dd_lname); ?>
+                    <?php echo form_open_multipart('admin/Documents/file_attachment/' . $doc_details['dd_id'] . "/" . $dd_division . "/" . $dd_lname, ['id' => 'viewDocForm']); ?>
                     <!-- BEGIN: Modal Header -->
                     <div class="modal-header">
                         <h2 class="font-medium text-base mr-auto">
@@ -895,17 +972,31 @@
                     <!-- END: Modal Header -->
                     <!-- BEGIN: Modal Body -->
                     <div class="modal-body grid grid-cols-12 gap-4 gap-y-3">
+                        <!-- type of Document single -->
+                        <div class="form-inline">
+                            <div class="form-inline mt-5" id="action_solo">
+                                <label for="add_doc" class="form-label sm:w-40" style="text-align: left;">Type of Document</label>
+                                <select data-search="true" id="add_doc" name="add_doc" class="tail-select form-control" required>
+                                    <optgroup label="Type of Document">
+                                        <option value="0" selected>Select Type of document</option>
+                                        <?php foreach ($type_documents as $type_document) : ?>
+                                            <option value="<?php echo $type_document['dt_id']; ?>"><?php echo $type_document['dt_name']; ?></option>
+                                        <?php endforeach; ?>
+                                    </optgroup>
+                                </select>
+                            </div>
+                        </div>
                         <div class="col-span-12 sm:col-span-12">
                             <label for="modal-form-1" class="form-label">Select files</label>
 
                             <div id="multiple-file-upload" class="form-control">
                                 <div class="preview">
                                     <div class="fallback">
-                                        <input type="file" class="upload" id="files" <?php if (!empty($files_array)) {
-                                                                                            if (count($files_array) >= 10) {
-                                                                                                echo 'disabled';
-                                                                                            }
-                                                                                        } ?> accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,application/vnd.ms-excel" name="files[]" onchange="readURL(this);" multiple />
+                                        <input type="file" class="upload" id="new_files" <?php if (!empty($files_array)) {
+                                                                                                if (count($files_array) >= 10) {
+                                                                                                    echo 'disabled';
+                                                                                                }
+                                                                                            } ?> accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,application/vnd.ms-excel" name="files[]" onchange="readURL(this);" multiple />
                                     </div>
                                 </div>
                             </div>
@@ -929,29 +1020,88 @@
 <!-- =================================================================================================================================================== -->
 <?php $this->load->view('admin/partials/footer.php'); ?>
 <script>
+    document.getElementById('viewDocForm').addEventListener('submit', function(event) {
+        const add_doc = document.getElementById('add_doc');
+        var fileInput = document.getElementById('new_files');
+
+        const selectedTypeDoc = Array.from(add_doc.selectedOptions).map(option => option.value);
+
+        if (selectedTypeDoc.includes("0")) {
+            Swal.fire({
+                target: document.getElementById('Upload_file'),
+                icon: 'error',
+                text: 'Please select at least one type of document.',
+            });
+            event.preventDefault(); // Prevent form submission
+            return;
+        }
+
+        if (!fileInput.value) {
+            Swal.fire({
+                target: document.getElementById('Upload_file'),
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Please select a file to upload!',
+            });
+
+            event.preventDefault();
+            return;
+        }
+
+    });
+</script>
+<script>
     document.getElementById('replyForm').addEventListener('submit', function(event) {
         const textarea2 = document.getElementById('editor1');
+        const replyTypeDoc = document.getElementById('reply_type_doc');
+        const replyFiles = document.getElementById('reply_files');
+        const selectedTypeDoc = Array.from(replyTypeDoc.selectedOptions).map(option => option.value);
 
         if (textarea2.value.trim() === '') {
             Swal.fire({
+                target: document.getElementById('Reply_Message'),
                 icon: 'error',
                 title: 'Error Submitting',
                 text: 'Notes/Remarks Cannot be empty',
             })
             event.preventDefault(); // Prevent form submission
+            return;
+        }
+        if (selectedTypeDoc.includes("0")) {
+            Swal.fire({
+                target: document.getElementById('Reply_Message'),
+                icon: 'error',
+                title: 'Error Submitting',
+                text: 'Please select the type of document.',
+            });
+            event.preventDefault(); // Prevent form submission
+            return;
+        }
+
+        if (!replyFiles.value) {
+            Swal.fire({
+                target: document.getElementById('Reply_Message'),
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Please select a file to upload!',
+            });
+
+            event.preventDefault();
+            return;
         }
 
     });
 </script>
-<script> 
+<script>
     document.getElementById('notesForm').addEventListener('submit', function(event) {
         const textarea = document.getElementById('editorDocAction');
         const textarea2 = document.getElementById('concern_staff');
         const docaction = document.getElementById('doc_action');
 
-       
+
         if (textarea.value.trim() === '') {
             Swal.fire({
+                target: document.getElementById('Document_Action'),
                 icon: 'error',
                 title: 'Error Submitting',
                 text: 'Notes/Remarks Cannot be empty',
@@ -964,6 +1114,7 @@
         const selecteddocaction = Array.from(docaction.selectedOptions).map(option => option.value);
         if (docaction.selectedOptions.length === 0) {
             Swal.fire({
+                target: document.getElementById('Document_Action'),
                 icon: 'error',
                 text: 'Please select at least one action.',
             });
@@ -1068,6 +1219,7 @@
     $('.reply').on('click', function(e) {
         let timerInterval
         Swal.fire({
+            target: document.getElementById('Reply_Message'),
             title: 'Please Wait...',
             html: 'I will close in <b></b> milliseconds.',
             timer: 3000,

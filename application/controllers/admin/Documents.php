@@ -16,14 +16,18 @@ class Documents extends CI_Controller
 
     public function index()
     {
+        log_message('debug', __METHOD__);
 
-        $data['staffs'] = $this->dts->get_staff_details();
-        $data['records_incoming'] = '0';
-        $data['type_action_takens'] = $this->dts->get_action_taken();
-        $data['type_documents'] = $this->dts->get_type_document();
-        $data['all_sources'] = $this->dts->get_all_source();
-        $data['get_internal_sources'] = $this->dts->get_internal_source();
+        $data = array(
+            'staffs' => $this->dts->get_staff_details(),
+            'records_incoming' => '0',
+            'type_action_takens' => $this->dts->get_action_taken(),
+            'type_documents' => $this->dts->get_type_document(),
+            'all_sources' => $this->dts->get_all_source(),
+            'get_internal_sources' => $this->dts->get_internal_source(),
+        );
 
+        // log_message('debug', 'my current data: '.print_r($data, true));
 
         $s_division = $this->session->userdata('staff_division');
         $data['get_s_division'] = $this->dts->get_s_division($s_division);
@@ -44,14 +48,65 @@ class Documents extends CI_Controller
         $this->load->view('admin/Documents/new_document', $data);
     }
 
-    public function newdoc()
+    public function updateDoc()
     {
+
+        $doc_id = $this->uri->segment(4);
+        $data = array(
+            'doc_id' => $doc_id,
+            'staffs' => $this->dts->get_staff_details(),
+            'records_incoming' => '0',
+            'type_action_takens' => $this->dts->get_action_taken(),
+            'type_documents' => $this->dts->get_type_document(),
+            'all_sources' => $this->dts->get_all_source(),
+            'get_internal_sources' => $this->dts->get_internal_source(),
+            'get_docs' => $this->dts->get_doc_pending($doc_id),
+        );
+        $data['getdoc'] = $data['get_docs'][0];
+
+        $data['bundled_type'] = explode(",", $data['getdoc']['dd_bundleDocs']); //Get Document Type
+
+        $data['doc_types'] = explode(",", $data['getdoc']['dd_doct_type']); //Get Document Action
+        $data['doc_action'] = explode(",", $data['getdoc']['dd_action_taken']); //Get Document Action
+
+        $data['route_div'] = explode(",", $data['getdoc']['dd_view_doc']); //Get Division/Unit
+
+        $data['route_staff'] = explode(",", $data['getdoc']['dd_routed_to']); //Get Staff/s for routing
+
+        log_message('debug', "Doc type: " . print_r($data['doc_types'], true));
+
+        $this->load->view('admin/Documents/update_document', $data);
+    }
+
+    public function editDoc($dd_id)
+    {
+        $existing_file = $this->dts->get_file_attachment($dd_id);
+        // log_message('debug', "My Data: " . print_r($existing_file['dd_filename'], true));
         // FILE UPLOAD START
         $s_division = $this->session->userdata('staff_division');
         $data['get_s_division'] = $this->dts->get_s_division($s_division);
         $my_division = $data['get_s_division']['sd_code_name'];
         $lname = $this->session->userdata('staff_lname');
         $folder_lname = str_replace(" ", "_", trim($lname));
+
+        $moredocs = $this->input->post('moredocs', TRUE) == null ? '0' : '1'; //Check if Multiple Docs
+        $type_doc = $this->input->post('type_doc') == 'Select' ? '0' : $this->input->post('type_doc'); // Get Doc Type
+        $type_docs = implode(', ', $this->input->post('type_docs[]') == '' ? array('0') : $this->input->post('type_docs[]'));
+        $document_type = $this->dts->get_bundle($type_doc); // Get Doc Type
+        if ($moredocs == '1') {
+            // $document_code = 'Multiple';
+            $type_docs_array = explode(', ', $type_docs);
+            foreach ($type_docs_array as $typeDocs) {
+                $document_type_all = $this->dts->get_bundle($typeDocs); // Get Doc Type
+                $document_code[] = $document_type_all['dt_code'];
+            }
+        } else {
+            $document_type = $this->dts->get_bundle($type_doc); // Get Doc Type
+            $document_code = $document_type['dt_code'];
+        }
+
+
+        $today = date("Ymd"); // Get Today Date
 
         $data = array();
         $filesCount = count($_FILES['files']['name']);
@@ -76,9 +131,215 @@ class Documents extends CI_Controller
 
             // Insert new name for image
             $lname = $this->session->userdata('staff_lname');
-            $token = substr(number_format(time() * rand(), 0, '', ''), 0, 6);
+            $token = substr(number_format(time() * rand(), 0, '', ''), 0, 6); //Random Token
             $temp = explode(".", $_FILES["file"]["name"]);
-            $new_name = $lname . '-' . $token . '.' . end($temp);
+            // $new_name = $document_code . '-' . $today . '-' . $token .  '.' . end($temp);
+            if ($moredocs == '1') {
+                if ($filesCount == count($document_code)) {
+                    $new_name = $document_code[$i] . '-' . $today . '-' . $token .  '.' . end($temp);
+                } elseif ($filesCount != count($document_code)) {
+                    $new_name = $document_code[0] . '-' . $today . '-' . $token .  '.' . end($temp);
+                }
+            } else {
+                $new_name = $document_code . '-' . $today . '-' . $token .  '.' . end($temp);
+            }
+
+            $config['file_name'] = $new_name;
+            $this->load->library('upload', $config);
+            $this->upload->initialize($config);
+
+            // Upload file to server
+            if ($this->upload->do_upload('file')) {
+                // Uploaded file data
+                $fileData = $this->upload->data();
+                $uploadData[$i]['file_name'] = $fileData['file_name'];
+
+                $get_filename = $fileData['file_name'];
+                $file_ext[$i]['test'] = pathinfo($get_filename, PATHINFO_EXTENSION);
+            }
+        }
+
+        $file_ex = '';
+        if (!empty($file_ext)) {
+            foreach ($file_ext as $ext) {
+                $file_ex .=  $ext['test'] . '|';
+                $file_e =  substr($file_ex, 0, -1);
+            }
+            $file_get = $file_e . "," . $existing_file['dd_filetype'];
+        } else {
+            $file_get = $existing_file['dd_filetype'];
+        }
+
+        $file_t = '';
+        if (!empty($uploadData)) {
+            foreach ($uploadData as $f) {
+                $file_t .=  '|' . $f['file_name'] . '|';
+            }
+            $files_array_upd = $file_t . $existing_file['dd_filename'];
+        } else {
+            // $files_array_new = '|No Uploaded Files!|';
+            $files_array_upd = $existing_file['dd_filename'];
+        }
+
+        $source_doc = $this->input->post('source_doc');
+        $priorityLevel = $this->input->post('priority_level');
+        $source_div = $this->dts->get_s_division($source_doc)['sd_code_name'];
+
+        $records_id = $this->input->post('records_status');
+
+        if ($records_id == 0) {
+            $source = $this->dts->get_in_ex_source1($source_doc);
+            // $source_label = $source['ds_code']; // source code number
+            $source_label = $source['ds_code']; // source code number
+            $count = $this->db->from("document_details")->count_all_results();
+        }
+
+        $doc_year = date('Y');
+
+        $number = sprintf("%04s", $count);
+        $year = substr($doc_year, -2);
+
+        $doc_no = $source_label . '-' . $number . '-' . $year;
+
+        $sub_title = $this->input->post('sub_title');
+
+        $datesent = $this->input->post('datepicker');
+        $editor1 = $this->input->post('editor1');
+
+        $staffs = $this->dts->get_staff_details();
+        $log_user = '';
+        foreach ($staffs as $staff) {
+            if ($staff['staff_id'] == $this->session->userdata('staff_id')) {
+                $log_user = $this->session->userdata('staff_id'); // get the staff id of the logged in user
+            }
+        }
+
+        //staff_id of person encoded
+        $action_taken = implode(', ', $this->input->post('action_taken[]'));
+        $div_unit = implode(', ', $this->input->post('div_unit[]'));
+        $staff_details =  $log_user . ", " . implode(', ', $this->input->post('staff_details[]')); // add the logged in user to the staff details array
+
+
+        $staff_datas = explode(", ", $staff_details);
+        $source_staff = '';
+        $source_email = '';
+        foreach ($staff_datas as $myid) {
+            $data = $this->dts->routed_details($myid);
+
+            $source_staff .= $data['fname'] . ' ' . $data['lname'] . ', ';
+            $source_email .= $data['official_email'] . ', ';
+            $source_staffs =  substr($source_staff, 0, -2);
+            $source_emails =  substr($source_email, 0, -2);
+        }
+        $source_staffs_name = $source_staffs;
+
+        //staff_id of person encoded
+        $staff_id = $this->session->userdata('staff_id');
+        // $this->load->view('admin/Documents/edit_document', $data);
+        $staff_id = $this->session->userdata('staff_id');
+        $dd_disregard_doc = 0;
+        $this->dts->updateDocDetails(
+            $dd_id,
+            $doc_no,
+            $source_doc,
+            $sub_title,
+            $files_array_upd,
+            $moredocs,
+            $type_doc,
+            $action_taken,
+            $datesent,
+            $div_unit,
+            $staff_details,
+            $editor1,
+            $type_docs,
+            $priorityLevel,
+            $file_get,
+            $staff_id,
+            $dd_disregard_doc,
+            $source_staffs_name,
+            $records_id
+        );
+
+        $this->session->set_flashdata('success', 'Data updated successfully');
+        redirect(base_url('admin/Dashboard')); //default Documents
+    }
+
+
+    public function get_file_pending($doc_id)
+    {
+
+        $getdocs = $this->dts->get_doc_pending($doc_id);
+        $getdoc = $getdocs[0];
+        $filename = substr($getdoc['dd_filename'], 1, -1);
+        $data['fileNames'] = explode('||', $filename);
+        echo json_encode($data['fileNames']);
+    }
+
+    public function newdoc()
+    {
+        // FILE UPLOAD START
+        $s_division = $this->session->userdata('staff_division');
+        $data['get_s_division'] = $this->dts->get_s_division($s_division);
+        $my_division = $data['get_s_division']['sd_code_name'];
+        $lname = $this->session->userdata('staff_lname');
+        $folder_lname = str_replace(" ", "_", trim($lname));
+
+        $moredocs = $this->input->post('moredocs', TRUE) == null ? '0' : '1'; //Check if Multiple Docs
+        $type_docs = implode(', ', $this->input->post('type_docs[]') == '' ? array('0') : $this->input->post('type_docs[]'));
+        $type_doc = is_null($this->input->post('type_doc')) ? '0' : $this->input->post('type_doc'); // Get Doc Type
+
+        if ($moredocs == '1') {
+            // $document_code = 'Multiple';
+            $type_docs_array = explode(', ', $type_docs);
+            foreach ($type_docs_array as $typeDocs) {
+                $document_type_all = $this->dts->get_bundle($typeDocs); // Get Doc Type
+                $document_code[] = $document_type_all['dt_code'];
+            }
+        } else {
+            $document_type = $this->dts->get_bundle($type_doc); // Get Doc Type
+            $document_code = $document_type['dt_code'];
+        }
+
+
+        $today = date("Ymd"); // Get Today Date
+
+
+        $data = array();
+        $filesCount = count($_FILES['files']['name']);
+        for ($i = 0; $i < $filesCount; $i++) {
+            $_FILES['file']['name']     = $_FILES['files']['name'][$i];
+            $_FILES['file']['type']     = $_FILES['files']['type'][$i];
+            $_FILES['file']['tmp_name'] = $_FILES['files']['tmp_name'][$i];
+            $_FILES['file']['error']     = $_FILES['files']['error'][$i];
+            $_FILES['file']['size']     = $_FILES['files']['size'][$i];
+
+            $doc_directory = "./assets/upload/" . $my_division . "/" . $folder_lname . "/";
+
+            if (!file_exists("./assets/upload/" . $my_division . "/" . $folder_lname . "/")) {
+                mkdir("./assets/upload/" . $my_division . "/" . $folder_lname . "/", 0777, true);
+            }
+
+            //upload files
+            $config['upload_path'] = $doc_directory;
+            $config['allowed_types'] = 'pdf|png|jpg|jpeg|xls|xlsx|doc|docx';
+            $config['remove_spaces'] = TRUE;
+            $config['max_size'] = '0';
+
+            // Insert new name for file
+            $lname = $this->session->userdata('staff_lname');
+            $token = substr(number_format(time() * rand(), 0, '', ''), 0, 6); //Random Token
+            $temp = explode(".", $_FILES["file"]["name"]);
+            if ($moredocs == '1') {
+                if ($filesCount == count($document_code)) {
+                    $new_name = $document_code[$i] . '-' . $today . '-' . $token .  '.' . end($temp);
+                } elseif ($filesCount != count($document_code)) {
+                    $new_name = $document_code[0] . '-' . $today . '-' . $token .  '.' . end($temp);
+                }
+            } else {
+                $new_name = $document_code . '-' . $today . '-' . $token .  '.' . end($temp);
+            }
+
+            // log_message('debug', "type of document: " . print_r($new_name, true));
 
             $config['file_name'] = $new_name;
             $this->load->library('upload', $config);
@@ -117,45 +378,14 @@ class Documents extends CI_Controller
             $files_array_new = '';
         }
 
-        if ($this->input->post('records_status') == 0) {
-        } else {
-        }
+        // if ($this->input->post('records_status') == 0) {
+        // } else {
+        // }
 
         $source_doc = $this->input->post('source_doc');
+        $priorityLevel = $this->input->post('priority_level');
         $source_div = $this->dts->get_s_division($source_doc)['sd_code_name'];
 
-        // switch ($source_doc) {
-        //     case 2:
-        //         $dd_text = 'PPRD';
-        //         break;
-        //     case 3:
-        //         $dd_text = 'LID';
-        //         break;
-        //     case 4:
-        //         $dd_text = 'MISU';
-        //         break;
-        //     case 5:
-        //         $dd_text = 'AFD';
-        //         break;
-        //     case 6:
-        //         $dd_text = 'PAIO';
-        //         break;
-        //     case 7:
-        //         $dd_text = 'OED';
-        //         break;
-        //     case 8:
-        //         $dd_text = 'ODED';
-        //         break;
-        //     case 9:
-        //         $dd_text = 'PMO';
-        //         break;
-        //     case 10:
-        //         $dd_text = 'MED';
-        //         break;
-        //     default:
-        //         echo "ERROR";
-        //         break;
-        // }
         $records_id = $this->input->post('records_status');
 
         if ($records_id == 0) {
@@ -170,24 +400,25 @@ class Documents extends CI_Controller
         }
 
         $doc_year = date('Y');
-
         $number = sprintf("%04s", $count);
         $year = substr($doc_year, -2);
-
-        $doc_no = $source_label . '-' . $number . '-' . $year;
-
-        $sub_title = $this->input->post('sub_title');
-        $moredocs = $this->input->post('moredocs', TRUE) == null ? '0' : '1';
-
-        $type_doc = $this->input->post('type_doc') == 'Select' ? '0' : $this->input->post('type_doc');
-
-        $datesent = $this->input->post('datepicker');
+        $doc_no = $source_label . '-' . $number . '-' . $year; //Document Routing Number
+        $sub_title = $this->input->post('sub_title'); // Document Title
+        $datesent = $this->input->post('datepicker'); //Date Created
         $editor1 = $this->input->post('editor1');
-
-        $type_docs = implode(', ', $this->input->post('type_docs[]') == '' ? array('0') : $this->input->post('type_docs[]'));
         $action_taken = implode(', ', $this->input->post('action_taken[]'));
         $div_unit = implode(', ', $this->input->post('div_unit[]'));
-        $staff_details =  implode(', ', $this->input->post('staff_details[]'));
+        $staffs = $this->dts->get_staff_details();
+        $log_user = '';
+        foreach ($staffs as $staff) {
+            if ($staff['staff_id'] == $this->session->userdata('staff_id')) {
+                $log_user = $this->session->userdata('staff_id'); // get the staff id of the logged in user
+            }
+        }
+
+        //staff_id of person encoded   
+        $staff_details =  $log_user . ", " . implode(', ', $this->input->post('staff_details[]')); // add the logged in user to the staff details array
+
 
         $staff_datas = explode(", ", $staff_details);
         $source_staff = '';
@@ -203,10 +434,6 @@ class Documents extends CI_Controller
         $source_staffs_name = $source_staffs;
         $source_staffs_email = explode(", ", $source_emails);
 
-
-        //staff_id of person encoded
-        $staff_id = $this->session->userdata('staff_id');
-
         if ($source_doc == 1) {
             $dd_disregard_doc = 1;
             $not_listed = $this->input->post('not_liste');
@@ -217,12 +444,15 @@ class Documents extends CI_Controller
         }
         // new add data , $dd_disregard_doc,$not_listed
 
-        $this->dts->insertDocDetails($doc_no, $source_doc, $sub_title, $files_array_new, $moredocs, $type_doc, $action_taken, $datesent, $div_unit, $staff_details, $editor1, $type_docs, $file_get, $staff_id, $dd_disregard_doc, $source_staffs_name, $records_id);
+        //staff_id of person encoded
+        $staff_id = $this->session->userdata('staff_id');
 
-        $emails = array();
-        foreach ($source_staffs_email as $test1) {
-            array_push($emails, $test1);
-        }
+        $this->dts->insertDocDetails($doc_no, $source_doc, $sub_title, $files_array_new, $moredocs, $type_doc, $action_taken, $datesent, $div_unit, $staff_details, $editor1, $type_docs, $priorityLevel, $file_get, $staff_id, $dd_disregard_doc, $source_staffs_name, $records_id);
+
+        // $emails = array();
+        // foreach ($source_staffs_email as $test1) {
+        //     array_push($emails, $test1);
+        // }
 
         //            $this->load->library('email');
         //            $config = Array(
@@ -290,7 +520,7 @@ class Documents extends CI_Controller
         $staff = $this->session->userdata('staff_id');
 
         $config = array();
-        $config["base_url"] = base_url() . "admin/Documents/incoming";
+        $config["base_url"] = base_url() . "admin/documents/incoming";
         $config["total_rows"] = $this->dts->count_doc_pagination($staff);
         $config["per_page"] = 10;
         $config["uri_segment"] = 4;
@@ -314,9 +544,9 @@ class Documents extends CI_Controller
         $config["num_tag_close"] = '</li>';
 
         $this->pagination->initialize($config);
-        $page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
+        $page = $this->uri->segment(4) ? $this->uri->segment(4) : 0;
         $data['posts'] = $this->dts->get_doc_pagination($config["per_page"], $page, $staff);
-
+        // log_message('debug', 'Limit: ' . print_r($data['posts'], true));
         $data['get_id_staffs'] = $this->dts->get_my_division($staff);
         $data['count'] =  $this->dts->count_doc_incoming($staff);
 
@@ -410,12 +640,15 @@ class Documents extends CI_Controller
 
     public function viewDoc($dd_id)
     {
-
-        $data['doc_details'] = $this->dts->view_get_details($dd_id);
-        $data['doc_reply'] = $this->dts->get_document_reply($dd_id);
-        $data['action_messages'] = $this->dts->get_document_reply($dd_id);
-        $data['type_action_takens'] = $this->dts->get_action_taken();
-        $data['staffs'] = $this->dts->get_staff_details();
+        $data = array(
+            'type_documents' => $this->dts->get_type_document(),
+            'doc_details' => $this->dts->view_get_details($dd_id),
+            'doc_reply' =>  $this->dts->get_document_reply($dd_id),
+            'action_messages' =>  $this->dts->get_document_reply($dd_id),
+            'type_action_takens' => $this->dts->get_action_taken(),
+            'staffs' =>  $this->dts->get_staff_details(),
+            'staff_id' =>  $this->session->userdata('staff_id')
+        );
         $stap = $this->dts->get_staff_details();
         // $data['staffIds'] = array_column($stap, 'staff_id');
         $staf = $data['doc_details']['dd_routed_to'];
@@ -452,7 +685,17 @@ class Documents extends CI_Controller
         $data['get'] = $v_imgs;
         $data['get_imgs'] = preg_replace('/- *$/ismU', " ", trim($get_img));
 
-        $this->load->view('admin/Documents/view_doc', $data);
+        $user_logged = $this->session->userdata('staff_id');
+        if (!in_array($user_logged, explode(',', $staf))) {
+            $data['heading'] = 'Access Denied';
+            $data['message'] = 'You are not authorized to view this document.';
+
+            $this->load->view('errors/html/error_general', $data);
+
+            // redirect('admin/dashboard');
+        } else {
+            $this->load->view('admin/Documents/view_doc', $data);
+        }
     }
 
     public function delete_file_attachment($file_name, $dd_id)
@@ -466,21 +709,84 @@ class Documents extends CI_Controller
         $this->dts->update_file($files_array, $dd_id);
 
         $this->session->set_flashdata('deleted', 'File has been deleted successfully...');
+
         redirect(base_url() . "admin/Documents/viewDoc/" . $dd_id);
+    }
+
+    public function delete_file_pending()
+    {
+        if ($this->input->is_ajax_request()) {
+            $file_name = $this->input->post('del_filename');
+            $dd_id = $this->input->post('doc_id');
+
+
+            $exist = $this->dts->get_file_attachment($dd_id);
+
+            $remove_file = '|' . $file_name . '|';
+            $original = $exist['dd_filename'];
+            $files_array = str_replace($remove_file, '', $original);
+
+            $this->dts->update_file($files_array, $dd_id);
+
+            $data = array('response' => "success",);
+
+            echo json_encode($data['response']);
+            // log_message('debug', 'Data File: ' . print_r($this->dts->update_file($files_array, $dd_id), true));
+        }
+        // redirect(base_url() . "admin/Documents/updateDoc/" . $dd_id);
     }
 
     public function complate_doc($dd_id)
     {
         $doc_reply = $this->dts->get_document_reply($dd_id);
+        $doc_details = $this->dts->view_get_details($dd_id);
+        $action = $this->input->post('action');
 
-        if (empty($doc_reply)) {
-            $this->session->set_flashdata('error', 'No Conversation or File Uploaded found');
+        $doc_sender = $doc_details['dd_encoded_doc'];
+        $staff_id = $this->session->userdata('staff_id');
+
+        if ($action == 'complete') {
+            if (empty($doc_reply)) {
+                $this->session->set_flashdata('error', 'No Conversation or File Uploaded found');
+                redirect(base_url() . "admin/Documents/viewDoc/" . $dd_id);
+            } else {
+                if ($staff_id != $doc_sender) {
+                    $doc_status = '5'; //Pending Complete
+                    $this->dts->complate_file($dd_id, $doc_status); //update status to pending complete
+                    $this->session->set_flashdata('success', 'This file has been requested to tag as completed!');
+                    redirect(base_url() . "admin/Documents/viewDoc/" . $dd_id);
+                } elseif ($staff_id == $doc_sender) {
+                    $doc_status = '4'; //Completed
+                    $this->dts->complate_file($dd_id, $doc_status); //completed
+                    $this->session->set_flashdata('success', 'This file has been completed!');
+                    redirect(base_url() . "admin/Documents/viewDoc/" . $dd_id);
+                    log_message('debug', 'Data File: ' . print_r($staff_id, true) . 'as' . print_r($doc_sender, true));
+                }
+            }
+        }elseif ($action == 'pending') {
+            $doc_status = '1'; //mark pending
+            $this->dts->complate_file($dd_id, $doc_status); //mark pending
+            $this->session->set_flashdata('success', 'This file has mark pending!');
             redirect(base_url() . "admin/Documents/viewDoc/" . $dd_id);
-        } else {
-            $this->dts->complate_file($dd_id);
-            $this->session->set_flashdata('success', 'This file has been completed!');
-            redirect(base_url() . "admin/Documents/viewDoc/" . $dd_id);
-        }
+            // log_message('debug', 'Data File: ' . print_r($staff_id, true) . 'as' . print_r($doc_sender, true));
+        
+        } 
+    }
+
+    public function generate_routing($dd_id)
+    {
+        $data['doc_reply'] = $this->dts->get_document_reply($dd_id);
+
+        $this->load->library('pdf');
+        $image = $_SERVER['DOCUMENT_ROOT'] . "/ddocts/assets/cwc/cwc-logo.png";
+        $imagedata = base64_encode($image);
+        $data['imgpath'] = '<img src="data:image/png;base64, ' . $imagedata . '">';
+        date_default_timezone_set('Asia/Manila');
+        $date_now = date('Y-m-d H:i:s', time());
+        $data['title'] = 'Test';
+        $html = $this->load->view('admin/print_template/routing_slip', $data, true);
+        $filename = 'Routing Slip';
+        $this->pdf->generate($html, $filename, true, 'A4', 'portrait');
     }
 
     public function viewDoc_process($dd_id)
@@ -615,6 +921,10 @@ class Documents extends CI_Controller
         $lname = $this->session->userdata('staff_lname');
         $staff = $this->session->userdata('staff_id');
 
+        $add_reply_doc = $this->input->post('reply_type_doc') == 'Select' ? '0' : $this->input->post('reply_type_doc'); // Get Doc Type
+        $document_type = $this->dts->get_bundle($add_reply_doc); // Get Doc Type
+        $document_code = $document_type['dt_code'];
+        $today = date("Ymd"); // Get Today Date
         // FILE UPLOAD
         $data = array();
         $filesCount = count($_FILES['files']['name']);
@@ -638,7 +948,7 @@ class Documents extends CI_Controller
 
             $token = substr(number_format(time() * rand(), 0, '', ''), 0, 6);
             $temp = explode(".", $_FILES["file"]["name"]);
-            $new_name = $lname . '-' . $token . '.' . end($temp);
+            $new_name = $document_code . '-' . $today . '-' . $token .  '.'  . end($temp);
 
             $config['file_name'] = $new_name;
             $this->load->library('upload', $config);
@@ -745,9 +1055,15 @@ class Documents extends CI_Controller
     {
         $checkifExisiting = $this->dts->get_file_attachment($dd_id);
 
+        $add_doc = $this->input->post('add_doc') == 'Select' ? '0' : $this->input->post('add_doc'); // Get Doc Type
+        $document_type = $this->dts->get_bundle($add_doc); // Get Doc Type
+        $document_code = $document_type['dt_code'];
+
+        $today = date("Ymd"); // Get Today Date
         // FILE UPLOAD
         $data = array();
         $filesCount = count($_FILES['files']['name']);
+        log_message('debug', 'File count: ' . print_r($_FILES['files']['name'], true));
         for ($i = 0; $i < $filesCount; $i++) {
             $_FILES['file']['name']     = $_FILES['files']['name'][$i];
             $_FILES['file']['type']     = $_FILES['files']['type'][$i];
@@ -768,9 +1084,9 @@ class Documents extends CI_Controller
 
 
             $uploaderLname = $this->session->userdata('staff_lname'); // get the logged in user's last name
-            $token = substr(number_format(time() * rand(), 0, '', ''), 0, 6);
+            $token = substr(number_format(time() * rand(), 0, '', ''), 0, 6); //Random Numbers (Previous File name)
             $temp = explode(".", $_FILES["file"]["name"]);
-            $new_name = $uploaderLname . '-' . $token . '.' . end($temp);
+            $new_name = $document_code . '-' . $today . '-' . $token .  '.'  . end($temp);
 
             $config['file_name'] = $new_name;
             $this->load->library('upload', $config);
@@ -807,7 +1123,7 @@ class Documents extends CI_Controller
             $this->dts->update_files_array($files_array, $dd_id);
         }
 
-        $this->session->set_flashdata('deleted', 'File has been uploaded successfully...');
+        $this->session->set_flashdata('success', 'File has been uploaded successfully...');
         redirect(base_url() . "admin/Documents/viewDoc/" . $dd_id);
     }
 

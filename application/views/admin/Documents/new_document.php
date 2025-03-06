@@ -14,7 +14,7 @@
             Route Document <?php echo $textdisplay; ?>
         </h2>
     </div>
-    <br>
+
     <!-- BEGIN: Post Info -->
     <div class="intro-y box mt-5">
         <div class="flex flex-col sm:flex-row items-center p-5 border-b border-gray-200 dark:border-dark-5">
@@ -48,47 +48,6 @@
                                 <?php endforeach; ?>
                             </optgroup>
                         <?php else : ?>
-                            <?php switch ($this->session->userdata('staff_division')) {
-                                case 2:
-                                    $dd_id = "2";
-                                    $dd_text = 'PPRD - Policy, Planning, and Research Division';
-                                    break;
-                                case 3:
-                                    $dd_id = "3";
-                                    $dd_text = 'LID - Localization and Institutional Division';
-                                    break;
-                                case 4:
-                                    $dd_id = 4;
-                                    $dd_text = 'MISU - Management Information Systems Unit';
-                                    break;
-                                case 5:
-                                    $dd_id = "5";
-                                    $dd_text = 'AFD - Administrative and Finance Division';
-                                    break;
-                                case 6:
-                                    $dd_id = "6";
-                                    $dd_text = 'PAIO - Public Affairs and Information Office';
-                                    break;
-                                case 7:
-                                    $dd_id = "7";
-                                    $dd_text = 'OED - Office of the Executive Director';
-                                    break;
-                                case 8:
-                                    $dd_id = "8";
-                                    $dd_text = 'ODED - Office of the Deputy Executive Director';
-                                    break;
-                                case 9:
-                                    $dd_id = "9";
-                                    $dd_text = 'PMO - Project Management Office';
-                                    break;
-                                case 10:
-                                    $dd_id = "10";
-                                    $dd_text = 'MED - Monitoring and Evalution Division';
-                                    break;
-                                default:
-                                    echo "ERROR";
-                                    break;
-                            } ?>
                             <?php foreach ($all_sources as $all_source) : ?> <!-- Here is the code use for the Select Option-->
                                 <?php if ($all_source['ds_id'] == $this->session->userdata('staff_division')) : ?>
                                     <option value="<?php echo $all_source['ds_id']; ?>" selected><?php echo $all_source['ds_name']; ?></option>
@@ -128,7 +87,7 @@
 
                 <!-- Subject Title -->
                 <div class="form-inline mt-5">
-                    <label for="sub_title" class="form-label sm:w-40" style="text-align: left;">Subject Title</label>
+                    <label for="sub_title" class="form-label sm:w-40" style="text-align: left;">Subject Title <span class="required_field">*</span></label>
                     <textarea placeholder="Enter Subject Title" id="sub_title" name="sub_title" class="form-control" required></textarea>
                 </div>
 
@@ -160,7 +119,7 @@
 
                 <!-- type of Document single -->
                 <div class="form-inline mt-5" id="action_solo">
-                    <label for="type_doc" class="form-label sm:w-40" style="text-align: left;">Type of Document</label>
+                    <label for="type_doc" class="form-label sm:w-40" style="text-align: left;">Type of Document <span class="required_field">*</span></label>
                     <select data-search="true" id="type_doc" name="type_doc" class="tail-select w-full form-control">
                         <optgroup label="Type of Document">
                             <option value="0" selected>Select Type of document</option>
@@ -173,7 +132,7 @@
 
                 <!-- type of Document multi -->
                 <div class="form-inline mt-5" id="action_multi" style="display: none">
-                    <label for="type_docs" class="form-label sm:w-40" style="text-align: left;">Type of documents</label>
+                    <label for="type_docs" class="form-label sm:w-40" style="text-align: left;">Type of documents <span class="required_field">*</span></label>
                     <select data-placeholder="Select Type of documents" data-search="true" class="tail-select w-full form-control" id="type_docs" name="type_docs[]" multiple>
                         <optgroup label="Type of documents">
                             <?php foreach ($type_documents as $type_document) : ?>
@@ -186,7 +145,7 @@
 
                 <!-- Required Action -->
                 <div class="form-inline mt-5">
-                    <label for="action_taken" class="form-label sm:w-40" style="text-align: left;">Required Action</label>
+                    <label for="action_taken" class="form-label sm:w-40" style="text-align: left;">Required Action <span class="required_field">*</span></label>
                     <select data-placeholder="Select Required Action" data-search="true" class="tail-select w-full form-control" id="action_taken" name="action_taken[]" multiple>
                         <optgroup label="Required Actions">
                             <?php foreach ($type_action_takens as $type_action_taken) : ?>
@@ -209,12 +168,33 @@
                     <input type="text" class="form-control" value="<?php echo $picker; ?>" disabled>
                     <input id="datepicker" name="datepicker" type="hidden" class="form-control" value="<?php echo $picker; ?>">
                 </div>
+                <!-- Priority Level -->
+                <div class="form-inline mt-5" id="priority_level">
+                    <label for="priority_level" class="form-label sm:w-40" style="text-align: left;">Priority Level</label>
+                    <select data-search="true" id="priority_level" name="priority_level" class="tail-select w-full form-control">
+                        <optgroup label="Select Priority Level">
+                            <option value="1">Urgent</option>
+                            <option value="2">Not Urgent</option>
+                        </optgroup>
+                    </select>
+                </div>
 
+                <!-- division checkboxs -->
                 <div>
                     <div class="form-inline mt-5">
-                        <label class="form-label sm:w-40" style="text-align: left;">Route to Divsion/Unit</label>
+                        <label for="div_unit" class="form-label sm:w-40" style="text-align: left;">Route to Divsion/Unit <span class="required_field">*</span></label>
+                        <select data-placeholder="Select Division/s To Route" data-search="true" class="tail-select w-full form-control" id="div_unit" name="div_unit[]" multiple>
+                            <optgroup label="Select Division/s To Route">
+                                <?php foreach ($all_sources as $all_source) : ?>
+                                    <?php if ($all_source['ds_id'] != 1) : ?>
+                                        <option value="<?php echo $all_source['ds_code']; ?>"><?php echo $all_source['ds_name']; ?></option>
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
+                            </optgroup>
+                        </select>
                     </div>
-                    <?php foreach ($all_sources as $all_source) : ?>
+
+                    <!-- <?php foreach ($all_sources as $all_source) : ?>
                         <?php if ($all_source['ds_id'] != 1) : ?>
                             <div class="form-inline mt-5">
                                 <label class="form-label sm:w-40" style="text-align: left;"></label>
@@ -222,95 +202,25 @@
                                     <input type="checkbox" class="form-check-input" id="<?php echo $all_source['ds_id']; ?>" name="div_unit[]" value="<?php echo $all_source['ds_code']; ?>">
                                     <label class="form-check-label" for="<?php echo $all_source['ds_id']; ?>"><?php echo $all_source['ds_name']; ?></label>
                                 </div>
+
                             </div>
                         <?php endif; ?>
-                    <?php endforeach; ?>
-
+                    <?php endforeach; ?> -->
                 </div>
-                <!-- division checkboxs -->
-                <!-- <div>
-                    <div class="form-inline mt-5">
-                        <label class="form-label sm:w-40" style="text-align: left;">Route to Divsion/Unit</label>
-                        <div class="form-check">
-                            <input id="div1" class="form-check-input" type="checkbox" name="div_unit[]" value="OED">
-                            <label class="form-check-label" for="div1">Office of Executive Director</label>
-                        </div>
-                    </div>
-                    <div class="form-inline mt-5">
-                        <label class="form-label sm:w-40" style="text-align: left;"></label>
-                        <div class="form-check">
-                            <input id="div2" class="form-check-input" type="checkbox" name="div_unit[]" value="ODED">
-                            <label class="form-check-label" for="div2">Office of Deputy Executive Director</label>
-                        </div>
-                    </div>
-                    <div class="form-inline mt-5">
-                        <label class="form-label sm:w-40" style="text-align: left;"></label>
-                        <div class="form-check">
-                            <input id="div3" class="form-check-input" type="checkbox" name="div_unit[]" value="PPRD">
-                            <label class="form-check-label" for="div3">Policy, Planning and Research Division</label>
-                        </div>
-                    </div>
-                    <div class="form-inline mt-5">
-                        <label class="form-label sm:w-40" style="text-align: left;"></label>
-                        <div class="form-check">
-                            <input id="div4" class="form-check-input" type="checkbox" name="div_unit[]" value="LID">
-                            <label class="form-check-label" for="div4">Localization and Institutional Division</label>
-                        </div>
-                    </div>
-                    <div class="form-inline mt-5">
-                        <label class="form-label sm:w-40" style="text-align: left;"></label>
-                        <div class="form-check">
-                            <input id="div5" class="form-check-input" type="checkbox" name="div_unit[]" value="AFD">
-                            <label class="form-check-label" for="div5">Administrative and Finance Division</label>
-                        </div>
-                    </div>
-                    <div class="form-inline mt-5">
-                        <label class="form-label sm:w-40" style="text-align: left;"></label>
-                        <div class="form-check">
-                            <input id="div6" class="form-check-input" type="checkbox" name="div_unit[]" value="PAIO">
-                            <label class="form-check-label" for="div6">Public Affairs and Informations Office</label>
-                        </div>
-                    </div>
-                    <div class="form-inline mt-5">
-                        <label class="form-label sm:w-40" style="text-align: left;"></label>
-                        <div class="form-check">
-                            <input id="div7" class="form-check-input" type="checkbox" name="div_unit[]" value="MISU">
-                            <label class="form-check-label" for="div7">Management Information System Unit</label>
-                        </div>
-                    </div>
-                    <div class="form-inline mt-5">
-                        <label class="form-label sm:w-40" style="text-align: left;"></label>
-                        <div class="form-check">
-                            <input id="div8" class="form-check-input" type="checkbox" name="div_unit[]" value="PMO">
-                            <label class="form-check-label" for="div8">Project Management Office</label>
-                        </div>
-                    </div>
-                    <div class="form-inline mt-5">
-                        <label class="form-label sm:w-40" style="text-align: left;"></label>
-                        <div class="form-check">
-                            <input id="div9" class="form-check-input" type="checkbox" name="div_unit[]" value="MED">
-                            <label class="form-check-label" for="div9">Monitoring and Evaluation Division</label>
-                        </div>
-                    </div>
-                </div> -->
                 <!-- end of division checkboxs -->
                 <!-- Concern Staff -->
                 <div class="form-inline mt-5">
-                    <label for="staff_details" class="form-label sm:w-40" style="text-align: left;">Concern Staff/s</label>
+                    <label for="staff_details" class="form-label sm:w-40" style="text-align: left;">Concern Staff/s  <span class="required_field">*</span></label>
+
                     <select data-placeholder="Select Concern Staffs" data-search="true" class="tail-select w-full form-control" id="staff_details" name="staff_details[]" multiple required>
                         <?php foreach ($staffs as $staff) : ?>
                             <?php $dev = $this->dts->get_s_division($staff['division']); ?>
                             <optgroup label="<?php echo $dev['sd_name']; ?>">
-                                <?php if ($staff['lname'] == $this->session->userdata('staff_lname')) :  ?>
-                                    <option value="<?php echo $staff['staff_id']; ?>" selected>
-                                        <?php echo $staff['fname']; ?> <?php echo $staff['lname']; ?>
-                                    </option>
-                                <?php else : ?>
+                                <?php if ($staff['lname'] != $this->session->userdata('staff_lname')) :  ?>
                                     <option value="<?php echo $staff['staff_id']; ?>">
                                         <?php echo $staff['fname']; ?> <?php echo $staff['lname']; ?>
                                     </option>
-                                <?php endif ?>
-
+                               <?php endif ?>
                             </optgroup>
                         <?php endforeach; ?>
                     </select>
@@ -343,25 +253,18 @@
         const typeDocs = document.getElementById('type_docs');
         const moredocs = document.getElementById('moredocs');
         const actionTaken = document.getElementById('action_taken');
-        var checkboxesdiv = document.querySelectorAll('input[name="div_unit[]"]');
-        var checkeddiv = Array.from(checkboxesdiv).some(checkbox => checkbox.checked);
+        const divUnit = document.getElementById('div_unit');
+        const priorityLevel = document.getElementById('priority_level');
 
-        if (!checkeddiv) {
-            Swal.fire({
-                icon: 'error',
-                text: 'Please select division/s to route the document',
-            });
-            event.preventDefault(); // Prevent form submission
-        }
 
-        if (staffDetails.selectedOptions.length < 2) {
-            Swal.fire({
-                icon: 'error',
-                text: 'Please select at least two staff members.',
-            });
-            event.preventDefault(); // Prevent form submission
-            return;
-        }
+        // if (staffDetails.selectedOptions.length < 2) {
+        //     Swal.fire({
+        //         icon: 'error',
+        //         text: 'Please select at least two staff members.',
+        //     });
+        //     event.preventDefault(); 
+        //     return;
+        // }
 
         const selectedTypeDoc = Array.from(typeDoc.selectedOptions).map(option => option.value);
 
@@ -385,12 +288,28 @@
             }
         }
 
-
+        if (priorityLevel.value === "") {
+            Swal.fire({
+                icon: 'error',
+                text: 'Please select priority level.',
+            });
+            event.preventDefault(); // Prevent form submission
+            return;
+        }
 
         if (actionTaken.selectedOptions.length === 0) {
             Swal.fire({
                 icon: 'error',
                 text: 'Please select at least one required action.',
+            });
+            event.preventDefault(); // Prevent form submission
+            return;
+        }
+
+        if (divUnit.selectedOptions.length === 0) {
+            Swal.fire({
+                icon: 'error',
+                text: 'Please select Division/Unit.',
             });
             event.preventDefault(); // Prevent form submission
             return;

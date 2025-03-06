@@ -226,7 +226,7 @@ $config['allow_get_array'] = TRUE;
 | your log files will fill up very fast.
 |
 */
-$config['log_threshold'] = 0;
+$config['log_threshold'] = 2;
 
 /*
 |--------------------------------------------------------------------------
@@ -451,12 +451,20 @@ $config['global_xss_filtering'] = FALSE;
 | 'csrf_regenerate' = Regenerate token on every submission
 | 'csrf_exclude_uris' = Array of URIs which ignore CSRF checks
 */
-$config['csrf_protection'] = FALSE;
+
+// Add this to your config.php file
+
+// if (stripos($_SERVER["REQUEST_URI"],'/controller/method') === FALSE) {
+// 	$config['csrf_protection'] 	= TRUE;
+// }else{ 
+// $config['csrf_protection'] 	= FALSE; 
+// }
+$config['csrf_protection'] = TRUE;
 $config['csrf_token_name'] = 'csrf_test_name';
 $config['csrf_cookie_name'] = 'csrf_cookie_name';
 $config['csrf_expire'] = 7200;
 $config['csrf_regenerate'] = TRUE;
-$config['csrf_exclude_uris'] = array();
+$config['csrf_exclude_uris'] = array('admin/Documents/delete_file_pending');
 
 /*
 |--------------------------------------------------------------------------

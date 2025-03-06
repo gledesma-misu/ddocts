@@ -31,6 +31,8 @@ class Dashboard extends CI_Controller {
         $data['incoming_doc_pending'] = $this->dashboard->get_incoming_pending($staf_get); 
         $data['outgoing_doc'] = $this->dashboard->get_outgoing_completed($staf_get); 
         $data['outgoing_doc_pending'] = $this->dashboard->get_outgoing_pending($staf_get); 
+
+        $data['get_docs'] = $this->dashboard->get_doc($staf_get); 
         
         $this->load->view('admin/dashboard_page', $data);
     }

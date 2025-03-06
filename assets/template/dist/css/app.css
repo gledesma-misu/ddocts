@@ -536,6 +536,10 @@ video {
 		max-width: 1600px !important;
 	}
 }
+.required_field{
+        color: red;
+        margin-left: 5px; /* Adjust spacing as needed */
+}
 .accordion .accordion-item{
 	padding-top: 1rem;
 	padding-bottom: 1rem;

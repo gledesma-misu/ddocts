@@ -193,7 +193,7 @@ class Model_admin extends CI_Model {
 		return $result->result_array();
 	}
 
-	public function insertnewstaff($username,$password,$text_pass,$email,$fname,$lname,$address,$em_no,$gender,$em_position,$dob,$division,$division_code,$staff_id){
+	public function insertnewstaff($username,$password,$text_pass,$email,$fname,$lname,$address,$em_no,$gender,$em_position,$dob,$division,$division_code,$staff_id,$account_type){
 
 		date_default_timezone_set('Asia/Manila');  
 		$date_now = date('Y-m-d H:i:s', time());
@@ -213,6 +213,7 @@ class Model_admin extends CI_Model {
 			'password' => $password,
 			'text_pass' => $text_pass,
 			'email' => $email,
+			'account_type_id' => $account_type,
 			'fname' => $fname,
 			'lname' => $lname,
 			'address' => $address,

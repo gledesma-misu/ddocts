@@ -8,6 +8,13 @@ class Administrator extends CI_Controller {
         if (!$this->session->userdata('isLogin')) { 
             redirect('Login'); 
         }
+
+        if ($this->session->userdata('account_type') != 1) {
+            if($this->uri->segment(2) == 'administrator'){
+                redirect('admin/dashboard');
+            }
+        }
+
       
         $this->load->model('Model_admin', 'admin'); 
     }
@@ -175,11 +182,12 @@ class Administrator extends CI_Controller {
         $dob = $this->input->post('dob');
         $get_division = $this->admin->get_staff_division($this->input->post('division'));
         $staff_id = $this->input->post('staff_id');
+        $account_type = 0;
 
 
         $division = $get_division['sd_code'];
         $division_code = $get_division['sd_code_name'];
-        $this->admin->insertnewstaff($username,$password,$text_pass,$email,$fname,$lname,$address,$em_no,$gender,$em_position,$dob,$division,$division_code,$staff_id);
+        $this->admin->insertnewstaff($username,$password,$text_pass,$email,$fname,$lname,$address,$em_no,$gender,$em_position,$dob,$division,$division_code,$staff_id,$account_type);
         // Set message 
         $this->session->set_flashdata('success', 'New staff has been Added!');
 

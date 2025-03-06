@@ -51,6 +51,8 @@ class Login extends CI_Controller
                 $s['staff_fname'] = $user->fname;
                 $s['staff_mname'] = $user->mname;
                 $s['staff_lname'] = $user->lname;
+                $s['staff_gender'] = $user->gender;
+                $s['account_type'] = $user->account_type_id;
                 $s['staff_official_email'] = $user->email;
                 $s['staff_position_title'] = $user->position_title;
                 $s['staff_position'] = $user->position;

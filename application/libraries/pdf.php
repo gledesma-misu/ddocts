@@ -19,7 +19,7 @@ class pdf {
 
     
    $dompdf = new DOMPDF();
-    //$dompdf = new Dompdf\DOMPDF(array('enable_remote' => true));
+    // $dompdf = new Dompdf\DOMPDF(array('enable_remote' => true));
     $dompdf->loadhtml($html);
     // $dompdf->set_option('isHtml5ParserEnabled', true);
     $dompdf->setpaper($paper, $orientation);

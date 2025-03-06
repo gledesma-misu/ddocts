@@ -8,7 +8,11 @@ class Records extends CI_Controller {
         if (!$this->session->userdata('isLogin')) { 
             redirect('Login'); 
         }
-      
+        if ($this->session->userdata('account_type') != 2) {
+            if($this->uri->segment(2) == 'Records'){
+                redirect('admin/dashboard');
+            }
+        }
         $this->load->model('Model_records', 'records'); 
     }
 
