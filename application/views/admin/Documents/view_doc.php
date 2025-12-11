@@ -32,7 +32,7 @@
                                 <?php if ($doc_details['dd_status'] == "5" && $doc_details['dd_encoded_doc'] == $staff_id) : ?>
                                     <button class="dropdown-toggle btn btn-warning tooltip" title="Select Action!" aria-expanded="false">Request for Completion</button>
                                 <?php else: ?>
-                                    <button class="dropdown-toggle btn btn-primary tooltip" title="Select Action!" aria-expanded="false">Action Button</button>
+                                    <button class="dropdown-toggle btn btn-primary tooltip" title="Select Action!" aria-expanded="false">Action</button>
                                 <?php endif; ?>
                                 <div class="dropdown-menu w-56">
                                     <div class="dropdown-menu__content box dark:bg-dark-1">
@@ -112,7 +112,15 @@
                     <div class="intro-x flex items-center border-b border-gray-200 dark:border-dark-5 py-5">
                         <div>
                             <div class="text-gray-600"> Document Routed to </div>
-                            <div class="mt-1"> <b><?php echo $doc_details['dd_view_doc']; ?></b> </div>
+                            <div class="mt-1"> <b><?php
+
+                                                    $dd_view_doc = $doc_details['dd_view_doc'];
+                                                    $this->load->model('Model_dts', 'dts');
+                                                    $data = $this->dts->get_selected_division($dd_view_doc);
+                                                    $dd_division = $data['sd_code_name'];
+                                                    echo $dd_division;
+
+                                                    ?></b> </div>
                         </div>
                     </div>
                     <div class="intro-x flex items-center border-b border-gray-200 dark:border-dark-5 py-5">
@@ -139,7 +147,7 @@
                             <div class="text-gray-600"> Document Recieved Date </div>
                             <div class="mt-1">
                                 <?php
-                                $date = $doc_details['dd_date_encoded'];
+                                $date = $doc_details['dd_date_routed'];
                                 $datepicker = date("M-d-Y h:i A", strtotime($date));
                                 echo $datepicker;
                                 ?>
@@ -191,7 +199,7 @@
             </table>
 
             <h2 class="intro-y text-lg font-medium mr-auto mt-2">
-                File Uploaded <?php
+                File/s Uploaded<?php
                                 ?>
             </h2>
             <div class="intro-y grid grid-cols-12 gap-3 sm:gap-6 mt-3">
@@ -227,7 +235,7 @@
                                     <a class="dropdown-toggle w-5 h-5 block" href="javascript:;" aria-expanded="false"> <i data-feather="more-vertical" class="w-5 h-5 text-gray-600 tooltip" title="Select Action!"></i> </a>
                                     <div class="dropdown-menu w-40">
                                         <div class="dropdown-menu__content box dark:bg-dark-1 p-2">
-                                            <a href="<?= base_url('admin/documents/delete_file_attachment/' . $key . "/" . $doc_details['dd_id']); ?>" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="trash" class="w-4 h-4 mr-2"></i> Delete </a>
+                                            <!-- <a href="<?= base_url('admin/documents/delete_file_attachment/' . $key . "/" . $doc_details['dd_id']); ?>" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="trash" class="w-4 h-4 mr-2"></i> Delete </a> -->
                                             <a href="<?= base_url('assets/upload' . "/" . $dd_division . "/" . $link); ?>" download class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="folder-plus" class="w-4 h-4 mr-2"></i> download </a>
                                         </div>
                                     </div>
@@ -236,6 +244,45 @@
                         </div>
 
                     <?php endforeach; ?>
+                    <?php
+                    $array1 = $doc_reply; // get document files on the transaction 
+                    foreach ($array1 as $comment) :
+                        $raw = $comment['doc_current_file'];
+                        $files = array_filter(
+                            explode('|', trim($raw, '|')),
+                            fn($f) => $f !== ''
+                        );
+
+                        // now $files is an array of filenames (or empty if none)
+                        if (count($files) > 0) {
+                            foreach ($files as $file) {
+                                if ($file != 'No Uploaded Files!') {
+                                    $ext = pathinfo($file, PATHINFO_EXTENSION);
+                                    $link = $dd_lname . "/" . $file;
+                    ?>
+                                    <div class="intro-y col-span-6 sm:col-span-4 md:col-span-6 xxl:col-span-3">
+                                        <div class="file box rounded-md px-5 pt-8 pb-5 px-3 sm:px-5 relative zoom-in">
+                                            <a href="<?= base_url('assets/upload' . "/" . $dd_division . "/" . $link); ?>" target="_blank" class="w-3/5 file__icon file__icon--file mx-auto tooltip" title="View this file!">
+                                                <div class="file__icon__file-name"><?php echo $ext; ?></div>
+                                            </a>
+                                            <a href="" class="block font-medium mt-4 text-center truncate"><?php echo $file; ?></a>
+                                            <div class="absolute top-0 right-0 mr-2 mt-2 dropdown ml-auto">
+                                                <a class="dropdown-toggle w-5 h-5 block" href="javascript:;" aria-expanded="false"> <i data-feather="more-vertical" class="w-5 h-5 text-gray-600 tooltip" title="Select Action!"></i> </a>
+                                                <div class="dropdown-menu w-40">
+                                                    <div class="dropdown-menu__content box dark:bg-dark-1 p-2">
+                                                        <a href="<?= base_url('assets/upload' . "/" . $dd_division . "/" . $link); ?>" download class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="folder-plus" class="w-4 h-4 mr-2"></i> download </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                    <?php
+                                }
+                            }
+                        }
+                    endforeach;
+                    ?>
+
                 <?php endif; ?>
 
             </div>
@@ -430,6 +477,7 @@
                                                                     <div class="mt-3">End process. <em style="font-size: 12px;">If edit is necessary for this document please contact the system admin.</em></div>
                                                                 </div>
                                                             </div>
+
                                                         <?php endif ?>
                                                     <?php endif ?>
                                                 </a>
@@ -441,18 +489,26 @@
                                 <?php endforeach; ?>
 
                             <?php endif ?>
-
+                            <?php if (!empty($doc_reply) && $doc_details['dd_status'] == 5) : ?>
+                                <div class="border-l-2 border-theme-12 pl-4 text-gray-600 mt-2">
+                                    <div class="alert alert-secondary show mb-2" role="alert">
+                                        <div class="flex items-center">
+                                            <div class="font-medium text-lg">The document is pending for completion</div>
+                                        </div>
+                                        <div class="mt-3"><em style="font-size: 12px;">If edit is necessary for this document please contact the system admin or wait for the sender to revert.</em></div>
+                                    </div>
+                                </div>
+                            <?php endif ?>
                         </div>
                     </div>
                 </div>
             </div>
-            <?php if (!empty($doc_reply)) : ?>
+            <?php if (!empty($doc_reply) && ($doc_details['dd_status'] != 5 && $doc_details['dd_status'] != 4)) : ?>
                 <div class="p-3 border-t border-gray-200 dark:border-dark-5 flex">
-                    <a href="javascript:;" data-toggle="modal" data-target="#Reply_Message" class="btn btn-primary w-60 py-2 px-3 ml-auto"> <i data-feather="activity" class="w-4 h-4 mr-2"></i> Reply Message </a>
+                    <a href="javascript:;" data-toggle="modal" data-target="#Reply_Message" class="btn btn-primary w-60 py-2 px-3 ml-auto"> <i data-feather="activity" class="w-4 h-4 mr-2"></i> Reply Message</a>
                 </div>
-            <?php else : ?>
-
             <?php endif ?>
+
             <!-- END: Display Information -->
         </div>
     </div>
@@ -760,7 +816,9 @@
                 </div>
                 <div class="px-5 pb-8 text-center">
                     <button type="button" data-dismiss="modal" class="btn btn-outline-secondary w-24 dark:border-dark-5 dark:text-gray-300 mr-1">Cancel</button>
-                    <button type="submit" name="action" value="pending" class="btn btn-warning w-30">Mark as Pending</button>
+                    <?php if ($doc_details['dd_encoded_doc'] == $this->session->userdata('staff_id') && $doc_details['dd_status'] == 5) : ?>
+                        <button type="submit" name="action" value="pending" class="btn btn-warning w-30">Mark as Pending</button>
+                    <?php endif ?>
                     <button type="submit" name="action" value="complete" class="btn btn-primary w-30">Yes!</button>
                 </div>
             </div>
@@ -801,7 +859,7 @@
         <div id="Document_Action" class="modal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <?php echo form_open_multipart('admin/Documents/viewDoc_process/' . $doc_details['dd_id'], array('id' => 'notesForm')); ?>
+                    <?php echo form_open_multipart('admin/Documents/viewDoc_process/' . $doc_details['dd_id'], ['id' => 'notesForm']); ?>
                     <!-- BEGIN: Modal Header -->
                     <div class="modal-header">
                         <h2 class="font-medium text-base mr-auto">
@@ -829,14 +887,17 @@
                                 </optgroup>
                             </select>
                         </div>
-                        <?php if ($doc_details['dd_status'] != "5"): ?>
-                            <div class="col-span-12 sm:col-span-12">
-                                <label for="dispatch" class="form-label"> For Dispatch </label>
-                                <div class="form-check">
-                                    <input id="dispatch" name="dispatch" class="form-check-input" type="checkbox">
-                                    <label class="form-check-label" for="dispatch">If you want to dispatch this document please check this box.</label>
+
+                        <?php if ($this->session->userdata('staff_division') == 5): ?>
+                            <?php if ($doc_details['dd_status'] != "5"): ?>
+                                <div class="col-span-12 sm:col-span-12">
+                                    <label for="dispatch" class="form-label"> For Dispatch </label>
+                                    <div class="form-check">
+                                        <input id="dispatch" name="dispatch" class="form-check-input" type="checkbox">
+                                        <label class="form-check-label" for="dispatch">If you want to dispatch this document please check this box.</label>
+                                    </div>
                                 </div>
-                            </div>
+                            <?php endif; ?>
                         <?php endif; ?>
                         <div class="col-span-12 sm:col-span-12">
                             <label for="modal-form-1" class="form-label"> Action Taken </label>
@@ -857,7 +918,7 @@
                     <!-- BEGIN: Modal Footer -->
                     <div class="modal-footer text-right">
                         <button type="button" data-dismiss="modal" class="btn btn-outline-secondary w-20 mr-1">Cancel</button>
-                        <button type="submit" data-dismiss="modal" class="btn btn-primary w-20" id="btn_action">Confirm</button>
+                        <button type="submit" class="btn btn-primary w-20" id="btn_action">Confirm</button>
                     </div>
                     <?php echo form_close(); ?>
                     <!-- END: Modal Footer -->
@@ -894,7 +955,7 @@
 
                         <div class="col-span-12 sm:col-span-12">
                             <label for="get_my_staff" class="form-label"> Staff Name </label>
-                            <input type="text" class="form-control" value="<?= $this->session->userdata('staff_fname'); ?> <?= $this->session->userdata('staff_lname'); ?>" disabled>
+                            <input type="text" class="form-control" value="<?= $this->session->userdata('staff_fname'); ?> <?= $this->session->userdata('staff_lname'); ?>" id="get_my_staff" name="get_my_staff" disabled>
                         </div>
                         <div class="col-span-12 sm:col-span-12">
                             <label for="get_my_division" class="form-label"> Division </label>
@@ -1093,9 +1154,9 @@
     });
 </script>
 <script>
-    document.getElementById('notesForm').addEventListener('submit', function(event) {
+    document.getElementById('notesForm').addEventListener('submit', function(e) {
         const textarea = document.getElementById('editorDocAction');
-        const textarea2 = document.getElementById('concern_staff');
+        const textarea3 = document.getElementById('concern_staff');
         const docaction = document.getElementById('doc_action');
 
 
@@ -1106,7 +1167,8 @@
                 title: 'Error Submitting',
                 text: 'Notes/Remarks Cannot be empty',
             })
-            event.preventDefault(); // Prevent form submission
+            e.preventDefault(); // Prevent form submission
+            return;
         } else {
             textarea.value = textarea.value;
         }
@@ -1118,7 +1180,7 @@
                 icon: 'error',
                 text: 'Please select at least one action.',
             });
-            event.preventDefault(); // Prevent form submission
+            e.preventDefault(); // Prevent form submission
             return;
         }
     });
@@ -1214,7 +1276,6 @@
         })
     });
 </script>
-
 <script type="text/javascript">
     $('.reply').on('click', function(e) {
         let timerInterval

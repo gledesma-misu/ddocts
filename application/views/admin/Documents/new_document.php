@@ -156,25 +156,27 @@
                 </div>
 
                 <!-- Document Recieved Date -->
-                <div class="form-inline mt-5">
+                <!-- <div class="form-inline mt-5">
                     <?php date_default_timezone_set('Asia/Manila');
                     $date_now = date('Y-m-d H:i:s');
                     $picker = date("M-d-Y h:i A", strtotime($date_now)); ?>
                     <?php if ($this->session->userdata('staff_position') == 'Records Officer I' || $this->session->userdata('staff_position') == 'Records Officer II') : ?>
                         <label for="datepicker" class="form-label sm:w-40" style="text-align: left;">Document Created Date</label>
                     <?php else : ?>
-                        <label for="datepicker" class="form-label sm:w-40" style="text-align: left;">Document Sent Date</label>
+                        <label for="datepicker" class="form-label sm:w-40" style="text-align: left;">Document Created Date</label>
                     <?php endif ?>
                     <input type="text" class="form-control" value="<?php echo $picker; ?>" disabled>
                     <input id="datepicker" name="datepicker" type="hidden" class="form-control" value="<?php echo $picker; ?>">
-                </div>
+                </div> -->
+
                 <!-- Priority Level -->
                 <div class="form-inline mt-5" id="priority_level">
                     <label for="priority_level" class="form-label sm:w-40" style="text-align: left;">Priority Level</label>
                     <select data-search="true" id="priority_level" name="priority_level" class="tail-select w-full form-control">
                         <optgroup label="Select Priority Level">
-                            <option value="1">Urgent</option>
-                            <option value="2">Not Urgent</option>
+                            <option value="1">Simple</option>
+                            <option value="2">Complex</option>
+                            <option value="3">Highly technical</option>
                         </optgroup>
                     </select>
                 </div>
@@ -185,9 +187,9 @@
                         <label for="div_unit" class="form-label sm:w-40" style="text-align: left;">Route to Divsion/Unit <span class="required_field">*</span></label>
                         <select data-placeholder="Select Division/s To Route" data-search="true" class="tail-select w-full form-control" id="div_unit" name="div_unit[]" multiple>
                             <optgroup label="Select Division/s To Route">
-                                <?php foreach ($all_sources as $all_source) : ?>
-                                    <?php if ($all_source['ds_id'] != 1) : ?>
-                                        <option value="<?php echo $all_source['ds_code']; ?>"><?php echo $all_source['ds_name']; ?></option>
+                                <?php foreach ($all_divisions as $all_division) : ?>
+                                    <?php if ($all_division['sd_id'] != 1) : ?>
+                                        <option value="<?php echo $all_division['sd_code']; ?>"><?php echo $all_division['sd_name']; ?></option>
                                     <?php endif; ?>
                                 <?php endforeach; ?>
                             </optgroup>
@@ -209,9 +211,8 @@
                 </div>
                 <!-- end of division checkboxs -->
                 <!-- Concern Staff -->
-                <div class="form-inline mt-5">
-                    <label for="staff_details" class="form-label sm:w-40" style="text-align: left;">Concern Staff/s  <span class="required_field">*</span></label>
-
+                <!-- <div class="form-inline mt-5">
+                    <label for="staff_details" class="form-label sm:w-40" style="text-align: left;">Concern Staff/s <span class="required_field">*</span></label>
                     <select data-placeholder="Select Concern Staffs" data-search="true" class="tail-select w-full form-control" id="staff_details" name="staff_details[]" multiple required>
                         <?php foreach ($staffs as $staff) : ?>
                             <?php $dev = $this->dts->get_s_division($staff['division']); ?>
@@ -220,12 +221,18 @@
                                     <option value="<?php echo $staff['staff_id']; ?>">
                                         <?php echo $staff['fname']; ?> <?php echo $staff['lname']; ?>
                                     </option>
-                               <?php endif ?>
+                                <?php endif ?>
                             </optgroup>
                         <?php endforeach; ?>
                     </select>
+                </div> -->
+                <div class="form-inline mt-5">
+                    <label for="staff_details" class="form-label sm:w-40" style="text-align: left;">Concern Staff/s <span class="required_field">*</span></label>
+                    <select data-placeholder="Select Concern Staffs" class="w-full form-control" id="staff_select" name="staff_select[]" required multiple>
+                    </select>
                 </div>
 
+                <input type="text" id="staff_details" name="staff_details" size="48" hidden>
 
                 <!-- Subject Title -->
                 <div class="form-inline mt-5">
@@ -246,6 +253,73 @@
 
 <?php $this->load->view('admin/partials/footer.php'); ?>
 
+<script>
+    var baseURL = "<?php echo base_url(); ?>";
+    var staffSelectInstance = [];
+    var staffSelect = $('#staff_select');
+    let selectedStaffArray = [];
+
+
+    $(document).ready(function() {
+        var division_select = $('#div_unit');
+        division_select.on('change', function() {
+            var selectedDivisions = $(this).val();
+            loadStaffOptions(selectedDivisions);
+        });
+
+    });
+
+    function loadStaffOptions(selectedDivisions) {
+        staffSelect.empty();
+        if (selectedDivisions && selectedDivisions.length > 0) {
+            $.ajax({
+                url: '<?= base_url() ?>admin/Documents/getConcernStaffSelect',
+                method: 'get',
+                data: {
+                    csrf_name: csrf_hash,
+                    division_select: selectedDivisions
+                },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.length > 0) {
+                        staffSelect.append(`<optgroup label="Concern Staffs"></optgroup>`);
+                        $.each(response, function(index, staff) {
+                            staffSelect.append(`<option value="${staff.staff_id}">${staff.fname}</option>`);
+                        });
+                    }
+                    staffSelectInstance.reload();
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('AJAX error:', textStatus, errorThrown);
+                }
+            });
+        } else {
+            staffSelectInstance.reload();
+        }
+
+    }
+    document.addEventListener("DOMContentLoaded", () => {
+        staffSelectInstance = tail.select('#staff_select', {
+            search: true,
+            multiple: true,
+            multiShowCount: false,
+            multiContainer: true,
+            descriptions: true,
+            hideSelected: true,
+            placeholder: "Select Staff Member",
+        });
+        staffSelectInstance.on('change', (e) => {
+
+            const mySelectField = document.querySelector('#staff_select');
+            var options = mySelectField.querySelectorAll('option:checked');
+
+            document.getElementById('staff_details').value = Array.from(options, e => e.value).join(', ');
+            
+            return Array.from(options, e => e.value);
+
+        });
+    });
+</script>
 <script>
     document.getElementById('staffForm').addEventListener('submit', function(event) {
         const staffDetails = document.getElementById('staff_details');

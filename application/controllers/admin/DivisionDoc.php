@@ -21,7 +21,7 @@ class DivisionDoc extends CI_Controller
 
         $config = array();
         $config["base_url"] = base_url() . "admin/DivisionDoc/completed";
-        $config["total_rows"] = $this->division->count_doc_completed($Exist['ds_code']);
+        $config["total_rows"] = $this->division->count_doc_completed($Exist['ds_id']);
         $config["per_page"] = 10;
         $config["uri_segment"] = 4;
         $config['first_link'] = 'First';
@@ -45,8 +45,8 @@ class DivisionDoc extends CI_Controller
 
         $this->pagination->initialize($config);
         $page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
-        $data['posts'] = $this->division->get_doc_completed($config["per_page"], $page, $Exist['ds_code']);
-        $data['get_id_staffs'] = $this->division->get_my_completed($Exist['ds_code']);
+        $data['posts'] = $this->division->get_doc_completed($config["per_page"], $page, $Exist['ds_id']);
+        $data['get_id_staffs'] = $this->division->get_my_completed($Exist['ds_id']);
         $data['all_sources'] = $this->division->get_all_source();
         $this->parser->parse('admin/DivisionDoc/view_complete_doc', $data);
     }
@@ -256,7 +256,7 @@ class DivisionDoc extends CI_Controller
 
         $config = array();
         $config["base_url"] = base_url() . "admin/DivisionDoc/pending";
-        $config["total_rows"] = $this->division->count_doc_pending($Exist['ds_code']);
+        $config["total_rows"] = $this->division->count_doc_pending($Exist['ds_id']);
         $config["per_page"] = 10;
         $config["uri_segment"] = 4;
         $config['first_link'] = 'First';
@@ -278,10 +278,11 @@ class DivisionDoc extends CI_Controller
         $config["num_tag_open"] = "<li>";
         $config["num_tag_close"] = '</li>';
 
+
         $this->pagination->initialize($config);
         $page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
-        $data['posts'] = $this->division->get_doc_pending($config["per_page"], $page, $Exist['ds_code']);
-        $data['get_id_staffs'] = $this->division->get_my_division($Exist['ds_code']);
+        $data['posts'] = $this->division->get_doc_pending($config["per_page"], $page, $Exist['ds_id']);
+        $data['get_id_staffs'] = $this->division->get_my_division($Exist['ds_id']);
         $data['all_sources'] = $this->division->get_all_source();
         $this->parser->parse('admin/DivisionDoc/view_pending_doc', $data);
     }
@@ -307,8 +308,7 @@ class DivisionDoc extends CI_Controller
         $date_from = $this->input->post('date_from');
         $date_to = $this->input->post('date_to');
 
-        // echo $Exist['ds_id'].' '.$date_from.' '.$date_to.' '.$Exist['ds_code'];
-
+       
         $this->load->library('pdf');
 
         date_default_timezone_set('Asia/Manila');
@@ -384,7 +384,7 @@ class DivisionDoc extends CI_Controller
         $date_to = $this->input->post('date_to_excel');
 
         $employee_data = $this->division->print_excel(trim($Exist), 2, $date_from, $date_to);
-        // echo "<script>console.log('Debug Objects: ".$Exist . " " . $source_doc . " " . $date_from. " ". $date_to."' );</script>";
+       
 
     
         $excel_row = 2;

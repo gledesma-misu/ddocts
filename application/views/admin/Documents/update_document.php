@@ -23,7 +23,7 @@
             </h2>
         </div>
         <?php foreach ($get_docs as $get_doc) : ?>
-            <?php echo form_open_multipart('admin/Documents/editDoc/'. $get_doc['dd_id'], ['id' => 'staffForm']); ?>
+            <?php echo form_open_multipart('admin/Documents/editDoc/' . $get_doc['dd_id'], ['id' => 'staffForm']); ?>
             <div id="horizontal-form" class="p-5">
                 <div class="preview">
                     <!-- Source -->
@@ -118,12 +118,12 @@
                             <optgroup label="Type of Document">
                                 <option value="0">Select Type of document</option>
                                 <?php foreach ($type_documents as $type_document) : ?>
-                                     <?php foreach ($doc_types as $doc_type) : ?>
-                                         <?php if ($doc_id != ''  && $doc_type == $type_document['dt_id']) : ?>
-                                            <option value="<?php $get_doc['dd_doct_type']; ?>" selected><?php echo $type_document['dt_name']; ?></option>
+                                    <?php foreach ($doc_types as $doc_type) : ?>
+                                        <?php if ($doc_id != ''  && $doc_type == $type_document['dt_id']) : ?>
+                                            <option value="<?php echo $type_document['dt_id']; ?>" selected><?php echo $type_document['dt_name']; ?></option>
                                         <?php endif; ?>
                                     <?php endforeach; ?>
-                                     <option value="<?php $type_document['dt_id']; ?>"><?php echo $type_document['dt_name']; ?></option>
+                                    <option value="<?php echo $type_document['dt_id']; ?>"><?php echo $type_document['dt_name']; ?></option>
                                 <?php endforeach; ?>
                             </optgroup>
                         </select>
@@ -140,7 +140,7 @@
                                             <option value="<?php echo $type_document['dt_id']; ?>" selected><?php echo $type_document['dt_name']; ?></option>
                                         <?php endif; ?>
                                     <?php endforeach; ?>
-                                    <option value="<?php $type_document['dt_id']; ?>"><?php echo $type_document['dt_name']; ?></option>
+                                    <option value="<?php echo $type_document['dt_id']; ?>"><?php echo $type_document['dt_name']; ?></option>
                                 <?php endforeach; ?>
                             </optgroup>
                         </select>
@@ -181,8 +181,9 @@
                         <label for="priority_level" class="form-label sm:w-40" style="text-align: left;">Priority Level</label>
                         <select data-search="true" id="priority_level" name="priority_level" class="tail-select w-full form-control">
                             <optgroup label="Select Priority Level">
-                                <option value="1">Urgent</option>
-                                <option value="2">Not Urgent</option>
+                                <option value="1">Simple</option>
+                                <option value="2">Complex</option>
+                                <option value="3">Highly technical</option>
                             </optgroup>
                         </select>
                     </div>
@@ -192,13 +193,8 @@
                         <label for="div_unit" class="form-label sm:w-40" style="text-align: left;">Route to Divsion/Unit</label>
                         <select data-placeholder="Select Division/s To Route" data-search="true" class="tail-select w-full form-control" id="div_unit" name="div_unit[]" multiple>
                             <optgroup label="Select Division/s To Route">
-                                <?php foreach ($all_sources as $all_source) : ?>
-                                    <?php foreach ($route_div as $routeDiv) : ?>
-                                        <?php if ($all_source['ds_id'] != 1 && $doc_id != '' &&  trim($routeDiv) == $all_source['ds_code']) : ?>
-                                             <option value="<?php echo $all_source['ds_code']; ?>" selected><?php echo $all_source['ds_name']; ?></option>
-                                        <?php endif; ?>
-                                    <?php endforeach; ?>
-                                    <option value="<?php echo $all_source['ds_code']; ?>"><?php echo $all_source['ds_name']; ?></option>
+                                <?php foreach ($all_divisions as $all_division) : ?>
+                                    <option value="<?php echo $all_division['sd_code']; ?>"><?php echo $all_division['sd_name']; ?></option>
                                 <?php endforeach; ?>
                             </optgroup>
                         </select>
@@ -208,28 +204,11 @@
                     <!-- Concern Staff -->
                     <div class="form-inline mt-5">
                         <label for="staff_details" class="form-label sm:w-40" style="text-align: left;">Concern Staff/s</label>
-                        <select data-placeholder="Select Concern Staffs" data-search="true" class="tail-select w-full form-control" id="staff_details" name="staff_details[]" multiple required>
-                            <?php foreach ($staffs as $staff) : ?>
-                                <?php foreach ($route_staff as $routeStaff) : ?>
-                                    <?php $dev = $this->dts->get_s_division($staff['division']); ?>
-                                    <optgroup label="<?php echo $dev['sd_name']; ?>">
-                                        <?php if ($staff['lname'] != $this->session->userdata('staff_lname')) :  ?>
-                                            <?php if ($doc_id != '' && $routeStaff == $staff['staff_id']) :  ?>
-                                                <option value="<?php echo $staff['staff_id']; ?>" selected>
-                                                    <?php echo $staff['fname']; ?> <?php echo $staff['lname']; ?>
-                                                </option>
-
-                                            <?php endif ?>
-                                            <option value="<?php echo $staff['staff_id']; ?>">
-                                                <?php echo $staff['fname']; ?> <?php echo $staff['lname']; ?>
-                                            </option>
-                                        <?php endif ?>
-                                    </optgroup>
-                                <?php endforeach; ?>
-
-                            <?php endforeach; ?>
+                        <select data-placeholder="Select Concern Staffs" data-search="true" class="w-full form-control" id="staff_select" name="staff_select[]" multiple>
                         </select>
                     </div>
+
+                    <input type="text" id="staff_details" name="staff_details" size="48" hidden>
 
                     <!-- Subject Title -->
                     <div class="form-inline mt-5">
@@ -249,7 +228,73 @@
 <!-- END: Content -->
 
 <?php $this->load->view('admin/partials/footer.php'); ?>
+<script>
 
+    var staffSelectInstance = [];
+    var staffSelect = $('#staff_select');
+    let selectedStaffArray = [];
+
+
+    $(document).ready(function() {
+        var division_select = $('#div_unit');
+        division_select.on('change', function() {
+            var selectedDivisions = $(this).val();
+            loadStaffOptions(selectedDivisions);
+        });
+
+    });
+
+    function loadStaffOptions(selectedDivisions) {
+        staffSelect.empty();
+        if (selectedDivisions && selectedDivisions.length > 0) {
+            $.ajax({
+                url: '<?= base_url() ?>admin/Documents/getConcernStaffSelect',
+                method: 'get',
+                data: {
+                    csrf_name: csrf_hash,
+                    division_select: selectedDivisions
+                },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.length > 0) {
+                        staffSelect.append(`<optgroup label="Concern Staffs"></optgroup>`);
+                        $.each(response, function(index, staff) {
+                            staffSelect.append(`<option value="${staff.staff_id}">${staff.fname}</option>`);
+                        });
+                    }
+                    staffSelectInstance.reload();
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('AJAX error:', textStatus, errorThrown);
+                }
+            });
+        } else {
+            staffSelectInstance.reload();
+        }
+
+    }
+    document.addEventListener("DOMContentLoaded", () => {
+        staffSelectInstance = tail.select('#staff_select', {
+            search: true,
+            multiple: true,
+            multiShowCount: false,
+            multiContainer: true,
+            descriptions: true,
+            hideSelected: true,
+            placeholder: "Select Staff Member",
+        });
+        staffSelectInstance.on('change', (e) => {
+
+            const mySelectField = document.querySelector('#staff_select');
+            var options = mySelectField.querySelectorAll('option:checked');
+
+            document.getElementById('staff_details').value = Array.from(options, e => e.value).join(', ');
+
+            return Array.from(options, e => e.value);
+
+        });
+    });
+</script>
 <script>
     document.getElementById('staffForm').addEventListener('submit', function(event) {
         const staffDetails = document.getElementById('staff_details');
@@ -261,14 +306,14 @@
         const priorityLevel = document.getElementById('priority_level');
 
 
-        // if (staffDetails.selectedOptions.length < 2) {
-        //     Swal.fire({
-        //         icon: 'error',
-        //         text: 'Please select at least two staff members.',
-        //     });
-        //     event.preventDefault(); 
-        //     return;
-        // }
+        if (staffDetails.value.length < 1) {
+            Swal.fire({
+                icon: 'error',
+                text: 'Please select at least two staff members.',
+            });
+            event.preventDefault(); 
+            return;
+        }
 
         const selectedTypeDoc = Array.from(typeDoc.selectedOptions).map(option => option.value);
 
@@ -336,11 +381,7 @@
         };
     };
 </script>
-<?php $CI = &get_instance(); ?>
-<script>
-    var csrf_name = '<?php echo $CI->security->get_csrf_token_name(); ?>';
-    var csrf_hash = '<?php echo $CI->security->get_csrf_hash(); ?>';
-</script>
+
 <script>
     $(document).ready(function() {
         fetchFiles();
@@ -368,9 +409,9 @@
                             tbody += "<tr>";
                         }
                     } else {
-                            tbody += "<tr>";
-                            tbody += "<td>NO FILES UPLOADED</td>";
-                            tbody += "<tr>";
+                        tbody += "<tr>";
+                        tbody += "<td>NO FILES UPLOADED</td>";
+                        tbody += "<tr>";
                     }
 
 
@@ -485,7 +526,7 @@
             html: 'I will close in <b></b> milliseconds.',
             timer: 3000,
             timerProgressBar: true,
-            onBeforeOpen: () => {
+            willOpen: () => {
                 Swal.showLoading()
                 timerInterval = setInterval(() => {
                     const content = Swal.getContent()
@@ -497,7 +538,7 @@
                     }
                 }, 100)
             },
-            onClose: () => {
+            willClose: () => {
                 clearInterval(timerInterval)
             }
         }).then((result) => {

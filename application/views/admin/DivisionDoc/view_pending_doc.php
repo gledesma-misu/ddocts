@@ -179,7 +179,15 @@
                             }
                             echo $dd_name;
                             ?></td>
-                        <td class="text-center"> <?php echo $post['dd_view_doc']; ?> </td>
+                        <td class="text-center">
+                            <?php
+                            $dd_view_doc = $post['dd_view_doc'];
+                            $this->load->model('Model_division', 'division');
+                            $data = $this->division->get_selected_division($dd_view_doc);
+                            $dd_division = $data['sd_code_name'];
+                            echo $dd_division;
+                            ?> </td>
+                        </td>
                         <td class="text-center">
                             <?php $date = $post['dd_date_encoded'];
                             $datepicker = date("M-d-Y h:i A", strtotime($date)); ?>

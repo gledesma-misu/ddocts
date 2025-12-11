@@ -32,6 +32,7 @@ class Model_dashboard extends CI_Model
     return $result->result_array();
   }
 
+
   public function get_incoming_completed($user)
   {
     $this->db->select('*');
@@ -143,7 +144,16 @@ class Model_dashboard extends CI_Model
     return $result->row_array();
   }
 
-  public function recieve_docs($get_doc, $name_doc)
+  public function get_single_doc($doc_id)
+  {
+    $this->db->select('*');
+    $this->db->from('document_details');
+    $this->db->where('document_details.dd_id', $doc_id);
+    $result = $this->db->get();
+    return $result->row_array();
+  }
+
+  public function recieve_docs($get_doc, $name_doc,$name,$concern_staff,$check_division)
   {
 
     $process_doc = 'DOCUMENT-RECIEVED: DocNo <b>' . $name_doc . '</b> with status: <b style="color:red"> PENDING </b>.';
@@ -157,14 +167,33 @@ class Model_dashboard extends CI_Model
     );
     $this->db->insert('document_history', $data1);
 
+    
+    $data3 = array(
+			'transaction_id' => $get_doc,
+			'function_method' => "MODULE_DTS",
+			'action_type' => 'MODIFY',
+			'action_message' => 'DOCUMENT-RECIEVED: DocNo <b>' . $name_doc . '</b> with status: <b style="color:red"> PENDING </b>.',
+			'added_by' => $name,
+			'read_notif' => '0',
+			'read_div_notif' => '0',
+			'read_oed_notif' => '1',
+			'reg_date' => $date_now,
+			'if_oed' => '1',
+			'account_id' => $concern_staff
+		);
+		$this->db->insert('notification', $data3);
+
     $data = array(
       'dd_recieved_doc' => '1',
       'dd_status' => '1',
       'dd_date_routed' => $date_now,
+      'dd_date_recieved' => $date_now,
     );
 
     $this->db->where('dd_id', $get_doc);
     return $this->db->update('document_details', $data);
+
+    
   }
 
   public function disregard_docs($get_doc, $name_doc, $editor1)
@@ -222,6 +251,15 @@ class Model_dashboard extends CI_Model
     return $result->row_array();
   }
 
+  public function get_selected_division($dd_div_id){
+    $this->db->select('*');
+    $this->db->from('staff_division');
+    $this->db->where('staff_division.sd_code', $dd_div_id);
+    $this->db->order_by("staff_division.sd_id", "desc");
+    $result = $this->db->get();
+    return $result->row_array();
+  }
+
   public function limit_doc($staf_get)
   {
     $this->db->select('*');
@@ -246,6 +284,21 @@ class Model_dashboard extends CI_Model
     $this->db->order_by("reg_date", "desc");
     return $this->db->get();
   }
+
+  public function read_notification($staff,$notificationId) {
+    date_default_timezone_set('Asia/Manila');
+		$date_now = date('Y-m-d H:i:s', time());
+
+    $data = array(
+      'read_notif' => 1,
+      'read_date' => $date_now,
+    );
+
+    $this->db->like('account_id', $staff);
+    $this->db->where('read_notif', 0);
+    $this->db->where('id', $notificationId);
+    return $this->db->update('notification', $data);
+}
 
   public function get_my_history($staf_get)
   {

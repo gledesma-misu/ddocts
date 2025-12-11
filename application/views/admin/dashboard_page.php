@@ -80,7 +80,7 @@
                     </div>
                 </div>
                 <!-- END: four box button -->
-                <div class="col-span-12">
+                <!-- <div class="col-span-12">
                     <div class="flex justify-center items-center">
                         <div class="col-span-12 sm:col-span-3 sm:col-span-2 intro-y">
                             <div class="box zoom-in ml-2">
@@ -113,7 +113,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
                 <!-- BEGIN: Data Table -->
                 <div class="col-span-12 mt-2 box p-2">
@@ -173,14 +173,23 @@
                                                 ?>
 
                                             </td>
-                                            <td class="text-center"><?php echo $staff_details['dd_view_doc']; ?></td>
+                                            <td class="text-center">
+                                                <?php
+                                                $dd_view_doc = $staff_details['dd_view_doc'];
+                                                $this->load->model('Model_dashboard', 'dashboard');
+                                                $data = $this->dashboard->get_selected_division($dd_view_doc);
+                                                $dd_division = $data['sd_code_name'];
+                                                echo $dd_division;
+                                                ?>
+                                            </td>
                                             <td class="text-center"><?php echo $staff_details['dd_staff_name']; ?></td>
-                                            <td class="text-center"><?php $date = $staff_details['dd_date_recieved'];
-                                                                    $datepicker = date("M-d-Y h:i A", strtotime($date)); ?>
+                                            <td class="text-center">
+                                                <?php $date = $staff_details['dd_date_encoded'];
+                                                $datepicker = date("M-d-Y h:i A", strtotime($date)); ?>
                                                 <?php echo $datepicker; ?></td>
                                             <td class="text-center w-35">
-                                                <span class="px-2 py-1 rounded-full <?php echo $staff_details['dd_priority_level'] == 1 ? 'bg-theme-6' : 'bg-theme-12'; ?> text-white mr-1">
-                                                    <?php echo $staff_details['dd_priority_level'] == 1 ? 'Urgent' : 'Not Urgent'; ?>
+                                                <span class="px-2 py-1 rounded-full <?php echo $staff_details['dd_priority_level'] == 1 ? 'bg-theme-9' : ($staff_details['dd_priority_level'] == 2 ? 'bg-theme-12' : ($staff_details['dd_priority_level'] == 3 ? 'bg-theme-6' : '')); ?> text-white mr-1">
+                                                    <?php echo $staff_details['dd_priority_level'] == 1 ? 'Simple' : ($staff_details['dd_priority_level'] == 2 ? 'Complex' : ($staff_details['dd_priority_level'] == 3 ? 'Highly Technical' : '')); ?>
                                                 </span>
                                             </td>
 
@@ -192,10 +201,10 @@
                                                     ?><a class="btn btn-sm btn-outline-primary w-24 inline-block" href="javascript:;" data-toggle="modal" data-target="#Recieve<?php echo $staff_details['dd_id']; ?>"> <i data-feather="check-square" class="w-4 h-4 mr-1"></i> Receive </a>
                                                         &nbsp; | &nbsp;
                                                     <?php endif ?>
-                                                    <?php if ($staff_details['dd_encoded_doc'] == $this->session->userdata('staff_id')) :
-                                                    ?><a class="btn btn-sm btn-outline-warning w-24 inline-block" href="<?= base_url('admin/documents/updateDoc/'.$staff_details['dd_id']);  ?>" > <i data-feather="edit-3" class="w-4 h-4 mr-1"></i> Edit </a>
+                                                    <!-- <?php if ($staff_details['dd_encoded_doc'] == $this->session->userdata('staff_id')) :
+                                                    ?><a class="btn btn-sm btn-outline-warning w-24 inline-block" href="<?= base_url('admin/documents/updateDoc/' . $staff_details['dd_id']);  ?>"> <i data-feather="edit-3" class="w-4 h-4 mr-1"></i> Edit </a>
                                                         &nbsp; | &nbsp;
-                                                    <?php endif ?>
+                                                    <?php endif ?> -->
                                                     <a class="btn btn-sm btn-outline-danger w-24 inline-block" href="javascript:;" data-toggle="modal" data-target="#Disregard<?php echo $staff_details['dd_id']; ?>"> <i data-feather="trash-2" class="w-4 h-4 mr-1"></i> Disregard </a>
 
                                                     <div class="preview">
@@ -518,7 +527,7 @@
     $date_end = date('Y-m-d', strtotime($date_now . ' + 1 day')) . ' ' . date('H:i:s', time());
     ?>
 
-    <?php if ($get_id_staff['dd_recieved_doc'] == 0 && $get_id_staff['dd_disregard_doc'] == 0 && $date_end >= $this->session->userdata('last_login')) : ?>
+    <?php if ($get_id_staff['dd_encoded_doc'] != $this->session->userdata('staff_id') && $get_id_staff['dd_recieved_doc'] == 0 && $get_id_staff['dd_disregard_doc'] == 0 && $date_end >= $this->session->userdata('last_login')) : ?>
         <div class="text-center">
             <!-- BEGIN: Notification Content -->
             <div id="success-notification-content" class="toastify-content hidden flex">
@@ -628,7 +637,14 @@
                                 </tr>
                                 <tr class="intro-x">
                                     <td class="text-left"> Routed To </td>
-                                    <td class="text-left"> <?php echo $get_id_staff['dd_view_doc']; ?></td>
+                                    <td class="text-left"> <?php
+                                                            $dd_view_doc = $get_id_staff['dd_view_doc'];
+                                                            $this->load->model('Model_dashboard', 'dashboard');
+                                                            $data = $this->dashboard->get_selected_division($dd_view_doc);
+                                                            $dd_division = $data['sd_code_name'];
+                                                            echo $dd_division;
+
+                                                            ?></td>
                                 </tr>
                                 <tr class="intro-x">
                                     <td class="text-left"> Date Routed </td>
@@ -739,6 +755,16 @@
         });
     });
 </script>
+
+<?php if ($this->session->flashdata('error')) : ?>
+    <script type="text/javascript">
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: '<?php echo $this->session->flashdata('error') ?>',
+        })
+    </script>
+<?php endif; ?>
 
 <!-- successful Recieve the document -->
 <?php if ($this->session->flashdata('sucs_doc')) : ?>

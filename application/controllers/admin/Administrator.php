@@ -169,25 +169,25 @@ class Administrator extends CI_Controller {
     }
 
     public function reg_staff(){
-        $username = $this->input->post('username'); 
-        $password = md5($this->input->post('password'));
-        $text_pass = $this->input->post('password');
-        $email = $this->input->post('email'); 
-        $fname = $this->input->post('fname');
-        $lname = $this->input->post('lname'); 
-        $address = $this->input->post('address');
-        $em_no = $this->input->post('em_no'); 
-        $gender = $this->input->post('gender');
-        $em_position = $this->input->post('em_position'); 
-        $dob = $this->input->post('dob');
-        $get_division = $this->admin->get_staff_division($this->input->post('division'));
-        $staff_id = $this->input->post('staff_id');
-        $account_type = 0;
-
-
-        $division = $get_division['sd_code'];
-        $division_code = $get_division['sd_code_name'];
-        $this->admin->insertnewstaff($username,$password,$text_pass,$email,$fname,$lname,$address,$em_no,$gender,$em_position,$dob,$division,$division_code,$staff_id,$account_type);
+        $data = array(
+            'username' => $this->input->post('username'),
+            'password' => md5($this->input->post('password')),
+            'text_pass' => $this->input->post('password'),
+            'email' => $this->input->post('email'),
+            'fname' => $this->input->post('fname'),
+            'lname' => $this->input->post('lname'),
+            'address' => $this->input->post('address'),
+            'em_no' => $this->input->post('em_no'),
+            'gender' => $this->input->post('gender'),
+            'em_position' => $this->input->post('em_position'),
+            'dob' => $this->input->post('dob'),
+            'get_division' => $this->input->post('division'),
+            'staff_id' => $this->input->post('staff_id'),
+            'account_type' => 0
+        );
+        // $division = $get_division['sd_code'];
+        // $division_code = $get_division['sd_code_name'];
+        $this->admin->insertnewstaff($data);
         // Set message 
         $this->session->set_flashdata('success', 'New staff has been Added!');
 
@@ -198,6 +198,7 @@ class Administrator extends CI_Controller {
     public function view_staff(){
         $data['staff_divisions'] = $this->admin->staff_account();
         $data['staff_divs'] = $this->admin->staff_division();
+        $this->admin->get_staff_division($this->input->post('division'));
 
         $this->load->view('admin/Administrator/view_staff', $data);
     }

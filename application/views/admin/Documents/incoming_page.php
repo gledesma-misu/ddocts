@@ -39,7 +39,7 @@
     </div>
     <!-- BEGIN: HTML Table Data -->
     <div class="intro-y overflow-auto lg:overflow-visible mt-8 sm:mt-0">
-        <table class="table table-report sm:mt-2">
+        <table id="zero_config" class="table table-report sm:mt-2">
             <thead>
                 <tr>
                     <th class="whitespace-nowrap">Document No.</th>
@@ -62,8 +62,8 @@
                         <tr class="intro-x">
                             <td class="text-center"> <?php echo $post['dd_doc_id_code']; ?> </td>
                             <td class="text-center w-40">
-                                <span class="px-2 py-1 rounded-full <?php echo $post['dd_priority_level'] == 1 ? 'bg-theme-6' : 'bg-theme-12'; ?> text-white mr-1">
-                                    <?php echo $post['dd_priority_level'] == 1 ? 'Urgent' : 'Not Urgent'; ?>
+                                <span class="px-2 py-1 rounded-full <?php echo $post['dd_priority_level'] == 1 ? 'bg-theme-9' : ($post['dd_priority_level'] == 2 ? 'bg-theme-12' : ($post['dd_priority_level'] == 3 ? 'bg-theme-6' : '')); ?> text-white mr-1">
+                                    <?php echo $post['dd_priority_level'] == 1 ? 'Simple' : ($post['dd_priority_level'] == 2 ? 'Complex' : ($post['dd_priority_level'] == 3 ? 'Highly Technical' : '')); ?>
                                 </span>
                             </td>
                             <td class="text-center">
@@ -91,10 +91,16 @@
                                 }
                                 echo $dd_name;
                                 ?></td>
-                            <td class="text-center"> <?php echo $post['dd_view_doc']; ?> </td>
+                            <td class="text-center"> <?php
+                                                        $dd_view_doc = $post['dd_view_doc'];
+                                                        $this->load->model('Model_dts', 'dts');
+                                                        $data = $this->dts->get_selected_division($dd_view_doc);
+                                                        $dd_division = $data['sd_code_name'];
+                                                        echo $dd_division;
+                                                        ?> </td>
 
                             <td class="text-center">
-                                <?php $date = $post['dd_date_recieved'];
+                                <?php $date = $post['dd_date_encoded'];
                                 $datepicker = date("M-d-Y h:i A", strtotime($date)); ?>
                                 <?php echo $datepicker; ?>
                             </td>
@@ -249,16 +255,19 @@
                                 </tr>
                                 <tr class="intro-x">
                                     <td class="text-left"> Document Recieved Date </td>
-                                    <td class="text-left"> <?php $date = $get_id_staff['dd_date_encoded'];
+                                    <td class="text-left"> <?php $date = $get_id_staff['dd_date_routed'];
                                                             $datepicker = date("M-d-Y h:i A", strtotime($date)); ?>
                                         <?php echo $datepicker; ?> </td>
                                 </tr>
                                 <tr class="intro-x">
                                     <td class="text-left"> Routed To </td>
                                     <td class="text-left">
-                                        <?php $dd_action_taken_id = $get_id_staff['dd_view_doc']; ?>
                                         <?php
-                                           echo $get_id_staff['dd_view_doc'];
+                                        $dd_view_doc = $get_id_staff['dd_view_doc'];
+                                        $this->load->model('Model_dts', 'dts');
+                                        $data = $this->dts->get_selected_division($dd_view_doc);
+                                        $dd_division = $data['sd_code_name'];
+                                        echo $dd_division;
                                         ?>
                                     </td>
                                 </tr>
@@ -310,5 +319,20 @@
 <script type="text/javascript">
     jQuery(function() {
         jQuery('#success-notification-toggle').click();
+    });
+</script>
+
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#zero_config').DataTable({
+            columnDefs: [{
+                type: 'date',
+                'targets': [5]
+            }],
+            order: [
+                [5, 'desc']
+            ],
+        });
     });
 </script>

@@ -22,6 +22,15 @@ class Model_dts extends CI_Model
 		return $result->result_array();
 	}
 
+	public function get_all_division()
+	{
+		$this->db->select('*');
+		$this->db->from('staff_division');
+		$this->db->order_by("staff_division.sd_id", "desc");
+		$result = $this->db->get();
+		return $result->result_array();
+	}
+
 	public function get_type_document()
 	{
 		$this->db->select('*');
@@ -88,10 +97,57 @@ class Model_dts extends CI_Model
 		return $result->row_array();
 	}
 
+	public function get_selected_division($dd_div_id)
+	{
+		$this->db->select('*');
+		$this->db->from('staff_division');
+		$this->db->where('staff_division.sd_code', $dd_div_id);
+		$this->db->order_by("staff_division.sd_id", "desc");
+		$result = $this->db->get();
+		return $result->row_array();
+	}
+
+	public function add_notification($dd_id, $action_type,$message,$id_to_staff){
+
+		$fname = $this->session->userdata('staff_fname');
+		$lname = $this->session->userdata('staff_lname');
+		$name = $fname . ' ' . $lname;
+		$data = array(
+			'transaction_id' => $dd_id,
+			'function_method' => "MODULE_DTS",
+			'action_type' => $action_type,
+			'action_message' => $message,
+			'added_by' => $name,
+			'read_notif' => '0',
+			'read_div_notif' => '0',
+			'read_oed_notif' => '1',
+			'if_oed' => '',
+			'account_id' => $id_to_staff
+		);
+		$this->db->insert('notification', $data);
+	}
+
 	// New Document Page  ==================================================================================
 
-	public function insertDocDetails($doc_no, $source_doc, $sub_title, $files_array_new, $moredocs, $type_doc, $action_taken, $datesent, $div_unit, $staff_details, $editor1, $type_docs, $priorityLevel, $file_get, $staff_id, $dd_disregard_doc, $source_staffs_name, $records_id)
-	{
+	public function insertDocDetails(
+		$doc_no,
+		$source_doc,
+		$sub_title,
+		$files_array_new,
+		$moredocs,
+		$type_doc,
+		$action_taken,
+		$div_unit,
+		$staff_details,
+		$editor1,
+		$type_docs,
+		$priorityLevel,
+		$file_get,
+		$staff_id,
+		$dd_disregard_doc,
+		$source_staffs_name,
+		$records_id
+	) {
 
 		date_default_timezone_set('Asia/Manila');
 		$date_now = date('Y-m-d H:i:s', time());
@@ -117,7 +173,7 @@ class Model_dts extends CI_Model
 			'dd_routed_to' => $staff_details,
 			'dd_staff_name' => $source_staffs_name,
 			'dd_view_doc' => $div_unit,
-			'dd_date_recieved' => $datesent,
+			'dd_date_recieved' => null,
 			'dd_filename' => $files_array_new,
 			'dd_status' => '0',
 			'dd_priority_level' => $priorityLevel,
@@ -130,9 +186,32 @@ class Model_dts extends CI_Model
 		);
 
 		$this->db->insert('document_details', $data);
+		// notification
+		$fname = $this->session->userdata('staff_fname');
+		$lname = $this->session->userdata('staff_lname');
+		$name = $fname . ' ' . $lname;
+
+		$query = $this->db->get('document_details');
+		$num_rows = $query->num_rows();
+
+		$data3 = array(
+			'transaction_id' => $num_rows,
+			'function_method' => "MODULE_DTS",
+			'action_type' => 'ADD',
+			'action_message' => 'NEW DOCUMENT: Document <b>' . $sub_title . '</b> with DocNo: <b>' . $doc_no . '</b> received.',
+			'added_by' => $name,
+			'read_notif' => '0',
+			'read_div_notif' => '0',
+			'read_oed_notif' => '1',
+			'reg_date' => $date_now,
+			'if_oed' => '0',
+			'account_id' => $staff_details
+		);
+		$this->db->insert('notification', $data3);
+		// end notification
 	}
 
-	public function updateDocDetails($dd_id,$doc_no, $source_doc, $sub_title, $files_array_upd, $moredocs, $type_doc, $action_taken, $datesent, $div_unit, $staff_details, $editor1, $type_docs, $priorityLevel, $file_get, $staff_id, $dd_disregard_doc, $source_staffs_name, $records_id)
+	public function updateDocDetails($dd_id, $doc_no, $source_doc, $sub_title, $files_array_upd, $moredocs, $type_doc, $action_taken, $datesent, $div_unit, $staff_details, $editor1, $type_docs, $priorityLevel, $file_get, $staff_id, $dd_disregard_doc, $source_staffs_name, $records_id)
 	{
 
 		date_default_timezone_set('Asia/Manila');
@@ -159,9 +238,10 @@ class Model_dts extends CI_Model
 			'dd_routed_to' => $staff_details,
 			'dd_staff_name' => $source_staffs_name,
 			'dd_view_doc' => $div_unit,
-			'dd_date_recieved' => $datesent,
+			'dd_date_recieved' => null,
 			'dd_filename' => $files_array_upd,
-			'dd_status' => '0',
+			'dd_status' => '1',
+			'dd_is_edited' => '1',
 			'dd_priority_level' => $priorityLevel,
 			'dd_encoded_doc' => $staff_id,
 			'dd_filetype' => $file_get,
@@ -174,6 +254,21 @@ class Model_dts extends CI_Model
 		$this->db->set($data);
 		$this->db->where('dd_id', $dd_id);
 		$this->db->update('document_details');
+	}
+
+	public function document_edit($dd_id, $edited_by, $field_name, $old_value, $new_value)
+	{
+		$data = array(
+			'dd_id' => $dd_id,
+			'edited_by' => $edited_by,
+			'field_name' => $field_name,
+			'old_value' => $old_value,
+			'new_value' => $new_value,
+
+		);
+		$this->db->set($data);
+		$this->db->where('dd_id', $dd_id);
+		$this->db->update('document_edits');
 	}
 
 	public function doc_request($not_listed)
@@ -253,6 +348,26 @@ class Model_dts extends CI_Model
 		return $result->row_array();
 	}
 
+	public function getConcernStaff($division)
+	{
+		if (empty($division)) {
+			return [];
+		}
+
+		if (!is_array($division)) {
+			$division = [$division];
+		}
+
+		$this->db->select('*');
+		$this->db->from('staff_details');
+		$this->db->where_in('division', $division);
+		$this->db->order_by('staff_id', 'ASC');
+
+		$q = $this->db->get();
+		$response = $q->result_array();
+
+		return $response;
+	}
 	// View Document Page ==================================================================================
 	public function view_get_details($dd_id)
 	{
@@ -293,7 +408,7 @@ class Model_dts extends CI_Model
 		$this->db->update('document_details');
 	}
 
-	public function complate_file($dd_id,$doc_status)
+	public function complete_file($dd_id, $doc_status)
 	{
 		$this->db->set('dd_status', $doc_status);
 		$this->db->where('dd_id', $dd_id);
@@ -318,7 +433,7 @@ class Model_dts extends CI_Model
 		return $result->result_array();
 	}
 
-	public function reply_notes($dd_id, $staff, $notes, $oed_other, $date_now, $doc_title, $doc_no, $files_new, $my_division, $doc_current_status, $doc_current_action, $id_to_staff)
+	public function reply_notes($dd_id, $staff, $staff_name, $notes, $oed_other, $date_now, $doc_title, $doc_no, $files_new, $my_division, $doc_current_status, $doc_current_action, $id_to_staff)
 	{
 		$data = array(
 			'document_id' => $dd_id,
@@ -379,7 +494,7 @@ class Model_dts extends CI_Model
 				$action_type = 'CREATE';
 				break;
 			case 1:
-				$message = 'PENDING: <b>' . $staff . '</b> reply in the document <b>' . $doc_title . '</b> with DocNo: <b>' . $doc_no . '</b>.';
+				$message = 'PENDING: <b>' . $staff_name . '</b> reply in the document <b>' . $doc_title . '</b> with DocNo: <b>' . $doc_no . '</b>.';
 				$action_type = 'MODIFY';
 				break;
 			default:
@@ -542,7 +657,7 @@ class Model_dts extends CI_Model
 		// $this->db->like('document_details.dd_routed_to', $staff);
 		$this->db->where('dd_status !=', '4');
 		$this->db->join('document_type', 'document_type.dt_id = document_details.dd_doct_type', 'left');
-		$this->db-> order_by("document_details.dd_id", "desc");
+		$this->db->order_by("document_details.dd_id", "desc");
 		$this->db->limit($limit, $start);
 		$query = $this->db->get('document_details');
 		return $query->result_array();
@@ -611,7 +726,7 @@ class Model_dts extends CI_Model
 		return $query->result_array();
 	}
 
-	public function filter_incoming($staff,$limit)
+	public function filter_incoming($staff, $limit)
 	{
 		$this->db->select('*');
 		$this->db->where('document_details.dd_recieved_doc', '1');

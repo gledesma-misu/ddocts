@@ -15,6 +15,8 @@
 
     <link rel="stylesheet" href="<?php echo base_url('assets/template/dist/css/app.css'); ?>" />
     <link rel="stylesheet" href="<?php echo base_url('assets/template/vendors/loadingjs/loading.min.css'); ?>">
+
+
     <!-- END: CSS Assets-->
 </head>
 <!-- END: Head -->
@@ -77,7 +79,9 @@
                     <div class="notification-content__box dropdown-menu__content box dark:bg-dark-6">
                         <div class="notification-content__title">Notifications</div>
 
-                        <div id="notif_list"></div>
+                        <div id="notif_list">
+
+                        </div>
 
                         <a href="<?= base_url('admin/dashboard/view_all_notif'); ?>" class="intro-x w-full block text-center btn btn-sm btn-secondary mt-5">View More</a>
                     </div>
@@ -90,8 +94,8 @@
             <div class="intro-x dropdown w-8 h-8">
                 <div class="dropdown-toggle w-8 h-8 rounded-full overflow-hidden shadow-lg image-fit zoom-in scale-110" role="button" aria-expanded="false">
                     <!-- <img alt="Rubick Tailwind HTML Admin Template" src="<?php echo base_url('assets/template/images/emp-avatar.png'); ?>"> -->
-                    <img alt="Rubick Tailwind HTML Admin Template" src="<?php echo $this->session->userdata('staff_gender') == 1 ? base_url('assets/template/images/emp-male.png') : base_url('assets/template/images/emp-female.png'); ?>"> 
-                    
+                    <img alt="Rubick Tailwind HTML Admin Template" src="<?php echo $this->session->userdata('staff_gender') == 1 ? base_url('assets/template/images/emp-male.png') : base_url('assets/template/images/emp-female.png'); ?>">
+
                 </div>
                 <div class="dropdown-menu w-56">
                     <div class="dropdown-menu__content box bg-theme-26 dark:bg-dark-6 text-white">
