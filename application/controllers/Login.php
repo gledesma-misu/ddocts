@@ -70,7 +70,7 @@ class Login extends CI_Controller
             }
 
             if ($su == 1) {
-                $this->session->set_flashdata('email_notif', 'Account has been Deactivated!');
+                $this->session->set_flashdata('email_notif', 'Account has been deactivated!');
                 return false;
             } else {
                 return true;
